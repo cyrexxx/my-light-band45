@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-//uint8_t lightReadingCounter;	
+	
 
 typedef struct light_reading_s
 {
@@ -23,43 +23,89 @@ typedef struct light_reading_s
 
 } light_reading_t;
 
+
+void i2c_eeprom_init();
 /**
- *	Function:	write_buffer
+ *	Function:	i2c_eeprom_erase
  *
- *	Arguments:	Address of the data to be written
- *              Data 
+ *	Arguments:	n/a
+ *
+ *	Returns:	true/false
+ *
+ *	Description:	Erases the EEPROM.
+**/
+bool i2c_eeprom_erase();
+/**
+ *	Function:	i2c_eeprom_write_page
+ *
+ *	Arguments:	18 bit address 
+ *              pointer to the data.
  *              length of data
  *
  *	Returns:	true/false
  *
- *	Description:	configures MAX 44009
+ *	Description:	Reads both the light registers on the device and returns the 
+ *			computed light level
 **/
-void write_buffer(uint32_t addr, uint8_t* data, uint32_t length);
-
+bool i2c_eeprom_write_buffer(uint32_t address, uint8_t* data, uint32_t length);
+bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, uint16_t length);
 /**
- *	Function:	getLightLevel
+ *	Function:	i2c_eeprom_write_page
  *
- *	Arguments:	n/a
+ *	Arguments:	Device Address
+ *              16 bit eeprom address 
+ *              pointer to the data.
+ *              length of data
  *
- *	Returns:	the ambient light level, in lux
+ *	Returns:	true/false
  *
  *	Description:	Reads both the light registers on the device and returns the 
  *			computed light level
 **/
-float getLightLevel(uint8_t slaveAddr);
-
+bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, uint8_t length );
 /**
- *	Function:	read_sensors
+ *	Function:	i2c_eeprom_read_byte
  *
- *	Arguments:	n/a
+ *	Arguments:	Device Address
+ *              16 bit eeprom address
  *
- *	Returns:	the ambient light level, in lux for all the sensors
+ *	Returns:	true/false
  *
  *	Description:	Reads both the light registers on the device and returns the 
  *			computed light level
 **/
 
-void read_sensors(light_reading_t * p_lux_value);
+uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress);
+/**
+ *	Function:	i2c_eeprom_read_buffer
+ *
+ *	Arguments:	18 bit eeprom address 
+ *              pointer to the data.
+ *              length of data
+ *
+ *	Returns:	true/false
+ *
+ *	Description:	Reads both the light registers on the device and returns the 
+ *			computed light level
+**/
+bool i2c_eeprom_read_buffer(uint32_t address, uint8_t* data, uint32_t length);
+/**
+ *	Function:	i2c_eeprom_read_buffer
+ *
+ *	Arguments:	Device Address
+ *              16 bit eeprom address 
+ *              pointer to the data.
+ *              length of data
+ *
+ *	Returns:	true/false
+ *
+ *	Description:	Reads both the light registers on the device and returns the 
+ *			computed light level
+**/
+bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, uint16_t length); 
+
+
+
 
 
 #endif // M24m02_H__
