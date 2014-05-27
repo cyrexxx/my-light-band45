@@ -32,6 +32,9 @@
 
 #define i2c_vcc1       17
 #define i2c_vcc2       5
+//Memory control 
+#define MEM_EN         9
+#define MEM_WC         8 
 
 #define RX_PIN_NUMBER  16    // UART RX pin number.
 #define TX_PIN_NUMBER  17    // UART TX pin number.
