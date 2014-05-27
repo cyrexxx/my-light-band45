@@ -19,25 +19,23 @@
 
 typedef struct light_reading_s
 {
-    float u4_top;
-    float u5_up;
-    float u6_down_1;
-    float u7_down_2;
+    uint8_t 
 
 } light_reading_t;
 
 /**
- *	Function:	config_max44009
+ *	Function:	write_buffer
  *
- *	Arguments:	Slave address
+ *	Arguments:	Address of the data to be written
+ *              Data 
+ *              length of data
  *
  *	Returns:	true/false
  *
  *	Description:	configures MAX 44009
 **/
+void write_buffer(uint32_t addr, uint8_t* data, uint32_t length);
 
-bool config_max44009(uint8_t slaveAddr);
-	
 /**
  *	Function:	getLightLevel
  *

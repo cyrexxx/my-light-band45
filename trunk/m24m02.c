@@ -1,7 +1,7 @@
 
 /*
-*Lib defining the MAX 44009 for the Exeger Light band project . 
-*20/05/2014
+*Lib defining the M24m)@ eeeprom form ST for the Exeger Light band project . 
+*26/05/2014
 *Copyright Exeger Systems AB  2014
 *
 *Author:Kartik karuna (Kartik.karuna@exeger.com) 
@@ -14,7 +14,17 @@
 #include "cy_io.h"
 
 //Device address  
-#define MAX_LUX_ADDR_1	0x96            //!< 6 MSBs of the MAX 44009 I2C ADD
+#define MEM_BASE_ADD  0xA0            //!< 6 MSBs of the MAX 44009 I2C ADD
+#define PAGE_0        0x08            // PAGE 0 (E2 =1 , A17=A16=0,W/R=D.C)
+#define PAGE_1        0x0A            // PAGE 0 (E2 =1 , A17=0 A16=1,W/R=D.C)
+#define PAGE_2        0x0C            // PAGE 0 (E2 =1 , A17=1 A16=0,W/R=D.C)
+#define PAGE_3        0x0E            // PAGE 0 (E2 =1 , A17=A16=1,W/R=D.C)
+
+//Memory Blocks 
+#define BLOCK_SIZE        0x10000
+#define BLOCK_1_MAX       0x20000
+#define BLOCK_2_MAX       0x30000
+#define BLOCK_3_MAX       0x40000
 
 
 #define BUS             true            //Bool valve to select bus 
@@ -35,6 +45,75 @@ extern float SCALE_FACTOR;	// captures scaling factors to map from % brightness 
 #define BUS_UP          i2c_vcc1 
 #define BUS_DOWN        i2c_vcc2
 
+
+void write_buffer(uint32_t addr, uint8_t* data, uint32_t length)
+{
+  //bool transfer_succeeded = true;
+  uint8_t dev_id = MEM_BASE_ADD;
+
+   if (addr < BLOCK_SIZE && (addr + length) < BLOCK_SIZE)                        // if address falls withing BLock 1 and length of data to be written is less than Block SIZE
+     {
+     dev_id = dev_id | PAGE_0 ;
+     write_device_buffer(dev_id, (uint16_t)addr, data, (uint16_t)length);
+     }
+    else if(addr < BLOCK_SIZE && (addr + length) > BLOCK_SIZE)                  // if address falls withing BLock 1 but length of data to be written spans 2 Blocks
+     { 
+      // break it into two writes	
+      uint8_t first_length = BLOCK_SIZE - addr;
+      dev_id = dev_id | PAGE_0 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, first_length); 
+
+      dev_id = dev_id | PAGE_1 ;
+      write_device_buffer(dev_id, 0x0, (uint8_t*)&data[first_length], length - (first_length));
+     }   
+    else if (addr > BLOCK_SIZE && (addr + length) < BLOCK_1_MAX)
+     {
+      dev_id = dev_id | PAGE_1 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, (uint16_t)length);
+     }
+     else if(addr > BLOCK_SIZE && (addr + length) > BLOCK_1_MAX)                  // if address falls withing BLock 1 but length of data to be written spans 2 Blocks
+     { 
+      // break it into two writes	
+      uint8_t first_length = BLOCK_1_MAX - addr;
+      dev_id = dev_id | PAGE_1 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, first_length); 
+
+      dev_id = dev_id | PAGE_2 ;
+      write_device_buffer(dev_id, 0x0, (uint8_t*)&data[first_length], length - (first_length));
+     }   	
+    else if (addr > BLOCK_1_MAX && (addr + length) < BLOCK_2_MAX)
+     {
+      dev_id = dev_id | PAGE_2 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, (uint16_t)length);
+     }
+     else if(addr > BLOCK_1_MAX && (addr + length) > BLOCK_2_MAX)                  // if address falls withing BLock 1 but length of data to be written spans 2 Blocks
+     { 
+      // break it into two writes	
+      uint8_t first_length = BLOCK_2_MAX - addr;
+      dev_id = dev_id | PAGE_2 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, first_length); 
+
+      dev_id = dev_id | PAGE_3 ;
+      write_device_buffer(dev_id, 0x0, (uint8_t*)&data[first_length], length - (first_length));
+     }  
+     else if (addr > BLOCK_2_MAX && (addr + length) < BLOCK_3_MAX)
+     {
+      dev_id = dev_id | PAGE_3 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, (uint16_t)length);
+     }
+     else if(addr > BLOCK_2_MAX && (addr + length) > BLOCK_3_MAX)                  // if address falls withing BLock 1 but length of data to be written spans 2 Blocks
+     { 
+      // break it into two writes	
+      uint8_t first_length = BLOCK_3_MAX - addr;
+      dev_id = dev_id | PAGE_3 ;
+      write_device_buffer(dev_id, (uint16_t)addr, data, first_length); 
+
+      dev_id = dev_id | PAGE_0 ;
+      write_device_buffer(dev_id, 0x0, (uint8_t*)&data[first_length], length - (first_length));
+     }  
+
+  //return transfer_succeeded;
+}
 
 bool config_max44009(uint8_t slaveAddr)
 {
