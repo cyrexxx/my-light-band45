@@ -56,6 +56,7 @@
 #include "ble_debug_assert_handler.h"
 #include "pstorage.h"
 #include "max_44009.h"
+#include "m24m02.h"
 
 #include "ble_sensorsim.h"
 
@@ -116,8 +117,8 @@ static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
 //for Sumating sensor values 
 static bool                                  m_lux_meas_ind_conf_pending = false;       /**< Flag to keep track of when an indication confirmation is pending. */
-static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
-static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
+//static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
+//static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
 static app_timer_id_t                        m_lux_timer_id;
 #define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). */
 
@@ -191,6 +192,7 @@ static void service_error_handler(uint32_t nrf_error)
 {
     APP_ERROR_HANDLER(nrf_error);
 } */
+/*
 static void sensor_sim_init(void)
 {
     m_LUX_sim_cfg.min          = 50;
@@ -200,10 +202,11 @@ static void sensor_sim_init(void)
 
     ble_sensorsim_init(&m_LUX_sim_state, &m_LUX_sim_cfg);
 
-}
+}*/
+
     
 /**@brief Function for populating simulated health thermometer measurement.
- */
+ 
 static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
 {
     float sim_value;
@@ -211,13 +214,13 @@ static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
   
    	p_meas->light_level =sim_value; // ble_sensorsim_measure(&m_LUX_sim_state, &m_LUX_sim_cfg);
 }
-
+*/
 
 /**@brief Function for simulating and sending one Temperature Measurement.
  */
 static void lux_measurement_send(void)
 {
-    ble_lbe_float_meas_t simulated_meas;
+    //ble_lbe_float_meas_t simulated_meas;
     uint32_t       err_code;
 	  
     if (m_lux_meas_ind_conf_pending==true)
@@ -367,6 +370,10 @@ static void pw_bus_init(void)
     nrf_gpio_pin_clear(i2c_vcc1);  
 	  nrf_gpio_cfg_output(i2c_vcc2);
     nrf_gpio_pin_clear(i2c_vcc2);
+	  nrf_gpio_cfg_output(MEM_EN );   //EEPROM Enable
+    nrf_gpio_pin_clear(MEM_EN );
+	  nrf_gpio_cfg_output(MEM_WC);    //EEPROM WC
+    nrf_gpio_pin_clear(MEM_WC);
     
 
   }
@@ -871,14 +878,16 @@ int main(void)
     advertising_init();
 	  conn_params_init();
     sec_params_init();
+	  i2c_eeprom_init();
+		i2c_eeprom_erase();
     //Sensor Sim
-	  srand(343);
-	  sensor_sim_init();
+	  //srand(343);
+	  //sensor_sim_init();
     // Start execution
     timers_start();
 	  advertising_start();
 		
-	  
+			  
 
     // Enter main loop
     for (;;)

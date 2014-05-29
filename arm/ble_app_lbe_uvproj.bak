@@ -524,6 +524,11 @@
               <FileType>1</FileType>
               <FilePath>..\twi_sw_master.c</FilePath>
             </File>
+            <File>
+              <FileName>nrf_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\nrf_delay.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1045,6 +1050,11 @@
               <FileName>twi_sw_master.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\twi_sw_master.c</FilePath>
+            </File>
+            <File>
+              <FileName>nrf_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\nrf_delay.c</FilePath>
             </File>
           </Files>
         </Group>

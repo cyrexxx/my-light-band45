@@ -17,11 +17,7 @@
 
 	
 
-typedef struct light_reading_s
-{
-    uint8_t 
 
-} light_reading_t;
 
 
 void i2c_eeprom_init();
@@ -47,7 +43,7 @@ bool i2c_eeprom_erase();
  *	Description:	Reads both the light registers on the device and returns the 
  *			computed light level
 **/
-bool i2c_eeprom_write_buffer(uint32_t address, uint8_t* data, uint32_t length);
+bool i2c_eeprom_write(uint32_t address, uint8_t* data, uint32_t length);
 bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, uint16_t length);
 /**
  *	Function:	i2c_eeprom_write_page
@@ -88,7 +84,7 @@ uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress);
  *	Description:	Reads both the light registers on the device and returns the 
  *			computed light level
 **/
-bool i2c_eeprom_read_buffer(uint32_t address, uint8_t* data, uint32_t length);
+bool i2c_eeprom_read(uint32_t address, uint8_t* data, uint32_t length);
 /**
  *	Function:	i2c_eeprom_read_buffer
  *
