@@ -52,4 +52,5 @@
 .\_build\main.o: ..\..\..\..\..\Include\app_common\pstorage.h
 .\_build\main.o: ..\pstorage_platform.h
 .\_build\main.o: ..\max_44009.h
+.\_build\main.o: ..\m24m02.h
 .\_build\main.o: ..\ble_sensorsim.h

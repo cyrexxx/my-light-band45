@@ -4,17 +4,17 @@
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
 C:\Keil\ARM\Device\Nordic\nrf51822\Board\pca10001\ble\ble_app_lbe\arm\ble_app_lbe.uvproj
-Project File Date:  05/20/2014
+Project File Date:  05/27/2014
 
 <h2>Output:</h2>
 Rebuild target 'nrf51822_xxaa_s110 (256K)'
 assembling arm_startup_nrf51.s...
 compiling system_nrf51.c...
 compiling main.c...
-..\main.c(220): warning:  #177-D: variable "simulated_meas" was declared but never referenced
-      ble_lbe_float_meas_t simulated_meas;
-..\main.c(207): warning:  #177-D: function "lux_sim_measurement" was declared but never referenced
-  static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
+..\m24m02.h(23): warning:  #1295-D: Deprecated declaration i2c_eeprom_init - give arg types
+  void i2c_eeprom_init();
+..\m24m02.h(33): warning:  #1295-D: Deprecated declaration i2c_eeprom_erase - give arg types
+  bool i2c_eeprom_erase();
 ..\main.c: 2 warnings, 0 errors
 compiling ble_srv_common.c...
 compiling ble_dis.c...
@@ -35,10 +35,16 @@ compiling ble_sensorsim.c...
 compiling max_44009.c...
 compiling twi_sw_master.c...
 compiling nrf_delay.c...
+compiling m24m02.c...
+..\m24m02.h(23): warning:  #1295-D: Deprecated declaration i2c_eeprom_init - give arg types
+  void i2c_eeprom_init();
+..\m24m02.h(33): warning:  #1295-D: Deprecated declaration i2c_eeprom_erase - give arg types
+  bool i2c_eeprom_erase();
+..\m24m02.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=26760 RO-data=464 RW-data=280 ZI-data=6248  
+Program Size: Code=27212 RO-data=460 RW-data=276 ZI-data=6004  
 FromELF: creating hex file...
-".\_build\ble_app_template.axf" - 0 Error(s), 2 Warning(s).
+".\_build\ble_app_template.axf" - 0 Error(s), 4 Warning(s).
 Load "C:\\Keil\\ARM\\Device\\Nordic\\nrf51822\\Board\\pca10001\\ble\\ble_app_lbe\\arm\\_build\\ble_app_template.axf" 
 Set JLink Project File to "C:\Keil\ARM\Device\Nordic\nrf51822\Board\pca10001\ble\ble_app_lbe\arm\JLinkSettings.ini"
 * JLink Info: Device "NRF51822_XXAA" selected (257 KB flash, 16 KB RAM).
@@ -61,7 +67,7 @@ Target info:
 Device: nRF51822_xxAA
 VTarget = 3.313V
 State of Pins: 
-TCK: 0, TDI: 1, TDO: 1, TMS: 1, TRES: 1, TRST: 1
+TCK: 0, TDI: 0, TDO: 1, TMS: 1, TRES: 1, TRST: 1
 Hardware-Breakpoints: 4
 Software-Breakpoints: 8192
 Watchpoints:          2
@@ -71,15 +77,15 @@ Erase Done.
 Programming Done.
 Verify OK.
 Application running ...
-Link Info: FPUnit: 4 code (BP) slots and 0 literal slots
-ROMTableAddr = 0xE00FF003
+   2
+JTAG speed: 2000 kHz
  
-Target info:
-------------
-Device: nRF51822_xxAA
-VTarget = 3.313V
-State of Pins: 
-TCK: 0, TDI: 1, TDO: 0, TMS: 1, TRES: 1, TRST: 1
+Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+Pins: 
+TCK: 0, TDI: 0, TDO: 1, TMS: 1, TRES: 1, TRST: 1
 Hardware-Breakpoints: 4
 Software-Breakpoints: 8192
 Watchpoints:          2
@@ -89,3 +95,71 @@ Erase Done.
 Programming Done.
 Verify OK.
 Application running ...
+rite_buffer(addr, data, sizeof(data));
+..\m24m02.c(61): error:  #167: argument of type "unsigned int" is incompatible with parameter of type "uint8_t *"
+      i2c_eeprom_write_buffer(addr, data, sizeof(data));
+..\m24m02.c(61): error:  #165: too few arguments in function call
+      i2c_eeprom_write_buffer(addr, data, sizeof(data));
+..\m24m02.c(65): warning:  #940-D: missing return statement at end of non-void function "i2c_eeprom_erase"
+  }
+..\m24m02.c(67): error:  #147-D: declaration is incompatible with "_Bool i2c_eeprom_write_buffer(uint8_t, uint16_t, uint8_t *, uint16_t)" (declared at line 46 of "..\m24m02.h")
+  bool i2c_eeprom_write_buffer(uint32_t address, uint8_t* data, uint32_t length) 
+..\m24m02.c(69): error:  #20: identifier "MAX_ADDR" is undefined
+    if (address > MAX_ADDR)  {return false;}
+..\m24m02.c(70): error:  #20: identifier "MAX_ADDR" is undefined
+    if (address + length > MAX_ADDR) {return false;}
+..\m24m02.c(82): error:  #167: argument of type "uint16_t" is incompatible with parameter of type "uint8_t *"
+      success = i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE),(uint8_t*)&(data[start_byte - address]), next_device_start - start_byte);
+..\m24m02.c(82): error:  #167: argument of type "uint8_t *" is incompatible with parameter of type "uint32_t"
+      success = i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE),(uint8_t*)&(data[start_byte - address]), next_device_start - start_byte);
+..\m24m02.c(82): error:  #140: too many arguments in function call
+      success = i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE),(uint8_t*)&(data[start_byte - address]), next_device_start - start_byte);
+..\m24m02.c(92): error:  #167: argument of type "uint16_t" is incompatible with parameter of type "uint8_t *"
+    return i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE), (uint8_t*)&(data[start_byte - address]), end_byte - start_byte);
+..\m24m02.c(92): error:  #167: argument of type "uint8_t *" is incompatible with parameter of type "uint32_t"
+    return i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE), (uint8_t*)&(data[start_byte - address]), end_byte - start_byte);
+..\m24m02.c(92): error:  #140: too many arguments in function call
+    return i2c_eeprom_write_buffer(dev_id, (uint16_t)(start_byte % BLOCK_SIZE), (uint8_t*)&(data[start_byte - address]), end_byte - start_byte);
+..\m24m02.c(95): error:  #247: function "i2c_eeprom_write_buffer" has already been defined
+  bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, uint16_t length) {
+..\m24m02.c(117): error:  #29: expected an expression
+    **if (my_twi->start(dev_id, I2C_WRITE)) 
+..\m24m02.c(136): warning:  #12-D: parsing restarts here after previous syntax error
+  }
+..\m24m02.c(136): error:  #65: expected a ";"
+  }
+..\m24m02.c(136): warning:  #940-D: missing return statement at end of non-void function "i2c_eeprom_write_page"
+  }
+..\m24m02.c(140): error:  #29: expected an expression
+    ** if (my_twi->start(dev_id, I2C_WRITE)) {
+..\m24m02.c(150): warning:  #12-D: parsing restarts here after previous syntax error
+    return b;
+..\m24m02.c(151): warning:  #940-D: missing return statement at end of non-void function "i2c_eeprom_read_byte"
+  }
+..\m24m02.c(139): warning:  #177-D: variable "read_byte" was declared but never referenced
+    uint8_t read_byte = 0;
+..\m24m02.c(167): error:  #20: identifier "CONFIG_REG" is undefined
+        data_buffer[0] = CONFIG_REG;
+..\m24m02.c(184): error:  #20: identifier "HIGH_BYTE" is undefined
+        if (twi_master_transfer(slaveAddr,(uint8_t*)&HIGH_BYTE, 1, TWI_DONT_ISSUE_STOP))
+..\m24m02.c(192): error:  #20: identifier "LOW_BYTE" is undefined
+        if (twi_master_transfer(slaveAddr,(uint8_t*)&LOW_BYTE, 1, TWI_DONT_ISSUE_STOP))
+..\m24m02.c(210): error:  #20: identifier "light_reading_t" is undefined
+  void read_sensors(light_reading_t * p_lux_value)
+..\m24m02.c(218): error:  #20: identifier "BUS_DOWN" is undefined
+          nrf_gpio_pin_clear(BUS_DOWN);    //Turn off the sensors on the lower line --
+..\m24m02.c(219): error:  #20: identifier "BUS_UP" is undefined
+                nrf_gpio_pin_set(BUS_UP);        //Turn on the sensors on the UP line --
+..\m24m02.c(221): error:  #20: identifier "MAX_LUX_ADDR_1" is undefined
+          config_max44009(MAX_LUX_ADDR_1);
+..\m24m02.c(224): error:  #132: expression must have pointer-to-struct-or-union type
+          p_lux_value->u4_top= lux;
+..\m24m02.c(225): error:  #20: identifier "MAX_LUX_ADDR_2" is undefined
+                config_max44009(MAX_LUX_ADDR_2);
+..\m24m02.c(227): error:  #132: expression must have pointer-to-struct-or-union type
+          p_lux_value->u5_up= lux;
+..\m24m02.c(234): error:  #132: expression must have pointer-to-struct-or-union type
+          p_lux_value->u6_down_1= lux;
+..\m24m02.c: 8 warnings, 30 errors
+".\_build\ble_app_template.axf" - 32 Error(s), 12 Warning(s).
+Target not created
