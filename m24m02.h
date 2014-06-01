@@ -60,6 +60,32 @@ bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, ui
 **/
 bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, uint8_t length );
 /**
+ *	Function:	i2c_eeprom_current_address
+ *
+ *	Arguments:	n/a
+ *
+ *	Returns:	32 bit current address  
+ *
+ *	Description:	Function to fint the current address of the EEPROM
+ *			
+**/
+
+//uint32_t i2c_eeprom_current_address();
+/**
+ *	Function:	i2c_eeprom_address_read
+ *
+ *	Arguments:	Device Address
+ 
+ *
+ *	Returns:	16 bit current address of each eeprom device. 
+ *
+ *	Description:	Function to fint the current address of the EEPROM 
+ *			
+**/
+
+
+//uint16_t i2c_eeprom_address_read(uint8_t dev_id);
+/**
  *	Function:	i2c_eeprom_read_byte
  *
  *	Arguments:	Device Address
@@ -70,7 +96,6 @@ bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, ui
  *	Description:	Reads both the light registers on the device and returns the 
  *			computed light level
 **/
-
 uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress);
 /**
  *	Function:	i2c_eeprom_read_buffer
