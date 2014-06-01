@@ -163,6 +163,7 @@ static uint32_t LuxSync_ACK_add(ble_luxsync_t * p_lbs, const ble_luxsync_init_t 
     
     char_md.char_props.read   = 1;
     char_md.char_props.write = 1;
+	  char_md.char_props.notify = 1;
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
     char_md.p_user_desc_md    = NULL;

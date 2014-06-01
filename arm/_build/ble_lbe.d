@@ -24,4 +24,3 @@
 .\_build\ble_lbe.o: ..\..\..\..\..\Include\app_common\app_error.h
 .\_build\ble_lbe.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\_build\ble_lbe.o: ..\..\..\..\..\Include\nordic_common.h
-.\_build\ble_lbe.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h

@@ -520,11 +520,6 @@
               <FilePath>..\max_44009.c</FilePath>
             </File>
             <File>
-              <FileName>twi_sw_master.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\twi_sw_master.c</FilePath>
-            </File>
-            <File>
               <FileName>nrf_delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\nrf_delay.c</FilePath>
@@ -533,6 +528,11 @@
               <FileName>m24m02.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\m24m02.c</FilePath>
+            </File>
+            <File>
+              <FileName>twi_sw_master.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\twi_sw_master.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1052,11 +1052,6 @@
               <FilePath>..\max_44009.c</FilePath>
             </File>
             <File>
-              <FileName>twi_sw_master.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\twi_sw_master.c</FilePath>
-            </File>
-            <File>
               <FileName>nrf_delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\nrf_delay.c</FilePath>
@@ -1065,6 +1060,11 @@
               <FileName>m24m02.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\m24m02.c</FilePath>
+            </File>
+            <File>
+              <FileName>twi_sw_master.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\twi_sw_master.c</FilePath>
             </File>
           </Files>
         </Group>

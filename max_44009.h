@@ -25,6 +25,15 @@ typedef struct light_reading_s
 
 } light_reading_t;
 
+typedef struct encoded_light_reading_s
+{
+    uint8_t u4_top;
+    uint8_t u5_up;
+    uint8_t u6_down_1;
+    uint8_t u7_down_2;
+
+} encoded_light_reading_t;
+
 /**
  *	Function:	config_max44009
  *
@@ -62,5 +71,5 @@ float getLightLevel(uint8_t slaveAddr);
 
 void read_sensors(light_reading_t * p_lux_value);
 
-
+void encode_sensor_value(light_reading_t * p_lux_value,encoded_light_reading_t * p_encoded_light_reading);
 #endif // MAX_44009_H__
