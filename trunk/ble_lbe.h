@@ -121,7 +121,11 @@ typedef struct ble_lbe_s
 			ble_gatts_char_handles_t      LUX_3_handles;         				  /**< Handles related to the Light Level characteristic. */
 			ble_gatts_char_handles_t      LUX_4_handles;         					/**< Handles related to the Batte      ry Level characteristic. */
 			ble_gatts_char_handles_t      LUX_sample_handles;        		  /**< Handles related to the Light Level characteristic. */
-			uint8_t                       sample_rate;
+			uint8_t                       LUX_1_Level_last;
+			uint8_t                       LUX_2_Level_last;
+			uint8_t                       LUX_3_Level_last;
+			uint8_t                       LUX_4_Level_last;
+		  uint8_t                       sample_rate;
 			
 			uint8_t                       uuid_type;	
 			uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
