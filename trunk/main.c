@@ -235,7 +235,7 @@ static void lux_measurement_send(void)
                 APP_ERROR_HANDLER(err_code);
                 break;
         }
-			/* err_code = ble_lbe_LUX_2_update(&m_lbe, m_encoded_light_reading.u5_up); 
+			 err_code = ble_lbe_LUX_2_update(&m_lbe, m_encoded_light_reading.u5_up); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -282,7 +282,7 @@ static void lux_measurement_send(void)
             default:
                 APP_ERROR_HANDLER(err_code);
                 break;
-        }*/
+        }
 
 
 		}		
