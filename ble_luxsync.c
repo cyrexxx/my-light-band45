@@ -266,7 +266,7 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data)
 
 uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
 {
-
+    uint32_t err_code = NRF_SUCCESS;
 	  ble_gatts_hvx_params_t hvx_params;
     uint16_t len = sizeof(Lux_Ack);
     
@@ -275,8 +275,10 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
     hvx_params.handle = p_luxsync->LuxSync_ACK_handles.value_handle;
     hvx_params.p_data = &Lux_Ack;
     hvx_params.p_len = &len;
-    
-    return sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
+    err_code = sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
+	
+    return err_code;
+			
 		
 }
 

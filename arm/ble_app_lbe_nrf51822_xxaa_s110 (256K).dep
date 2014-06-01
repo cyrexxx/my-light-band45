@@ -12,7 +12,7 @@ I (..\..\..\..\..\Include\system_nrf51.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_bitfields.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_deprecated.h)(0x5321B20E)
 I (..\..\..\..\..\Include\compiler_abstraction.h)(0x5321B20E)
-F (.\..\main.c)(0x538A8C75)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\main.o --omf_browse .\_build\main.crf --depend .\_build\main.d)
+F (.\..\main.c)(0x538A9E25)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\main.o --omf_browse .\_build\main.crf --depend .\_build\main.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x52FE34EE)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x52FE34EE)
 I (..\..\..\..\..\Include\nordic_common.h)(0x5321B106)
@@ -139,7 +139,7 @@ I (..\..\..\..\..\Include\app_common\app_error.h)(0x5321B100)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x52FE34EE)
 I (..\..\..\..\..\Include\nordic_common.h)(0x5321B106)
 I (C:\Keil\ARM\ARMCC\include\math.h)(0x52FE34EE)
-F (..\ble_luxsync.c)(0x5379630E)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\ble_luxsync.o --omf_browse .\_build\ble_luxsync.crf --depend .\_build\ble_luxsync.d)
+F (..\ble_luxsync.c)(0x538A9FB7)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\ble_luxsync.o --omf_browse .\_build\ble_luxsync.crf --depend .\_build\ble_luxsync.d)
 I (..\ble_luxsync.h)(0x5379930B)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x52FE34EE)
 I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x52FE34EE)
@@ -434,7 +434,7 @@ I (..\..\..\..\..\Include\system_nrf51.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_bitfields.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_deprecated.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf_delay.h)(0x5370CDA9)
-F (..\m24m02.c)(0x538A8E37)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\m24m02.o --omf_browse .\_build\m24m02.crf --depend .\_build\m24m02.d)
+F (..\m24m02.c)(0x538A9B19)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\m24m02.o --omf_browse .\_build\m24m02.crf --depend .\_build\m24m02.d)
 I (..\m24m02.h)(0x538A7EAD)
 I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x52FE34EE)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x52FE34EE)
@@ -451,11 +451,11 @@ I (..\..\..\..\..\Include\nrf51_deprecated.h)(0x5321B20E)
 I (..\..\..\..\..\Include\compiler_abstraction.h)(0x5321B20E)
 I (..\cy_io.h)(0x5384F5B0)
 I (..\..\..\..\..\Include\nrf_gpio.h)(0x5321B102)
-F (..\twi_hw_master.c)(0x53211996)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\twi_hw_master.o --omf_browse .\_build\twi_hw_master.crf --depend .\_build\twi_hw_master.d)
-I (..\..\..\..\..\Include\twi_master.h)(0x537B0E0C)
+F (..\twi_sw_master.c)(0x5321B0B8)(-c --cpu Cortex-M0 -D__EVAL --li -g -O0 --apcs=interwork --enum_is_int -I.. -I..\..\..\..\..\Include -I..\..\..\..\..\Include\app_common -I..\..\..\..\..\Include\ble -I..\..\..\..\..\Include\ble\ble_services -I..\..\..\..\..\Include\s110 -I..\..\..\..\..\Include\sd_common --c99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\Device\Nordic\nRF51822\Include-DNRF51 -DNRF51 -DDEBUG_NRF_USER -DBLE_STACK_SUPPORT_REQD -DBOARD_NRF6310 -o .\_build\twi_sw_master.o --omf_browse .\_build\twi_sw_master.crf --depend .\_build\twi_sw_master.d)
 I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x52FE34EE)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x52FE34EE)
-I (..\twi_master_config.h)(0x537B0653)
+I (..\..\..\..\..\Include\twi_master.h)(0x537B0E0C)
+I (..\..\..\..\..\Include\nrf_delay.h)(0x5370CDA9)
 I (..\..\..\..\..\Include\nrf.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51.h)(0x5321B20E)
 I (C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cm0.h)(0x512C80D2)
@@ -465,5 +465,4 @@ I (..\..\..\..\..\Include\system_nrf51.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_bitfields.h)(0x5321B20E)
 I (..\..\..\..\..\Include\nrf51_deprecated.h)(0x5321B20E)
 I (..\..\..\..\..\Include\compiler_abstraction.h)(0x5321B20E)
-I (..\..\..\..\..\Include\nrf_delay.h)(0x5370CDA9)
-I (..\..\..\..\..\Include\nrf_gpio.h)(0x5321B102)
+I (..\twi_master_config.h)(0x537B0653)
