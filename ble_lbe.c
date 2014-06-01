@@ -70,7 +70,7 @@ static void on_write(ble_lbe_t * p_lbe, ble_evt_t * p_ble_evt)
     }
 	if (p_lbe->is_notification_supported)
     {
-        ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+        //ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
         
         if (
             (p_evt_write->handle == p_lbe->LUX_1_handles.cccd_handle)
@@ -538,59 +538,61 @@ uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, uint8_t light_level)
 	   len=sizeof(uint8_t);
 	
 	   		
-	 
-			//encoded_lbe_meas = lbe_measurement_encode(light_level);
-			hvx_len = sizeof(light_level);       
-      len=hvx_len;
-	
-      err_code = sd_ble_gatts_value_set(p_lbe->LUX_1_handles.value_handle,
-                                          0,
-                                          &len,
-                                          &light_level);
-	
-        if (err_code != NRF_SUCCESS)
-        {
-            return err_code;
-        }  
-				if(m_lbe_char_notifications.lux_1_notification_st==BLE_LBE_EVT_NOTIFICATION_ENABLED)
-				{
-	      ble_gatts_hvx_params_t hvx_params_temp;
-				hvx_params_temp.handle   = p_lbe->LUX_1_handles.value_handle;
-        hvx_params_temp.type     = BLE_GATT_HVX_NOTIFICATION;
-        hvx_params_temp.offset   = 0;
-				err_code = sd_ble_gatts_hvx(p_lbe->conn_handle, &hvx_params_temp);
-				}
-				
-	      // Send value if connected and notifying
-        if(0)
+	 if(light_level != p_lbe->LUX_1_Level_last)
+	 {
+				//encoded_lbe_meas = lbe_measurement_encode(light_level);
+				hvx_len = sizeof(light_level);       
+				len=hvx_len;
+		    p_lbe->LUX_1_Level_last = light_level;
+				err_code = sd_ble_gatts_value_set(p_lbe->LUX_1_handles.value_handle,
+																						0,
+																						&len,
+																						&light_level);
+		
+					if (err_code != NRF_SUCCESS)
 					{
+							return err_code;
+					}  
+					if(m_lbe_char_notifications.lux_1_notification_st==BLE_LBE_EVT_NOTIFICATION_ENABLED)
+					{
+					ble_gatts_hvx_params_t hvx_params_temp;
+					hvx_params_temp.handle   = p_lbe->LUX_1_handles.value_handle;
+					hvx_params_temp.type     = BLE_GATT_HVX_NOTIFICATION;
+					hvx_params_temp.offset   = 0;
+					err_code = sd_ble_gatts_hvx(p_lbe->conn_handle, &hvx_params_temp);
+					}
 					
-				if ((p_lbe->conn_handle != BLE_CONN_HANDLE_INVALID) && p_lbe->is_notification_supported)
-        {
-            ble_gatts_hvx_params_t hvx_params;
-            
-						
-            
-					  memset(&hvx_params, 0, sizeof(hvx_params));
-                
-            hvx_params.handle   = p_lbe->LUX_1_handles.value_handle;
-            hvx_params.type     = BLE_GATT_HVX_NOTIFICATION;
-            hvx_params.offset   = 0;
-            hvx_params.p_len    = &hvx_len;
-            hvx_params.p_data   = &light_level;
-            
-            err_code = sd_ble_gatts_hvx(p_lbe->conn_handle, &hvx_params);
-								if ((err_code == NRF_SUCCESS) && (hvx_len != len))
+					// Send value if connected and notifying
+					if(0)
 						{
-								err_code = NRF_ERROR_DATA_SIZE;
-						}
+						
+					if ((p_lbe->conn_handle != BLE_CONN_HANDLE_INVALID) && p_lbe->is_notification_supported)
+					{
+							ble_gatts_hvx_params_t hvx_params;
+							
+							
+							
+							memset(&hvx_params, 0, sizeof(hvx_params));
+									
+							hvx_params.handle   = p_lbe->LUX_1_handles.value_handle;
+							hvx_params.type     = BLE_GATT_HVX_NOTIFICATION;
+							hvx_params.offset   = 0;
+							hvx_params.p_len    = &hvx_len;
+							hvx_params.p_data   = &light_level;
+							
+							err_code = sd_ble_gatts_hvx(p_lbe->conn_handle, &hvx_params);
+									if ((err_code == NRF_SUCCESS) && (hvx_len != len))
+							{
+									err_code = NRF_ERROR_DATA_SIZE;
+							}
+					}
 				}
-			}
-				else
-				{
-						err_code = NRF_ERROR_INVALID_STATE;
-				}
+					else
+					{
+							err_code = NRF_ERROR_INVALID_STATE;
+					}
 
+			}		
     return err_code;
 }
 
