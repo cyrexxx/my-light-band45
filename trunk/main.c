@@ -879,8 +879,16 @@ int main(void)
 	  conn_params_init();
     sec_params_init();
 	  i2c_eeprom_init();
-		i2c_eeprom_erase();
-    //Sensor Sim
+		//i2c_eeprom_erase();
+	  //uint8_t data_buff[120]={1};
+    uint32_t addss=0x00080;		
+	  uint8_t read_by[2];
+		read_by[1] = 250;
+		read_by[0] = i2c_eeprom_read_byte( 0xA8,(uint8_t)(addss & 0xFF));
+		
+		 // i2c_eeprom_read(addss,data_buff, 120);
+		 //data_buff[1]= 2;
+		//Sensor Sim
 	  //srand(343);
 	  //sensor_sim_init();
     // Start execution

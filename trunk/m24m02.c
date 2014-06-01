@@ -54,6 +54,7 @@ void i2c_eeprom_init()
 		
 		}
   nrf_gpio_pin_set(E2);
+	nrf_delay_ms(1);
 }
 
 bool i2c_eeprom_erase() 
@@ -151,16 +152,41 @@ bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, ui
   }	
 	  
 }
+/*
+uint32_t i2c_eeprom_current_address()
+{
+uint8_t device_address,i;     = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[dev_offset];
+uint16_t address_pointer[4];
+uint32_t return_address;
+
+for (i=0;1<4;i++)
+  {
+  device_address = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[i];
+  address_pointer[i]=i2c_eeprom_address_read(device_address)
+  }
+
+return return_address;  
+}
+
+uint16_t i2c_eeprom_address_read(uint8_t dev_id)
+{
+if(twi_master_transfer(dev_id|TWI_READ_BIT,&read_byte,1,TWI_ISSUE_STOP))
+   {
+   }
+
+}
+*/
 
 uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress ) 
 {
   nrf_gpio_pin_set(WC); 
-	uint8_t read_byte = 0;
-	uint8_t data_buffer[2];
-	data_buffer[0]=(uint8_t)((eeaddress >> 8) &0xFF);
-	data_buffer[1]=(uint8_t)(eeaddress & 0xFF);
-	if(twi_master_transfer(dev_id,data_buffer,2,TWI_DONT_ISSUE_STOP))
+	uint8_t read_byte = 0xFF;
+	uint8_t add_buffer[2];
+	add_buffer[0]=(uint8_t)((eeaddress >> 8) &0xFF);
+	add_buffer[1]=(uint8_t)(eeaddress & 0xFF);
+	if(twi_master_transfer(dev_id,add_buffer,2,TWI_DONT_ISSUE_STOP))
 	{
+	 nrf_delay_us(2);
 	 if(twi_master_transfer(dev_id|TWI_READ_BIT,&read_byte,1,TWI_ISSUE_STOP))
 	 {
 	 }
@@ -201,10 +227,10 @@ bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, u
 {
     bool success;
     nrf_gpio_pin_set(WC);
-	  uint8_t data_buffer[2];
-	  data_buffer[0]=(uint8_t)((address >> 8) &0xFF);
-	  data_buffer[1]=(uint8_t)(address & 0xFF);
-	  if(twi_master_transfer(dev_id,data_buffer,2,TWI_DONT_ISSUE_STOP))
+	  uint8_t add_buffer[2];
+	  add_buffer[0]=(uint8_t)((address >> 8) &0xFF);
+	  add_buffer[1]=(uint8_t)(address & 0xFF);
+	  if(twi_master_transfer(dev_id,add_buffer,2,TWI_DONT_ISSUE_STOP))
 	  { 
 			if(twi_master_transfer(dev_id|TWI_READ_BIT,buffer,length,TWI_ISSUE_STOP))
 			{
