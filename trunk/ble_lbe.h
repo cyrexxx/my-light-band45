@@ -65,6 +65,8 @@ typedef struct
 			ble_lbe_evt_type_t evt_type;                                  /**< Type of event. */
 	} ble_lbe_evt_t;
 
+	
+	
 // Forward declaration of the ble_lbe_t type. 
 typedef struct ble_lbe_s ble_lbe_t;
 
@@ -78,17 +80,14 @@ typedef void (*ble_lbe_s_rate_write_handler_t) (ble_lbe_t * p_lbe, uint8_t new_r
  *        and an 8-bit exponent. */
 typedef struct
 	{
-		int8_t  exponent;                   /**< Base 10 exponent */
-		int8_t mantissa; //int32_t mantissa;                   /**< Mantissa, should be using only 24 bits */
-	} ieee_float32_t;
+		ble_lbe_evt_type_t  lux_1_notification_st;
+		ble_lbe_evt_type_t  lux_2_notification_st;
+		ble_lbe_evt_type_t  lux_3_notification_st;
+		ble_lbe_evt_type_t  lux_4_notification_st;
+		
+	} lbe_char_notifications_t;
 	
-/**@brief Light value measurement structure. This contains  Lux meter
- *        measurement. */
-typedef struct ble_lbe_meas_s
-	{
-			ieee_float32_t       light_level;                       /**< Light Reading In LUX */
 
-	} ble_lbe_meas_t;
 
 	
 typedef struct ble_lbe_float_meas_s
@@ -103,8 +102,8 @@ typedef struct
 	{
 			  ble_lbe_evt_handler_t            evt_handler;                    /**< Event handler to be called for handling events in the Battery Service. */
 			  ble_lbe_s_rate_write_handler_t  s_rate_write_handler;         /**< Event handler for the sample rate   */
-		    bool                          support_notification;           /**< TRUE if notification of Battery Level measurement is supported. */
-			
+		    bool                            support_notification;           /**< TRUE if notification of Battery Level measurement is supported. */
+			  
 			//ble_srv_cccd_security_mode_t  light_level_char_attr_md;     /**< Initial security level for battery characteristics attribute */
 			//ble_gap_conn_sec_mode_t       light_level_report_read_perm;  /**< Initial security level for battery report read attribute */
 		 
@@ -114,8 +113,7 @@ typedef struct
 /**@brief Light band Service structure. This contains various status information for the service. */
 typedef struct ble_lbe_s
 	{
-			//ble_lbe_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Battery Service. */
-			
+			ble_lbe_evt_handler_t         evt_handler;                    /**< Event handler to be called for handling events in the Battery Service. */
 			uint16_t                      service_handle;                 /**< Handle of  Service (as provided by the BLE stack). */
 			
 			ble_gatts_char_handles_t      LUX_1_handles;          			  /**< Handles related to the Light Level characteristic. */
@@ -176,7 +174,7 @@ void ble_lbe_on_ble_evt(ble_lbe_t * p_lbe, ble_evt_t * p_ble_evt);
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
 
-uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, float light_level);
+uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, uint8_t light_level);
 //uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, ble_lbe_meas_t * p_lbe_meas);
 
 
@@ -194,7 +192,7 @@ uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, float light_level);
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_lbe_LUX_2_update(ble_lbe_t * p_lbe, float light_level);
+uint32_t ble_lbe_LUX_2_update(ble_lbe_t * p_lbe, uint8_t light_level);
 
 /**@brief Function for updating the Lux Sensor 1.
  *
@@ -210,7 +208,7 @@ uint32_t ble_lbe_LUX_2_update(ble_lbe_t * p_lbe, float light_level);
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_lbe_LUX_3_update(ble_lbe_t * p_lbe, float light_level);
+uint32_t ble_lbe_LUX_3_update(ble_lbe_t * p_lbe, uint8_t light_level);
 
 /**@brief Function for updating the Lux Sensor 4.
  *
@@ -226,7 +224,7 @@ uint32_t ble_lbe_LUX_3_update(ble_lbe_t * p_lbe, float light_level);
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_lbe_LUX_4_update(ble_lbe_t * p_lbe, float light_level);
+uint32_t ble_lbe_LUX_4_update(ble_lbe_t * p_lbe, uint8_t light_level);
 
 
 /**@brief Function for updating the Sample rate.

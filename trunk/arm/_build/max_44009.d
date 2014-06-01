@@ -16,3 +16,4 @@
 .\_build\max_44009.o: ..\..\..\..\..\Include\compiler_abstraction.h
 .\_build\max_44009.o: ..\cy_io.h
 .\_build\max_44009.o: ..\..\..\..\..\Include\nrf_gpio.h
+.\_build\max_44009.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h

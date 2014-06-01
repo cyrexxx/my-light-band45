@@ -32,6 +32,7 @@
 #include "nrf_gpio.h"
 #include "nrf51_bitfields.h"
 
+
 #include "ble_lbe.h"
 #include "ble_luxsync.h"
 #include "ble.h"
@@ -119,13 +120,14 @@ static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;
 static bool                                  m_lux_meas_ind_conf_pending = false;       /**< Flag to keep track of when an indication confirmation is pending. */
 //static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
 //static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
-static app_timer_id_t                        m_lux_timer_id;
-#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). */
+static app_timer_id_t                         m_lux_timer_id;
+#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 static ble_lbe_t                        m_lbe;
 static ble_luxsync_t       							m_luxsync;
-static light_reading_t                  m_lux_values;
-
+static light_reading_t                  m_lux_values;               // Lux values in Float 
+static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
+ 
 // YOUR_JOB: Modify these according to requirements (e.g. if other event types are to pass through
 //           the scheduler).
 #define SCHED_MAX_EVENT_DATA_SIZE       sizeof(app_timer_event_t)                   /**< Maximum size of scheduler events. Note that scheduler BLE stack events do not contain any data, as the events are being pulled from the stack in the event handler. */
@@ -192,19 +194,8 @@ static void service_error_handler(uint32_t nrf_error)
 {
     APP_ERROR_HANDLER(nrf_error);
 } */
-/*
-static void sensor_sim_init(void)
-{
-    m_LUX_sim_cfg.min          = 50;
-    m_LUX_sim_cfg.max          = 100000;
-    m_LUX_sim_cfg.incr         = 500;
-    m_LUX_sim_cfg.start_at_max = false;
 
-    ble_sensorsim_init(&m_LUX_sim_state, &m_LUX_sim_cfg);
-
-}*/
-
-    
+  
 /**@brief Function for populating simulated health thermometer measurement.
  
 static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
@@ -220,19 +211,15 @@ static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
  */
 static void lux_measurement_send(void)
 {
-    //ble_lbe_float_meas_t simulated_meas;
-    uint32_t       err_code;
-	  
+   uint32_t       err_code;
+	
+	 read_sensors(&m_lux_values);
+	 encode_sensor_value(&m_lux_values,&m_encoded_light_reading);  // Encode the lux values from Float to log 
     if (m_lux_meas_ind_conf_pending==true)
 		{			
-	  //lux_sim_measurement(&simulated_meas);
-		//temp_light= rand();//simulated_meas.light_level;
- 	   float temp_light,temp_light2,temp_light3,temp_light4;
- 	
-	    
-      read_sensors(&m_lux_values);
-			 temp_light=m_lux_values.u4_top;
-	     err_code = ble_lbe_LUX_1_update(&m_lbe, temp_light); //err_code = ble_lbe_LUX_1_update(&m_lbe, &simulated_meas);
+	   		    
+      
+			err_code = ble_lbe_LUX_1_update(&m_lbe, m_encoded_light_reading.u4_top); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -248,8 +235,7 @@ static void lux_measurement_send(void)
                 APP_ERROR_HANDLER(err_code);
                 break;
         }
-			 temp_light2=m_lux_values.u5_up;
-	     err_code = ble_lbe_LUX_2_update(&m_lbe, temp_light2); //err_code = ble_lbe_LUX_1_update(&m_lbe, &simulated_meas);
+			/* err_code = ble_lbe_LUX_2_update(&m_lbe, m_encoded_light_reading.u5_up); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -265,8 +251,7 @@ static void lux_measurement_send(void)
                 APP_ERROR_HANDLER(err_code);
                 break;
         }
-       temp_light3=m_lux_values.u6_down_1;
-	     err_code = ble_lbe_LUX_3_update(&m_lbe, temp_light3); //err_code = ble_lbe_LUX_1_update(&m_lbe, &simulated_meas);
+       err_code = ble_lbe_LUX_3_update(&m_lbe, m_encoded_light_reading.u6_down_1); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -282,8 +267,7 @@ static void lux_measurement_send(void)
                 APP_ERROR_HANDLER(err_code);
                 break;
         }
-			 temp_light4=m_lux_values.u7_down_2;
-	     err_code = ble_lbe_LUX_4_update(&m_lbe, temp_light4); //err_code = ble_lbe_LUX_1_update(&m_lbe, &simulated_meas);
+			err_code = ble_lbe_LUX_4_update(&m_lbe, m_encoded_light_reading.u7_down_2); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -298,7 +282,7 @@ static void lux_measurement_send(void)
             default:
                 APP_ERROR_HANDLER(err_code);
                 break;
-        }
+        }*/
 
 
 		}		
@@ -494,8 +478,6 @@ static void advertising_init(void)
 }
 
 
-
-
 /**@brief Function for initializing services that will be used by the application.
  */
 static void services_init(void)
@@ -524,13 +506,17 @@ static void services_init(void)
     APP_ERROR_CHECK(err_code);
 	
 	//Initialize Light band service 
-	memset(&lbe_init, 0, sizeof(lbe_init));
+	
+	//lbe_init.evt_handler = on_lbe_evt;   
+	lbe_init.evt_handler = NULL;
+	lbe_init.support_notification = true;
 	lbe_init.s_rate_write_handler = s_rate_write_handler;
-   //lbe_init.evt_handler = on_lbe_evt;   
 	err_code = ble_lbe_init(&m_lbe, &lbe_init);
   APP_ERROR_CHECK(err_code);
 	
 	//Initialize sync service 
+	memset(&luxsync_init, 0, sizeof(luxsync_init));
+	luxsync_init.support_notification=true;
 	luxsync_init.Luxsync_ack_write_handler = Luxsync_ack_write_handler;
   err_code = ble_luxsync_init(&m_luxsync, &luxsync_init);
   APP_ERROR_CHECK(err_code);

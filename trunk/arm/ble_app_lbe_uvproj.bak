@@ -529,6 +529,11 @@
               <FileType>1</FileType>
               <FilePath>..\nrf_delay.c</FilePath>
             </File>
+            <File>
+              <FileName>m24m02.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\m24m02.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1055,6 +1060,11 @@
               <FileName>nrf_delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\nrf_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>m24m02.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\m24m02.c</FilePath>
             </File>
           </Files>
         </Group>

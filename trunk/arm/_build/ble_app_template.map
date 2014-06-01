@@ -30,8 +30,8 @@ Section Cross References
     main.o(.text) refers to ble_advdata.o(.text) for ble_advdata_set
     main.o(.text) refers to ble_srv_common.o(.text) for ble_srv_ascii_to_utf8
     main.o(.text) refers to ble_dis.o(.text) for ble_dis_init
-    main.o(.text) refers to main.o(.data) for m_lux_meas_ind_conf_pending
     main.o(.text) refers to main.o(.bss) for m_lux_values
+    main.o(.text) refers to main.o(.data) for m_encoded_light_reading
     main.o(.text) refers to main.o(.constdata) for .constdata
     main.o(.text) refers to ble_conn_params.o(.text) for ble_conn_params_init
     main.o(.text) refers to rt_memcpy.o(.text) for __aeabi_memcpy
@@ -46,11 +46,7 @@ Section Cross References
     ble_dis.o(.text) refers to rt_memclr.o(.text) for __aeabi_memclr4
     ble_dis.o(.text) refers to ble_dis.o(.data) for service_handle
     ble_lbe.o(.text) refers to rt_memclr.o(.text) for __aeabi_memclr4
-    ble_lbe.o(.text) refers to f2d.o(.text) for __aeabi_f2d
-    ble_lbe.o(.text) refers to log10.o(i.log10) for log10
-    ble_lbe.o(.text) refers to dmul.o(.text) for __aeabi_dmul
-    ble_lbe.o(.text) refers to round.o(i.round) for round
-    ble_lbe.o(.text) refers to dfixui.o(.text) for __aeabi_d2uiz
+    ble_lbe.o(.text) refers to ble_lbe.o(.bss) for m_lbe_char_notifications
     ble_lbe.o(.text) refers to ble_lbe.o(.constdata) for .constdata
     ble_luxsync.o(.text) refers to rt_memclr.o(.text) for __aeabi_memclr4
     ble_luxsync.o(.text) refers to ble_luxsync.o(.constdata) for .constdata
@@ -91,6 +87,10 @@ Section Cross References
     max_44009.o(.text) refers to dmul.o(.text) for __aeabi_dmul
     max_44009.o(.text) refers to d2f.o(.text) for __aeabi_d2f
     max_44009.o(.text) refers to nrf_delay.o(.text) for nrf_delay_ms
+    max_44009.o(.text) refers to f2d.o(.text) for __aeabi_f2d
+    max_44009.o(.text) refers to log10.o(i.log10) for log10
+    max_44009.o(.text) refers to round.o(i.round) for round
+    max_44009.o(.text) refers to dfixui.o(.text) for __aeabi_d2uiz
     max_44009.o(.text) refers to max_44009.o(.data) for m_device_address
     max_44009.o(.text) refers to max_44009.o(.constdata) for HIGH_BYTE
     nrf_delay.o(.text) refers to nrf_delay.o(.emb_text) for __asm___11_nrf_delay_c_532987f3__nrf_delay_us
@@ -355,39 +355,39 @@ Image Symbol Table
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
-    ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_zi.o ABSOLUTE
+    ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
+    ../clib/angel/kernel.s                   0x00000000   Number         0  rtentry.o ABSOLUTE
+    ../clib/angel/kernel.s                   0x00000000   Number         0  rtentry4.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtentry2.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit2.o ABSOLUTE
-    ../clib/angel/kernel.s                   0x00000000   Number         0  rtentry4.o ABSOLUTE
-    ../clib/angel/kernel.s                   0x00000000   Number         0  rtentry.o ABSOLUTE
-    ../clib/angel/rt.s                       0x00000000   Number         0  rt_div0.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  aeabi_idiv0_sigfpe.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_raise.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  aeabi_idiv0.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr_intlibspace.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr.o ABSOLUTE
+    ../clib/angel/rt.s                       0x00000000   Number         0  rt_div0.o ABSOLUTE
     ../clib/angel/scatterp.s                 0x00000000   Number         0  __scatter.o ABSOLUTE
     ../clib/angel/startup.s                  0x00000000   Number         0  __main.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  tempstk.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  tempstk.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  sys_stackheap_outer.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
-    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_command.o ABSOLUTE
+    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_wrch.o ABSOLUTE
+    ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  no_argv.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
-    ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv.o ABSOLUTE
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv_div0.o ABSOLUTE
     ../clib/fenv.c                           0x00000000   Number         0  _rserrno.o ABSOLUTE
     ../clib/heapalloc.c                      0x00000000   Number         0  hrguard.o ABSOLUTE
     ../clib/heapaux.c                        0x00000000   Number         0  heapauxi.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libinit2.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libshutdown.o ABSOLUTE
     ../clib/memcpset.c                       0x00000000   Number         0  rt_memcpy.o ABSOLUTE
@@ -395,24 +395,24 @@ Image Symbol Table
     ../clib/memcpset.c                       0x00000000   Number         0  rt_memclr.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_outer.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_formal.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_pvfn_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.s                         0x00000000   Number         0  defsig.o ABSOLUTE
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
-    ../clib/string.c                         0x00000000   Number         0  strncpy.o ABSOLUTE
     ../clib/string.c                         0x00000000   Number         0  strlen.o ABSOLUTE
+    ../clib/string.c                         0x00000000   Number         0  strncpy.o ABSOLUTE
     ../fplib/cfplib/cmpret.c                 0x00000000   Number         0  cmpret.o ABSOLUTE
     ../fplib/cfplib/d2f.c                    0x00000000   Number         0  d2f.o ABSOLUTE
     ../fplib/cfplib/daddsub.c                0x00000000   Number         0  daddsub.o ABSOLUTE
@@ -431,10 +431,10 @@ Image Symbol Table
     ../fplib/dleqf6m.s                       0x00000000   Number         0  dlef.o ABSOLUTE
     ../fplib/drleqf6m.s                      0x00000000   Number         0  drlef.o ABSOLUTE
     ../fplib/usenofp.s                       0x00000000   Number         0  usenofp.o ABSOLUTE
-    ../mathlib/log.c                         0x00000000   Number         0  log_x.o ABSOLUTE
     ../mathlib/log.c                         0x00000000   Number         0  log.o ABSOLUTE
-    ../mathlib/log10.c                       0x00000000   Number         0  log10_x.o ABSOLUTE
+    ../mathlib/log.c                         0x00000000   Number         0  log_x.o ABSOLUTE
     ../mathlib/log10.c                       0x00000000   Number         0  log10.o ABSOLUTE
+    ../mathlib/log10.c                       0x00000000   Number         0  log10_x.o ABSOLUTE
     ../mathlib/poly.c                        0x00000000   Number         0  poly.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
     ../mathlib/round.c                       0x00000000   Number         0  round.o ABSOLUTE
@@ -535,293 +535,296 @@ Image Symbol Table
     is_disabled_in_debug_needed              0x00014251   Thumb Code    52  system_nrf51.o(.text)
     is_manual_peripheral_setup_needed        0x00014285   Thumb Code   104  system_nrf51.o(.text)
     .text                                    0x00014330   Section        0  main.o(.text)
-    lux_measurement_send                     0x0001435d   Thumb Code   212  main.o(.text)
-    lux_meas_timeout_handler                 0x00014431   Thumb Code    10  main.o(.text)
-    s_rate_write_handler                     0x0001443b   Thumb Code    62  main.o(.text)
-    Luxsync_ack_write_handler                0x00014479   Thumb Code    68  main.o(.text)
-    pw_bus_init                              0x000144bd   Thumb Code    52  main.o(.text)
-    leds_init                                0x000144f1   Thumb Code    40  main.o(.text)
-    timers_init                              0x00014519   Thumb Code    90  main.o(.text)
-    gap_params_init                          0x00014573   Thumb Code   156  main.o(.text)
-    advertising_init                         0x0001460f   Thumb Code   106  main.o(.text)
-    services_init                            0x00014679   Thumb Code   392  main.o(.text)
-    sec_params_init                          0x00014801   Thumb Code    68  main.o(.text)
-    on_conn_params_evt                       0x00014845   Thumb Code    46  main.o(.text)
-    conn_params_error_handler                0x00014873   Thumb Code    22  main.o(.text)
-    conn_params_init                         0x00014889   Thumb Code    84  main.o(.text)
-    timers_start                             0x000148dd   Thumb Code    46  main.o(.text)
-    advertising_start                        0x0001490b   Thumb Code    74  main.o(.text)
-    on_ble_evt                               0x00014955   Thumb Code   360  main.o(.text)
-    ble_evt_dispatch                         0x00014abd   Thumb Code    34  main.o(.text)
-    sys_evt_dispatch                         0x00014adf   Thumb Code    12  main.o(.text)
-    ble_stack_init                           0x00014aeb   Thumb Code   116  main.o(.text)
-    scheduler_init                           0x00014b5f   Thumb Code    46  main.o(.text)
-    gpiote_init                              0x00014b8d   Thumb Code    42  main.o(.text)
-    buttons_init                             0x00014bb7   Thumb Code   130  main.o(.text)
-    power_manage                             0x00014c39   Thumb Code    34  main.o(.text)
-    nrf_gpio_cfg_output                      0x00014ca3   Thumb Code    18  main.o(.text)
-    nrf_gpio_pin_set                         0x00014cb5   Thumb Code    10  main.o(.text)
-    nrf_gpio_pin_clear                       0x00014cbf   Thumb Code    10  main.o(.text)
-    app_timer_evt_schedule                   0x00014cc9   Thumb Code    22  main.o(.text)
-    app_button_evt_schedule                  0x00014cdf   Thumb Code    26  main.o(.text)
-    app_timer_evt_get                        0x00014cf9   Thumb Code    50  main.o(.text)
-    app_button_evt_get                       0x00014d2b   Thumb Code    50  main.o(.text)
-    .text                                    0x00014dcc   Section        0  ble_srv_common.o(.text)
-    .text                                    0x00014e54   Section        0  ble_dis.o(.text)
-    sys_id_encode                            0x00014e55   Thumb Code   160  ble_dis.o(.text)
-    pnp_id_encode                            0x00014ef5   Thumb Code   152  ble_dis.o(.text)
-    char_add                                 0x00014f8d   Thumb Code   232  ble_dis.o(.text)
-    uint16_encode                            0x000151f7   Thumb Code    18  ble_dis.o(.text)
-    .text                                    0x00015248   Section        0  ble_lbe.o(.text)
-    on_connect                               0x00015249   Thumb Code     6  ble_lbe.o(.text)
-    on_disconnect                            0x0001524f   Thumb Code     8  ble_lbe.o(.text)
-    on_write                                 0x00015257   Thumb Code    38  ble_lbe.o(.text)
-    lux_1_level_char_add                     0x000152b7   Thumb Code   302  ble_lbe.o(.text)
-    lux_2_level_char_add                     0x000153e5   Thumb Code   306  ble_lbe.o(.text)
-    lux_3_level_char_add                     0x00015517   Thumb Code   306  ble_lbe.o(.text)
-    lux_4_level_char_add                     0x00015649   Thumb Code   312  ble_lbe.o(.text)
-    Sample_rate_add                          0x00015781   Thumb Code   228  ble_lbe.o(.text)
-    lbe_measurement_encode                   0x00015917   Thumb Code    52  ble_lbe.o(.text)
-    .text                                    0x00015ba0   Section        0  ble_luxsync.o(.text)
-    on_connect                               0x00015ba1   Thumb Code     6  ble_luxsync.o(.text)
-    on_disconnect                            0x00015ba7   Thumb Code     8  ble_luxsync.o(.text)
-    on_write                                 0x00015baf   Thumb Code    38  ble_luxsync.o(.text)
-    LuxSync_char_add                         0x00015c0f   Thumb Code   300  ble_luxsync.o(.text)
-    LuxSync_ACK_add                          0x00015d3b   Thumb Code   226  ble_luxsync.o(.text)
-    .text                                    0x00015f24   Section        0  pstorage.o(.text)
-    cmd_queue_element_init                   0x00015f25   Thumb Code    56  pstorage.o(.text)
-    cmd_queue_init                           0x00015f5d   Thumb Code    40  pstorage.o(.text)
-    swap_state_process                       0x00015f85   Thumb Code   578  pstorage.o(.text)
-    cmd_process                              0x000161c7   Thumb Code   382  pstorage.o(.text)
-    cmd_queue_enqueue                        0x00016345   Thumb Code   138  pstorage.o(.text)
-    app_notify                               0x000163cf   Thumb Code   100  pstorage.o(.text)
-    cmd_queue_dequeue                        0x00016433   Thumb Code    36  pstorage.o(.text)
-    is_word_aligned                          0x00016b8b   Thumb Code    18  pstorage.o(.text)
-    .text                                    0x00016ba4   Section        0  ble_advdata.o(.text)
-    name_encode                              0x00016ba5   Thumb Code   150  ble_advdata.o(.text)
-    appearance_encode                        0x00016c3b   Thumb Code    74  ble_advdata.o(.text)
-    uint8_array_encode                       0x00016c85   Thumb Code    82  ble_advdata.o(.text)
-    tx_power_level_encode                    0x00016cd7   Thumb Code    48  ble_advdata.o(.text)
-    uuid_list_sized_encode                   0x00016d07   Thumb Code   196  ble_advdata.o(.text)
-    uuid_list_encode                         0x00016dcb   Thumb Code    64  ble_advdata.o(.text)
-    conn_int_check                           0x00016e0b   Thumb Code    88  ble_advdata.o(.text)
-    conn_int_encode                          0x00016e63   Thumb Code    92  ble_advdata.o(.text)
-    manuf_specific_data_encode               0x00016ebf   Thumb Code   106  ble_advdata.o(.text)
-    service_data_encode                      0x00016f29   Thumb Code   140  ble_advdata.o(.text)
-    adv_data_encode                          0x00016fb5   Thumb Code   304  ble_advdata.o(.text)
-    advdata_check                            0x000170e5   Thumb Code    34  ble_advdata.o(.text)
-    srdata_check                             0x00017107   Thumb Code    16  ble_advdata.o(.text)
-    uint16_encode                            0x00017191   Thumb Code    18  ble_advdata.o(.text)
-    .text                                    0x000171a8   Section        0  app_scheduler.o(.text)
-    app_sched_event_get                      0x000172d9   Thumb Code    84  app_scheduler.o(.text)
-    current_int_priority_get                 0x0001734b   Thumb Code    84  app_scheduler.o(.text)
-    next_index                               0x0001739f   Thumb Code    20  app_scheduler.o(.text)
-    .text                                    0x0001740c   Section        0  app_timer.o(.text)
-    NVIC_SetPriority                         0x0001740d   Thumb Code   110  app_timer.o(.text)
-    rtc1_init                                0x0001747b   Thumb Code    18  app_timer.o(.text)
-    rtc1_start                               0x0001748d   Thumb Code    42  app_timer.o(.text)
-    rtc1_stop                                0x000174b7   Thumb Code    44  app_timer.o(.text)
-    timer_list_insert                        0x000174e3   Thumb Code   212  app_timer.o(.text)
-    timer_list_remove                        0x000175b7   Thumb Code   156  app_timer.o(.text)
-    timer_timeouts_check_sched               0x00017653   Thumb Code    10  app_timer.o(.text)
-    timer_list_handler_sched                 0x0001765d   Thumb Code    10  app_timer.o(.text)
-    timeout_handler_exec                     0x00017667   Thumb Code    60  app_timer.o(.text)
-    timer_timeouts_check                     0x000176a3   Thumb Code   132  app_timer.o(.text)
-    elapsed_ticks_acquire                    0x00017727   Thumb Code    82  app_timer.o(.text)
-    list_deletions_handler                   0x00017779   Thumb Code   280  app_timer.o(.text)
-    expired_timers_handler                   0x00017891   Thumb Code   100  app_timer.o(.text)
-    list_insertions_handler                  0x000178f5   Thumb Code   264  app_timer.o(.text)
-    compare_reg_update                       0x000179fd   Thumb Code   128  app_timer.o(.text)
-    timer_list_handler                       0x00017a7d   Thumb Code    70  app_timer.o(.text)
-    user_op_enque                            0x00017ac3   Thumb Code     4  app_timer.o(.text)
-    user_op_alloc                            0x00017ac7   Thumb Code    44  app_timer.o(.text)
-    timer_start_op_schedule                  0x00017af3   Thumb Code    80  app_timer.o(.text)
-    timer_stop_op_schedule                   0x00017b43   Thumb Code    58  app_timer.o(.text)
-    timer_stop_all_op_schedule               0x00017b7d   Thumb Code    58  app_timer.o(.text)
-    user_id_get                              0x00017d43   Thumb Code    34  app_timer.o(.text)
-    NVIC_EnableIRQ                           0x00017e41   Thumb Code    14  app_timer.o(.text)
-    NVIC_SetPendingIRQ                       0x00017e4f   Thumb Code    14  app_timer.o(.text)
-    NVIC_ClearPendingIRQ                     0x00017e5d   Thumb Code    16  app_timer.o(.text)
-    current_int_priority_get                 0x00017e6d   Thumb Code    84  app_timer.o(.text)
-    rtc1_counter_get                         0x00017ec1   Thumb Code     6  app_timer.o(.text)
-    ticks_diff_get                           0x00017ec7   Thumb Code    10  app_timer.o(.text)
-    .text                                    0x00017ef8   Section        0  ble_conn_params.o(.text)
-    is_conn_params_ok                        0x00017ef9   Thumb Code    30  ble_conn_params.o(.text)
-    update_timeout_handler                   0x00017f17   Thumb Code   136  ble_conn_params.o(.text)
-    conn_params_negotiation                  0x00018005   Thumb Code   126  ble_conn_params.o(.text)
-    on_connect                               0x00018083   Thumb Code    42  ble_conn_params.o(.text)
-    on_disconnect                            0x000180ad   Thumb Code    50  ble_conn_params.o(.text)
-    on_write                                 0x000180df   Thumb Code    84  ble_conn_params.o(.text)
-    on_conn_params_update                    0x00018133   Thumb Code    20  ble_conn_params.o(.text)
-    .text                                    0x00018200   Section        0  softdevice_handler.o(.text)
-    .text                                    0x000183d4   Section        0  app_button.o(.text)
-    button_handler_execute                   0x000183d5   Thumb Code    82  app_button.o(.text)
-    detection_delay_timeout_handler          0x00018427   Thumb Code   146  app_button.o(.text)
-    gpiote_event_handler                     0x000184b9   Thumb Code    52  app_button.o(.text)
-    .text                                    0x00018678   Section        0  app_gpiote.o(.text)
-    sense_level_toggle                       0x00018679   Thumb Code   128  app_gpiote.o(.text)
-    pins_sense_disable                       0x00018797   Thumb Code    98  app_gpiote.o(.text)
-    NVIC_SetPriority                         0x00018a4f   Thumb Code   110  app_gpiote.o(.text)
-    .text                                    0x00018ae4   Section        0  ble_debug_assert_handler.o(.text)
-    .text                                    0x00018b20   Section        0  max_44009.o(.text)
-    nrf_gpio_pin_set                         0x00018c39   Thumb Code    10  max_44009.o(.text)
-    nrf_gpio_pin_clear                       0x00018c43   Thumb Code    10  max_44009.o(.text)
-    .text                                    0x00018c64   Section        0  nrf_delay.o(.text)
-    .text                                    0x00018c80   Section        0  m24m02.o(.text)
-    nrf_gpio_pin_set                         0x00018f9f   Thumb Code    10  m24m02.o(.text)
-    .text                                    0x00018fb0   Section        0  twi_sw_master.o(.text)
-    twi_master_clear_bus                     0x00018fb1   Thumb Code   142  twi_sw_master.o(.text)
-    twi_master_wait_while_scl_low            0x00019085   Thumb Code    38  twi_sw_master.o(.text)
-    twi_master_issue_stopcondition           0x000190ab   Thumb Code    52  twi_sw_master.o(.text)
-    twi_master_clock_byte                    0x000190df   Thumb Code   176  twi_sw_master.o(.text)
-    twi_master_clock_byte_in                 0x0001918f   Thumb Code   156  twi_sw_master.o(.text)
-    twi_master_issue_startcondition          0x0001922b   Thumb Code    70  twi_sw_master.o(.text)
-    .text                                    0x000192f8   Section        0  strlen.o(.text)
-    .text                                    0x0001933c   Section        0  rt_memcpy.o(.text)
-    .text                                    0x000193be   Section        0  rt_memclr.o(.text)
-    .text                                    0x00019400   Section        0  strncpy.o(.text)
-    .text                                    0x0001946c   Section      346  aeabi_sdiv.o(.text)
-    .text                                    0x000195c6   Section        0  heapauxi.o(.text)
-    .text                                    0x000195cc   Section        0  d2f.o(.text)
-    .text                                    0x00019648   Section        0  dfixui.o(.text)
-    .text                                    0x0001968c   Section        0  dflti.o(.text)
-    .text                                    0x000196e4   Section        0  dmul.o(.text)
-    .text                                    0x0001994c   Section        0  f2d.o(.text)
-    .text                                    0x000199a0   Section        0  _rserrno.o(.text)
-    .text                                    0x000199b8   Section        0  daddsub.o(.text)
-    _dadd1                                   0x000199b9   Thumb Code   290  daddsub.o(.text)
-    _dsub1                                   0x00019adb   Thumb Code   470  daddsub.o(.text)
-    .text                                    0x00019d08   Section        0  ddiv.o(.text)
-    .text                                    0x0001a150   Section        0  drnd.o(.text)
-    .text                                    0x0001a244   Section        0  dscalbn.o(.text)
-    .text                                    0x0001a2a0   Section        8  rt_errno_addr_intlibspace.o(.text)
-    .text                                    0x0001a2a8   Section        0  dcmpin.o(.text)
-    .text                                    0x0001a338   Section        8  libspace.o(.text)
-    .text                                    0x0001a340   Section       62  sys_stackheap_outer.o(.text)
-    .text                                    0x0001a37e   Section        0  exit.o(.text)
-    .text                                    0x0001a38c   Section        0  cmpret.o(.text)
-    .text                                    0x0001a3bc   Section        0  dnan2.o(.text)
-    .text                                    0x0001a3d0   Section        0  retnan.o(.text)
-    .text                                    0x0001a430   Section        0  sys_exit.o(.text)
-    .text                                    0x0001a43c   Section        2  use_no_semi.o(.text)
-    .text                                    0x0001a43e   Section        0  indicate_semi.o(.text)
-    i.__ARM_common_switch8                   0x0001a43e   Section        0  pstorage.o(i.__ARM_common_switch8)
-    i.__kernel_poly                          0x0001a45a   Section        0  poly.o(i.__kernel_poly)
-    i.log                                    0x0001a508   Section        0  log.o(i.log)
-    i.log10                                  0x0001a858   Section        0  log10.o(i.log10)
-    i.round                                  0x0001a950   Section        0  round.o(i.round)
-    x$fpl$deqf                               0x0001a9ec   Section      100  deqf.o(x$fpl$deqf)
-    x$fpl$dleqf                              0x0001aa50   Section      100  dlef.o(x$fpl$dleqf)
-    x$fpl$drleqf                             0x0001aab4   Section      104  drlef.o(x$fpl$drleqf)
-    .constdata                               0x0001ab1c   Section        4  main.o(.constdata)
-    x$fpl$usenofp                            0x0001ab1c   Section        0  usenofp.o(x$fpl$usenofp)
-    .constdata                               0x0001ab20   Section       16  ble_lbe.o(.constdata)
-    .constdata                               0x0001ab30   Section       16  ble_luxsync.o(.constdata)
-    .constdata                               0x0001ab40   Section        6  max_44009.o(.constdata)
-    .constdata                               0x0001ab46   Section      128  ddiv.o(.constdata)
-    ddiv_reciptbl                            0x0001ab46   Data         128  ddiv.o(.constdata)
-    .constdata                               0x0001abc8   Section       56  log.o(.constdata)
-    Lg2                                      0x0001abc8   Data          24  log.o(.constdata)
-    Lg                                       0x0001abe0   Data          32  log.o(.constdata)
-    .constdata                               0x0001ac00   Section        8  qnan.o(.constdata)
+    lux_measurement_send                     0x0001435d   Thumb Code    70  main.o(.text)
+    lux_meas_timeout_handler                 0x000143a3   Thumb Code    10  main.o(.text)
+    s_rate_write_handler                     0x000143ad   Thumb Code    62  main.o(.text)
+    Luxsync_ack_write_handler                0x000143eb   Thumb Code    68  main.o(.text)
+    pw_bus_init                              0x0001442f   Thumb Code    52  main.o(.text)
+    leds_init                                0x00014463   Thumb Code    40  main.o(.text)
+    timers_init                              0x0001448b   Thumb Code    90  main.o(.text)
+    gap_params_init                          0x000144e5   Thumb Code   156  main.o(.text)
+    advertising_init                         0x00014581   Thumb Code   106  main.o(.text)
+    services_init                            0x000145eb   Thumb Code   250  main.o(.text)
+    sec_params_init                          0x000146e5   Thumb Code    68  main.o(.text)
+    on_conn_params_evt                       0x00014729   Thumb Code   218  main.o(.text)
+    conn_params_error_handler                0x00014803   Thumb Code    22  main.o(.text)
+    conn_params_init                         0x00014819   Thumb Code    82  main.o(.text)
+    timers_start                             0x0001486b   Thumb Code    46  main.o(.text)
+    advertising_start                        0x00014899   Thumb Code    74  main.o(.text)
+    on_ble_evt                               0x000148e3   Thumb Code   360  main.o(.text)
+    ble_evt_dispatch                         0x00014a4b   Thumb Code    34  main.o(.text)
+    sys_evt_dispatch                         0x00014a6d   Thumb Code    12  main.o(.text)
+    ble_stack_init                           0x00014a79   Thumb Code   116  main.o(.text)
+    scheduler_init                           0x00014aed   Thumb Code    46  main.o(.text)
+    gpiote_init                              0x00014b1b   Thumb Code    44  main.o(.text)
+    buttons_init                             0x00014b47   Thumb Code    48  main.o(.text)
+    power_manage                             0x00014b77   Thumb Code    32  main.o(.text)
+    nrf_gpio_cfg_output                      0x00014bdf   Thumb Code    98  main.o(.text)
+    nrf_gpio_pin_set                         0x00014c41   Thumb Code    10  main.o(.text)
+    nrf_gpio_pin_clear                       0x00014c4b   Thumb Code    10  main.o(.text)
+    app_timer_evt_schedule                   0x00014c55   Thumb Code    22  main.o(.text)
+    app_button_evt_schedule                  0x00014c6b   Thumb Code    26  main.o(.text)
+    app_timer_evt_get                        0x00014c85   Thumb Code    50  main.o(.text)
+    app_button_evt_get                       0x00014cb7   Thumb Code    50  main.o(.text)
+    .text                                    0x00014d54   Section        0  ble_srv_common.o(.text)
+    .text                                    0x00014ddc   Section        0  ble_dis.o(.text)
+    sys_id_encode                            0x00014ddd   Thumb Code   160  ble_dis.o(.text)
+    pnp_id_encode                            0x00014e7d   Thumb Code   152  ble_dis.o(.text)
+    char_add                                 0x00014f15   Thumb Code   232  ble_dis.o(.text)
+    uint16_encode                            0x0001517f   Thumb Code    18  ble_dis.o(.text)
+    .text                                    0x000151d0   Section        0  ble_lbe.o(.text)
+    on_connect                               0x000151d1   Thumb Code     6  ble_lbe.o(.text)
+    on_disconnect                            0x000151d7   Thumb Code     8  ble_lbe.o(.text)
+    on_write                                 0x000151df   Thumb Code   216  ble_lbe.o(.text)
+    lux_1_level_char_add                     0x000152f1   Thumb Code   340  ble_lbe.o(.text)
+    lux_2_level_char_add                     0x00015445   Thumb Code   306  ble_lbe.o(.text)
+    lux_3_level_char_add                     0x00015577   Thumb Code   316  ble_lbe.o(.text)
+    lux_4_level_char_add                     0x000156b3   Thumb Code   304  ble_lbe.o(.text)
+    Sample_rate_add                          0x000157e3   Thumb Code   242  ble_lbe.o(.text)
+    ble_srv_is_notification_enabled          0x00015b85   Thumb Code    20  ble_lbe.o(.text)
+    .text                                    0x00015b98   Section        0  ble_luxsync.o(.text)
+    on_connect                               0x00015b99   Thumb Code     6  ble_luxsync.o(.text)
+    on_disconnect                            0x00015b9f   Thumb Code     8  ble_luxsync.o(.text)
+    on_write                                 0x00015ba7   Thumb Code    38  ble_luxsync.o(.text)
+    LuxSync_char_add                         0x00015c07   Thumb Code   300  ble_luxsync.o(.text)
+    LuxSync_ACK_add                          0x00015d33   Thumb Code   238  ble_luxsync.o(.text)
+    .text                                    0x00015f28   Section        0  pstorage.o(.text)
+    cmd_queue_element_init                   0x00015f29   Thumb Code    56  pstorage.o(.text)
+    cmd_queue_init                           0x00015f61   Thumb Code    40  pstorage.o(.text)
+    swap_state_process                       0x00015f89   Thumb Code   578  pstorage.o(.text)
+    cmd_process                              0x000161cb   Thumb Code   382  pstorage.o(.text)
+    cmd_queue_enqueue                        0x00016349   Thumb Code   138  pstorage.o(.text)
+    app_notify                               0x000163d3   Thumb Code   100  pstorage.o(.text)
+    cmd_queue_dequeue                        0x00016437   Thumb Code    36  pstorage.o(.text)
+    is_word_aligned                          0x00016b8f   Thumb Code    18  pstorage.o(.text)
+    .text                                    0x00016ba8   Section        0  ble_advdata.o(.text)
+    name_encode                              0x00016ba9   Thumb Code   150  ble_advdata.o(.text)
+    appearance_encode                        0x00016c3f   Thumb Code    74  ble_advdata.o(.text)
+    uint8_array_encode                       0x00016c89   Thumb Code    82  ble_advdata.o(.text)
+    tx_power_level_encode                    0x00016cdb   Thumb Code    48  ble_advdata.o(.text)
+    uuid_list_sized_encode                   0x00016d0b   Thumb Code   196  ble_advdata.o(.text)
+    uuid_list_encode                         0x00016dcf   Thumb Code    64  ble_advdata.o(.text)
+    conn_int_check                           0x00016e0f   Thumb Code    88  ble_advdata.o(.text)
+    conn_int_encode                          0x00016e67   Thumb Code    92  ble_advdata.o(.text)
+    manuf_specific_data_encode               0x00016ec3   Thumb Code   106  ble_advdata.o(.text)
+    service_data_encode                      0x00016f2d   Thumb Code   140  ble_advdata.o(.text)
+    adv_data_encode                          0x00016fb9   Thumb Code   304  ble_advdata.o(.text)
+    advdata_check                            0x000170e9   Thumb Code    34  ble_advdata.o(.text)
+    srdata_check                             0x0001710b   Thumb Code    16  ble_advdata.o(.text)
+    uint16_encode                            0x00017195   Thumb Code    18  ble_advdata.o(.text)
+    .text                                    0x000171ac   Section        0  app_scheduler.o(.text)
+    app_sched_event_get                      0x000172dd   Thumb Code    84  app_scheduler.o(.text)
+    current_int_priority_get                 0x0001734f   Thumb Code    84  app_scheduler.o(.text)
+    next_index                               0x000173a3   Thumb Code    20  app_scheduler.o(.text)
+    .text                                    0x00017410   Section        0  app_timer.o(.text)
+    NVIC_SetPriority                         0x00017411   Thumb Code   110  app_timer.o(.text)
+    rtc1_init                                0x0001747f   Thumb Code    18  app_timer.o(.text)
+    rtc1_start                               0x00017491   Thumb Code    42  app_timer.o(.text)
+    rtc1_stop                                0x000174bb   Thumb Code    44  app_timer.o(.text)
+    timer_list_insert                        0x000174e7   Thumb Code   212  app_timer.o(.text)
+    timer_list_remove                        0x000175bb   Thumb Code   156  app_timer.o(.text)
+    timer_timeouts_check_sched               0x00017657   Thumb Code    10  app_timer.o(.text)
+    timer_list_handler_sched                 0x00017661   Thumb Code    10  app_timer.o(.text)
+    timeout_handler_exec                     0x0001766b   Thumb Code    60  app_timer.o(.text)
+    timer_timeouts_check                     0x000176a7   Thumb Code   132  app_timer.o(.text)
+    elapsed_ticks_acquire                    0x0001772b   Thumb Code    82  app_timer.o(.text)
+    list_deletions_handler                   0x0001777d   Thumb Code   280  app_timer.o(.text)
+    expired_timers_handler                   0x00017895   Thumb Code   100  app_timer.o(.text)
+    list_insertions_handler                  0x000178f9   Thumb Code   264  app_timer.o(.text)
+    compare_reg_update                       0x00017a01   Thumb Code   128  app_timer.o(.text)
+    timer_list_handler                       0x00017a81   Thumb Code    70  app_timer.o(.text)
+    user_op_enque                            0x00017ac7   Thumb Code     4  app_timer.o(.text)
+    user_op_alloc                            0x00017acb   Thumb Code    44  app_timer.o(.text)
+    timer_start_op_schedule                  0x00017af7   Thumb Code    80  app_timer.o(.text)
+    timer_stop_op_schedule                   0x00017b47   Thumb Code    58  app_timer.o(.text)
+    timer_stop_all_op_schedule               0x00017b81   Thumb Code    58  app_timer.o(.text)
+    user_id_get                              0x00017d47   Thumb Code    34  app_timer.o(.text)
+    NVIC_EnableIRQ                           0x00017e45   Thumb Code    14  app_timer.o(.text)
+    NVIC_SetPendingIRQ                       0x00017e53   Thumb Code    14  app_timer.o(.text)
+    NVIC_ClearPendingIRQ                     0x00017e61   Thumb Code    16  app_timer.o(.text)
+    current_int_priority_get                 0x00017e71   Thumb Code    84  app_timer.o(.text)
+    rtc1_counter_get                         0x00017ec5   Thumb Code     6  app_timer.o(.text)
+    ticks_diff_get                           0x00017ecb   Thumb Code    10  app_timer.o(.text)
+    .text                                    0x00017efc   Section        0  ble_conn_params.o(.text)
+    is_conn_params_ok                        0x00017efd   Thumb Code    30  ble_conn_params.o(.text)
+    update_timeout_handler                   0x00017f1b   Thumb Code   136  ble_conn_params.o(.text)
+    conn_params_negotiation                  0x00018009   Thumb Code   126  ble_conn_params.o(.text)
+    on_connect                               0x00018087   Thumb Code    42  ble_conn_params.o(.text)
+    on_disconnect                            0x000180b1   Thumb Code    50  ble_conn_params.o(.text)
+    on_write                                 0x000180e3   Thumb Code    84  ble_conn_params.o(.text)
+    on_conn_params_update                    0x00018137   Thumb Code    20  ble_conn_params.o(.text)
+    .text                                    0x00018204   Section        0  softdevice_handler.o(.text)
+    .text                                    0x000183d8   Section        0  app_button.o(.text)
+    button_handler_execute                   0x000183d9   Thumb Code    82  app_button.o(.text)
+    detection_delay_timeout_handler          0x0001842b   Thumb Code   146  app_button.o(.text)
+    gpiote_event_handler                     0x000184bd   Thumb Code    52  app_button.o(.text)
+    .text                                    0x0001867c   Section        0  app_gpiote.o(.text)
+    sense_level_toggle                       0x0001867d   Thumb Code   128  app_gpiote.o(.text)
+    pins_sense_disable                       0x0001879b   Thumb Code    98  app_gpiote.o(.text)
+    NVIC_SetPriority                         0x00018a53   Thumb Code   110  app_gpiote.o(.text)
+    .text                                    0x00018ae8   Section        0  ble_debug_assert_handler.o(.text)
+    .text                                    0x00018b24   Section        0  max_44009.o(.text)
+    nrf_gpio_pin_set                         0x00018cf1   Thumb Code    10  max_44009.o(.text)
+    nrf_gpio_pin_clear                       0x00018cfb   Thumb Code    10  max_44009.o(.text)
+    .text                                    0x00018d20   Section        0  nrf_delay.o(.text)
+    .text                                    0x00018d3c   Section        0  m24m02.o(.text)
+    nrf_gpio_pin_set                         0x0001905b   Thumb Code    10  m24m02.o(.text)
+    .text                                    0x0001906c   Section        0  twi_sw_master.o(.text)
+    twi_master_clear_bus                     0x0001906d   Thumb Code   142  twi_sw_master.o(.text)
+    twi_master_wait_while_scl_low            0x00019141   Thumb Code    38  twi_sw_master.o(.text)
+    twi_master_issue_stopcondition           0x00019167   Thumb Code    52  twi_sw_master.o(.text)
+    twi_master_clock_byte                    0x0001919b   Thumb Code   176  twi_sw_master.o(.text)
+    twi_master_clock_byte_in                 0x0001924b   Thumb Code   156  twi_sw_master.o(.text)
+    twi_master_issue_startcondition          0x000192e7   Thumb Code    70  twi_sw_master.o(.text)
+    .text                                    0x000193b4   Section        0  strlen.o(.text)
+    .text                                    0x000193f8   Section        0  rt_memcpy.o(.text)
+    .text                                    0x0001947a   Section        0  rt_memclr.o(.text)
+    .text                                    0x000194bc   Section        0  strncpy.o(.text)
+    .text                                    0x00019528   Section      346  aeabi_sdiv.o(.text)
+    .text                                    0x00019682   Section        0  heapauxi.o(.text)
+    .text                                    0x00019688   Section        0  d2f.o(.text)
+    .text                                    0x00019704   Section        0  dfixui.o(.text)
+    .text                                    0x00019748   Section        0  dflti.o(.text)
+    .text                                    0x000197a0   Section        0  dmul.o(.text)
+    .text                                    0x00019a08   Section        0  f2d.o(.text)
+    .text                                    0x00019a5c   Section        0  _rserrno.o(.text)
+    .text                                    0x00019a74   Section        0  daddsub.o(.text)
+    _dadd1                                   0x00019a75   Thumb Code   290  daddsub.o(.text)
+    _dsub1                                   0x00019b97   Thumb Code   470  daddsub.o(.text)
+    .text                                    0x00019dc4   Section        0  ddiv.o(.text)
+    .text                                    0x0001a20c   Section        0  drnd.o(.text)
+    .text                                    0x0001a300   Section        0  dscalbn.o(.text)
+    .text                                    0x0001a35c   Section        8  rt_errno_addr_intlibspace.o(.text)
+    .text                                    0x0001a364   Section        0  dcmpin.o(.text)
+    .text                                    0x0001a3f4   Section        8  libspace.o(.text)
+    .text                                    0x0001a3fc   Section       62  sys_stackheap_outer.o(.text)
+    .text                                    0x0001a43a   Section        0  exit.o(.text)
+    .text                                    0x0001a448   Section        0  cmpret.o(.text)
+    .text                                    0x0001a478   Section        0  dnan2.o(.text)
+    .text                                    0x0001a48c   Section        0  retnan.o(.text)
+    .text                                    0x0001a4ec   Section        0  sys_exit.o(.text)
+    .text                                    0x0001a4f8   Section        2  use_no_semi.o(.text)
+    .text                                    0x0001a4fa   Section        0  indicate_semi.o(.text)
+    i.__ARM_common_switch8                   0x0001a4fa   Section        0  pstorage.o(i.__ARM_common_switch8)
+    i.__kernel_poly                          0x0001a516   Section        0  poly.o(i.__kernel_poly)
+    i.log                                    0x0001a5c4   Section        0  log.o(i.log)
+    i.log10                                  0x0001a914   Section        0  log10.o(i.log10)
+    i.round                                  0x0001aa0c   Section        0  round.o(i.round)
+    x$fpl$deqf                               0x0001aaa8   Section      100  deqf.o(x$fpl$deqf)
+    x$fpl$dleqf                              0x0001ab0c   Section      100  dlef.o(x$fpl$dleqf)
+    x$fpl$drleqf                             0x0001ab70   Section      104  drlef.o(x$fpl$drleqf)
+    .constdata                               0x0001abd8   Section        4  main.o(.constdata)
+    x$fpl$usenofp                            0x0001abd8   Section        0  usenofp.o(x$fpl$usenofp)
+    .constdata                               0x0001abdc   Section       16  ble_lbe.o(.constdata)
+    .constdata                               0x0001abec   Section       16  ble_luxsync.o(.constdata)
+    .constdata                               0x0001abfc   Section        6  max_44009.o(.constdata)
+    .constdata                               0x0001ac02   Section      128  ddiv.o(.constdata)
+    ddiv_reciptbl                            0x0001ac02   Data         128  ddiv.o(.constdata)
+    .constdata                               0x0001ac88   Section       56  log.o(.constdata)
+    Lg2                                      0x0001ac88   Data          24  log.o(.constdata)
+    Lg                                       0x0001aca0   Data          32  log.o(.constdata)
+    .constdata                               0x0001acc0   Section        8  qnan.o(.constdata)
     .data                                    0x20002000   Section        4  system_nrf51.o(.data)
     __tagsym$$used                           0x20002000   Number         0  system_nrf51.o(.data)
-    .data                                    0x20002004   Section       16  main.o(.data)
+    .data                                    0x20002004   Section       20  main.o(.data)
     m_sec_params                             0x20002004   Data           6  main.o(.data)
     m_conn_handle                            0x2000200a   Data           2  main.o(.data)
     m_lux_meas_ind_conf_pending              0x2000200c   Data           1  main.o(.data)
     m_lux_timer_id                           0x20002010   Data           4  main.o(.data)
-    .data                                    0x20002014   Section       74  ble_dis.o(.data)
-    service_handle                           0x20002014   Data           2  ble_dis.o(.data)
-    manufact_name_handles                    0x20002016   Data           8  ble_dis.o(.data)
-    model_num_handles                        0x2000201e   Data           8  ble_dis.o(.data)
-    serial_num_handles                       0x20002026   Data           8  ble_dis.o(.data)
-    hw_rev_handles                           0x2000202e   Data           8  ble_dis.o(.data)
-    fw_rev_handles                           0x20002036   Data           8  ble_dis.o(.data)
-    sw_rev_handles                           0x2000203e   Data           8  ble_dis.o(.data)
-    sys_id_handles                           0x20002046   Data           8  ble_dis.o(.data)
-    reg_cert_data_list_handles               0x2000204e   Data           8  ble_dis.o(.data)
-    pnp_id_handles                           0x20002056   Data           8  ble_dis.o(.data)
-    .data                                    0x20002060   Section       16  pstorage.o(.data)
-    m_next_app_instance                      0x20002060   Data           2  pstorage.o(.data)
-    m_next_page_addr                         0x20002064   Data           4  pstorage.o(.data)
-    m_round_val                              0x20002068   Data           2  pstorage.o(.data)
-    m_module_initialized                     0x2000206a   Data           1  pstorage.o(.data)
-    m_swap_state                             0x2000206c   Data           4  pstorage.o(.data)
-    .data                                    0x20002070   Section       14  app_scheduler.o(.data)
-    m_queue_event_headers                    0x20002070   Data           4  app_scheduler.o(.data)
-    m_queue_event_data                       0x20002074   Data           4  app_scheduler.o(.data)
-    m_queue_start_index                      0x20002078   Data           1  app_scheduler.o(.data)
-    m_queue_end_index                        0x20002079   Data           1  app_scheduler.o(.data)
-    m_queue_event_size                       0x2000207a   Data           2  app_scheduler.o(.data)
-    m_queue_size                             0x2000207c   Data           2  app_scheduler.o(.data)
-    .data                                    0x20002080   Section       40  app_timer.o(.data)
-    m_node_array_size                        0x20002080   Data           1  app_timer.o(.data)
-    mp_nodes                                 0x20002084   Data           4  app_timer.o(.data)
-    m_user_array_size                        0x20002088   Data           1  app_timer.o(.data)
-    mp_users                                 0x2000208c   Data           4  app_timer.o(.data)
-    m_timer_id_head                          0x20002090   Data           4  app_timer.o(.data)
-    m_ticks_latest                           0x20002094   Data           4  app_timer.o(.data)
-    m_ticks_elapsed                          0x20002098   Data           8  app_timer.o(.data)
-    m_ticks_elapsed_q_read_ind               0x200020a0   Data           1  app_timer.o(.data)
-    m_ticks_elapsed_q_write_ind              0x200020a1   Data           1  app_timer.o(.data)
-    m_evt_schedule_func                      0x200020a4   Data           4  app_timer.o(.data)
-    .data                                    0x200020a8   Section       25  ble_conn_params.o(.data)
-    m_preferred_conn_params                  0x200020a8   Data           8  ble_conn_params.o(.data)
-    m_update_count                           0x200020b0   Data           1  ble_conn_params.o(.data)
-    m_conn_handle                            0x200020b2   Data           2  ble_conn_params.o(.data)
-    m_current_conn_params                    0x200020b4   Data           8  ble_conn_params.o(.data)
-    m_conn_params_timer_id                   0x200020bc   Data           4  ble_conn_params.o(.data)
-    m_change_param                           0x200020c0   Data           1  ble_conn_params.o(.data)
-    .data                                    0x200020c4   Section       20  softdevice_handler.o(.data)
-    m_evt_schedule_func                      0x200020c4   Data           4  softdevice_handler.o(.data)
-    m_evt_buffer                             0x200020c8   Data           4  softdevice_handler.o(.data)
-    m_ble_evt_buffer_size                    0x200020cc   Data           2  softdevice_handler.o(.data)
-    m_softdevice_enabled                     0x200020ce   Data           1  softdevice_handler.o(.data)
-    m_ble_evt_handler                        0x200020d0   Data           4  softdevice_handler.o(.data)
-    m_sys_evt_handler                        0x200020d4   Data           4  softdevice_handler.o(.data)
-    .data                                    0x200020d8   Section       32  app_button.o(.data)
-    mp_buttons                               0x200020d8   Data           4  app_button.o(.data)
-    m_button_count                           0x200020dc   Data           1  app_button.o(.data)
-    m_detection_delay                        0x200020e0   Data           4  app_button.o(.data)
-    m_evt_schedule_func                      0x200020e4   Data           4  app_button.o(.data)
-    m_gpiote_user_id                         0x200020e8   Data           1  app_button.o(.data)
-    m_detection_delay_timer_id               0x200020ec   Data           4  app_button.o(.data)
-    m_pin_transition                         0x200020f0   Data           8  app_button.o(.data)
-    .data                                    0x200020f8   Section       12  app_gpiote.o(.data)
-    m_enabled_users_mask                     0x200020f8   Data           4  app_gpiote.o(.data)
-    m_user_array_size                        0x200020fc   Data           1  app_gpiote.o(.data)
-    m_user_count                             0x200020fd   Data           1  app_gpiote.o(.data)
-    mp_users                                 0x20002100   Data           4  app_gpiote.o(.data)
-    .data                                    0x20002104   Section        8  ble_debug_assert_handler.o(.data)
-    s_line_num                               0x20002104   Data           2  ble_debug_assert_handler.o(.data)
-    s_error_code                             0x20002108   Data           4  ble_debug_assert_handler.o(.data)
-    .data                                    0x2000210c   Section        1  max_44009.o(.data)
-    m_device_address                         0x2000210c   Data           1  max_44009.o(.data)
-    .data                                    0x2000210d   Section        4  m24m02.o(.data)
-    .bss                                     0x20002114   Section     1020  main.o(.bss)
-    m_lbe                                    0x20002114   Data          52  main.o(.bss)
-    m_luxsync                                0x20002148   Data          36  main.o(.bss)
-    m_lux_values                             0x2000216c   Data          16  main.o(.bss)
-    APP_TIMER_BUF                            0x2000217c   Data         576  main.o(.bss)
-    m_auth_status                            0x200023bc   Data          50  main.o(.bss)
-    EVT_BUFFER                               0x200023f0   Data          80  main.o(.bss)
-    APP_SCHED_BUF                            0x20002440   Data         176  main.o(.bss)
-    app_gpiote_buf                           0x200024f0   Data          20  main.o(.bss)
-    buttons                                  0x20002504   Data          12  main.o(.bss)
-    .bss                                     0x20002510   Section      636  pstorage.o(.bss)
-    m_cmd_queue                              0x20002510   Data         604  pstorage.o(.bss)
-    m_app_table                              0x2000276c   Data          32  pstorage.o(.bss)
-    .bss                                     0x2000278c   Section       28  ble_conn_params.o(.bss)
-    m_conn_params_config                     0x2000278c   Data          28  ble_conn_params.o(.bss)
-    .bss                                     0x200027a8   Section      128  ble_debug_assert_handler.o(.bss)
-    s_file_name                              0x200027a8   Data         128  ble_debug_assert_handler.o(.bss)
-    .bss                                     0x20002828   Section       96  libspace.o(.bss)
-    HEAP                                     0x20002888   Section     2048  arm_startup_nrf51.o(HEAP)
-    Heap_Mem                                 0x20002888   Data        2048  arm_startup_nrf51.o(HEAP)
-    STACK                                    0x20003088   Section     2048  arm_startup_nrf51.o(STACK)
-    Stack_Mem                                0x20003088   Data        2048  arm_startup_nrf51.o(STACK)
-    __initial_sp                             0x20003888   Data           0  arm_startup_nrf51.o(STACK)
+    m_encoded_light_reading                  0x20002014   Data           4  main.o(.data)
+    .data                                    0x20002018   Section       74  ble_dis.o(.data)
+    service_handle                           0x20002018   Data           2  ble_dis.o(.data)
+    manufact_name_handles                    0x2000201a   Data           8  ble_dis.o(.data)
+    model_num_handles                        0x20002022   Data           8  ble_dis.o(.data)
+    serial_num_handles                       0x2000202a   Data           8  ble_dis.o(.data)
+    hw_rev_handles                           0x20002032   Data           8  ble_dis.o(.data)
+    fw_rev_handles                           0x2000203a   Data           8  ble_dis.o(.data)
+    sw_rev_handles                           0x20002042   Data           8  ble_dis.o(.data)
+    sys_id_handles                           0x2000204a   Data           8  ble_dis.o(.data)
+    reg_cert_data_list_handles               0x20002052   Data           8  ble_dis.o(.data)
+    pnp_id_handles                           0x2000205a   Data           8  ble_dis.o(.data)
+    .data                                    0x20002064   Section       16  pstorage.o(.data)
+    m_next_app_instance                      0x20002064   Data           2  pstorage.o(.data)
+    m_next_page_addr                         0x20002068   Data           4  pstorage.o(.data)
+    m_round_val                              0x2000206c   Data           2  pstorage.o(.data)
+    m_module_initialized                     0x2000206e   Data           1  pstorage.o(.data)
+    m_swap_state                             0x20002070   Data           4  pstorage.o(.data)
+    .data                                    0x20002074   Section       14  app_scheduler.o(.data)
+    m_queue_event_headers                    0x20002074   Data           4  app_scheduler.o(.data)
+    m_queue_event_data                       0x20002078   Data           4  app_scheduler.o(.data)
+    m_queue_start_index                      0x2000207c   Data           1  app_scheduler.o(.data)
+    m_queue_end_index                        0x2000207d   Data           1  app_scheduler.o(.data)
+    m_queue_event_size                       0x2000207e   Data           2  app_scheduler.o(.data)
+    m_queue_size                             0x20002080   Data           2  app_scheduler.o(.data)
+    .data                                    0x20002084   Section       40  app_timer.o(.data)
+    m_node_array_size                        0x20002084   Data           1  app_timer.o(.data)
+    mp_nodes                                 0x20002088   Data           4  app_timer.o(.data)
+    m_user_array_size                        0x2000208c   Data           1  app_timer.o(.data)
+    mp_users                                 0x20002090   Data           4  app_timer.o(.data)
+    m_timer_id_head                          0x20002094   Data           4  app_timer.o(.data)
+    m_ticks_latest                           0x20002098   Data           4  app_timer.o(.data)
+    m_ticks_elapsed                          0x2000209c   Data           8  app_timer.o(.data)
+    m_ticks_elapsed_q_read_ind               0x200020a4   Data           1  app_timer.o(.data)
+    m_ticks_elapsed_q_write_ind              0x200020a5   Data           1  app_timer.o(.data)
+    m_evt_schedule_func                      0x200020a8   Data           4  app_timer.o(.data)
+    .data                                    0x200020ac   Section       25  ble_conn_params.o(.data)
+    m_preferred_conn_params                  0x200020ac   Data           8  ble_conn_params.o(.data)
+    m_update_count                           0x200020b4   Data           1  ble_conn_params.o(.data)
+    m_conn_handle                            0x200020b6   Data           2  ble_conn_params.o(.data)
+    m_current_conn_params                    0x200020b8   Data           8  ble_conn_params.o(.data)
+    m_conn_params_timer_id                   0x200020c0   Data           4  ble_conn_params.o(.data)
+    m_change_param                           0x200020c4   Data           1  ble_conn_params.o(.data)
+    .data                                    0x200020c8   Section       20  softdevice_handler.o(.data)
+    m_evt_schedule_func                      0x200020c8   Data           4  softdevice_handler.o(.data)
+    m_evt_buffer                             0x200020cc   Data           4  softdevice_handler.o(.data)
+    m_ble_evt_buffer_size                    0x200020d0   Data           2  softdevice_handler.o(.data)
+    m_softdevice_enabled                     0x200020d2   Data           1  softdevice_handler.o(.data)
+    m_ble_evt_handler                        0x200020d4   Data           4  softdevice_handler.o(.data)
+    m_sys_evt_handler                        0x200020d8   Data           4  softdevice_handler.o(.data)
+    .data                                    0x200020dc   Section       32  app_button.o(.data)
+    mp_buttons                               0x200020dc   Data           4  app_button.o(.data)
+    m_button_count                           0x200020e0   Data           1  app_button.o(.data)
+    m_detection_delay                        0x200020e4   Data           4  app_button.o(.data)
+    m_evt_schedule_func                      0x200020e8   Data           4  app_button.o(.data)
+    m_gpiote_user_id                         0x200020ec   Data           1  app_button.o(.data)
+    m_detection_delay_timer_id               0x200020f0   Data           4  app_button.o(.data)
+    m_pin_transition                         0x200020f4   Data           8  app_button.o(.data)
+    .data                                    0x200020fc   Section       12  app_gpiote.o(.data)
+    m_enabled_users_mask                     0x200020fc   Data           4  app_gpiote.o(.data)
+    m_user_array_size                        0x20002100   Data           1  app_gpiote.o(.data)
+    m_user_count                             0x20002101   Data           1  app_gpiote.o(.data)
+    mp_users                                 0x20002104   Data           4  app_gpiote.o(.data)
+    .data                                    0x20002108   Section        8  ble_debug_assert_handler.o(.data)
+    s_line_num                               0x20002108   Data           2  ble_debug_assert_handler.o(.data)
+    s_error_code                             0x2000210c   Data           4  ble_debug_assert_handler.o(.data)
+    .data                                    0x20002110   Section        1  max_44009.o(.data)
+    m_device_address                         0x20002110   Data           1  max_44009.o(.data)
+    .data                                    0x20002111   Section        4  m24m02.o(.data)
+    .bss                                     0x20002118   Section     1024  main.o(.bss)
+    m_lbe                                    0x20002118   Data          56  main.o(.bss)
+    m_luxsync                                0x20002150   Data          36  main.o(.bss)
+    m_lux_values                             0x20002174   Data          16  main.o(.bss)
+    APP_TIMER_BUF                            0x20002184   Data         576  main.o(.bss)
+    m_auth_status                            0x200023c4   Data          50  main.o(.bss)
+    EVT_BUFFER                               0x200023f8   Data          80  main.o(.bss)
+    APP_SCHED_BUF                            0x20002448   Data         176  main.o(.bss)
+    app_gpiote_buf                           0x200024f8   Data          20  main.o(.bss)
+    buttons                                  0x2000250c   Data          12  main.o(.bss)
+    .bss                                     0x20002518   Section       16  ble_lbe.o(.bss)
+    m_lbe_char_notifications                 0x20002518   Data          16  ble_lbe.o(.bss)
+    .bss                                     0x20002528   Section      636  pstorage.o(.bss)
+    m_cmd_queue                              0x20002528   Data         604  pstorage.o(.bss)
+    m_app_table                              0x20002784   Data          32  pstorage.o(.bss)
+    .bss                                     0x200027a4   Section       28  ble_conn_params.o(.bss)
+    m_conn_params_config                     0x200027a4   Data          28  ble_conn_params.o(.bss)
+    .bss                                     0x200027c0   Section      128  ble_debug_assert_handler.o(.bss)
+    s_file_name                              0x200027c0   Data         128  ble_debug_assert_handler.o(.bss)
+    .bss                                     0x20002840   Section       96  libspace.o(.bss)
+    HEAP                                     0x200028a0   Section     2048  arm_startup_nrf51.o(HEAP)
+    Heap_Mem                                 0x200028a0   Data        2048  arm_startup_nrf51.o(HEAP)
+    STACK                                    0x200030a0   Section     2048  arm_startup_nrf51.o(STACK)
+    Stack_Mem                                0x200030a0   Data        2048  arm_startup_nrf51.o(STACK)
+    __initial_sp                             0x200038a0   Data           0  arm_startup_nrf51.o(STACK)
 
     Global Symbols
 
@@ -942,164 +945,165 @@ Image Symbol Table
     SystemInit                               0x000142ed   Thumb Code    38  system_nrf51.o(.text)
     app_error_handler                        0x00014331   Thumb Code    26  main.o(.text)
     assert_nrf_callback                      0x0001434b   Thumb Code    18  main.o(.text)
-    main                                     0x00014c5b   Thumb Code    72  main.o(.text)
-    ble_srv_report_ref_encode                0x00014dcd   Thumb Code    60  ble_srv_common.o(.text)
-    ble_srv_ascii_to_utf8                    0x00014e09   Thumb Code    18  ble_srv_common.o(.text)
-    ble_dis_init                             0x00015075   Thumb Code   386  ble_dis.o(.text)
-    ble_lbe_on_ble_evt                       0x0001527d   Thumb Code    58  ble_lbe.o(.text)
-    ble_lbe_init                             0x00015865   Thumb Code   178  ble_lbe.o(.text)
-    ble_lbe_LUX_1_update                     0x0001594b   Thumb Code   134  ble_lbe.o(.text)
-    ble_lbe_LUX_2_update                     0x000159d1   Thumb Code   134  ble_lbe.o(.text)
-    ble_lbe_LUX_3_update                     0x00015a57   Thumb Code   134  ble_lbe.o(.text)
-    ble_lbe_LUX_4_update                     0x00015add   Thumb Code   134  ble_lbe.o(.text)
-    ble_lbe_Sample_rate_update               0x00015b63   Thumb Code    46  ble_lbe.o(.text)
-    ble_luxsync_on_ble_evt                   0x00015bd5   Thumb Code    58  ble_luxsync.o(.text)
-    ble_luxsync_init                         0x00015e1d   Thumb Code   126  ble_luxsync.o(.text)
-    ble_luxsync_write_update                 0x00015e9b   Thumb Code    74  ble_luxsync.o(.text)
-    ble_luxsync_ACK_update                   0x00015ee5   Thumb Code    52  ble_luxsync.o(.text)
-    pstorage_sys_event_handler               0x00016457   Thumb Code   326  pstorage.o(.text)
-    pstorage_init                            0x0001659d   Thumb Code   196  pstorage.o(.text)
-    pstorage_register                        0x00016661   Thumb Code   360  pstorage.o(.text)
-    pstorage_block_identifier_get            0x000167c9   Thumb Code   136  pstorage.o(.text)
-    pstorage_store                           0x00016851   Thumb Code   202  pstorage.o(.text)
-    pstorage_update                          0x0001691b   Thumb Code   202  pstorage.o(.text)
-    pstorage_load                            0x000169e5   Thumb Code   202  pstorage.o(.text)
-    pstorage_clear                           0x00016aaf   Thumb Code   184  pstorage.o(.text)
-    pstorage_access_status_get               0x00016b67   Thumb Code    36  pstorage.o(.text)
-    ble_advdata_set                          0x00017117   Thumb Code   122  ble_advdata.o(.text)
-    app_sched_init                           0x000171a9   Thumb Code    66  app_scheduler.o(.text)
-    app_sched_event_put                      0x000171eb   Thumb Code   238  app_scheduler.o(.text)
-    app_sched_execute                        0x0001732d   Thumb Code    30  app_scheduler.o(.text)
-    RTC1_IRQHandler                          0x00017bb7   Thumb Code    34  app_timer.o(.text)
-    SWI0_IRQHandler                          0x00017bd9   Thumb Code     8  app_timer.o(.text)
-    app_timer_init                           0x00017be1   Thumb Code   246  app_timer.o(.text)
-    app_timer_create                         0x00017cd7   Thumb Code   108  app_timer.o(.text)
-    app_timer_start                          0x00017d65   Thumb Code    98  app_timer.o(.text)
-    app_timer_stop                           0x00017dc7   Thumb Code    60  app_timer.o(.text)
-    app_timer_stop_all                       0x00017e03   Thumb Code    26  app_timer.o(.text)
-    app_timer_cnt_get                        0x00017e1d   Thumb Code    14  app_timer.o(.text)
-    app_timer_cnt_diff_compute               0x00017e2b   Thumb Code    22  app_timer.o(.text)
-    ble_conn_params_init                     0x00017f9f   Thumb Code    90  ble_conn_params.o(.text)
-    ble_conn_params_stop                     0x00017ff9   Thumb Code    12  ble_conn_params.o(.text)
-    ble_conn_params_on_ble_evt               0x00018147   Thumb Code    62  ble_conn_params.o(.text)
-    ble_conn_params_change_conn_params       0x00018185   Thumb Code    86  ble_conn_params.o(.text)
-    softdevice_assertion_handler             0x00018201   Thumb Code    18  softdevice_handler.o(.text)
-    intern_softdevice_events_execute         0x00018213   Thumb Code   168  softdevice_handler.o(.text)
-    softdevice_handler_init                  0x000182bb   Thumb Code    84  softdevice_handler.o(.text)
-    softdevice_handler_sd_disable            0x0001830f   Thumb Code    24  softdevice_handler.o(.text)
-    softdevice_ble_evt_handler_set           0x00018327   Thumb Code    18  softdevice_handler.o(.text)
-    softdevice_sys_evt_handler_set           0x00018339   Thumb Code    18  softdevice_handler.o(.text)
-    SWI2_IRQHandler                          0x0001834b   Thumb Code    52  softdevice_handler.o(.text)
-    app_button_init                          0x000184ed   Thumb Code   134  app_button.o(.text)
-    app_button_enable                        0x00018573   Thumb Code    24  app_button.o(.text)
-    app_button_disable                       0x0001858b   Thumb Code    42  app_button.o(.text)
-    app_button_is_pushed                     0x000185b5   Thumb Code   110  app_button.o(.text)
-    GPIOTE_IRQHandler                        0x000186f9   Thumb Code   158  app_gpiote.o(.text)
-    app_gpiote_init                          0x000187f9   Thumb Code   116  app_gpiote.o(.text)
-    app_gpiote_user_register                 0x0001886d   Thumb Code   138  app_gpiote.o(.text)
-    app_gpiote_user_enable                   0x000188f7   Thumb Code   226  app_gpiote.o(.text)
-    app_gpiote_user_disable                  0x000189d9   Thumb Code    66  app_gpiote.o(.text)
-    app_gpiote_pins_state_get                0x00018a1b   Thumb Code    52  app_gpiote.o(.text)
-    ble_debug_assert_handler                 0x00018ae5   Thumb Code    46  ble_debug_assert_handler.o(.text)
-    config_max44009                          0x00018b21   Thumb Code    34  max_44009.o(.text)
-    getLightLevel                            0x00018b43   Thumb Code   138  max_44009.o(.text)
-    read_sensors                             0x00018bcd   Thumb Code   108  max_44009.o(.text)
-    nrf_delay_ms                             0x00018c65   Thumb Code    24  nrf_delay.o(.text)
-    i2c_eeprom_init                          0x00018c81   Thumb Code    20  m24m02.o(.text)
-    i2c_eeprom_write_page                    0x00018c95   Thumb Code   112  m24m02.o(.text)
-    i2c_eeprom_write_buffer                  0x00018d05   Thumb Code   124  m24m02.o(.text)
-    i2c_eeprom_write                         0x00018d81   Thumb Code   182  m24m02.o(.text)
-    i2c_eeprom_erase                         0x00018e37   Thumb Code    42  m24m02.o(.text)
-    i2c_eeprom_read_byte                     0x00018e61   Thumb Code    64  m24m02.o(.text)
-    i2c_eeprom_read_buffer                   0x00018ea1   Thumb Code    76  m24m02.o(.text)
-    i2c_eeprom_read                          0x00018eed   Thumb Code   178  m24m02.o(.text)
-    twi_master_init                          0x0001903f   Thumb Code    70  twi_sw_master.o(.text)
-    twi_master_transfer                      0x00019271   Thumb Code   128  twi_sw_master.o(.text)
-    strlen                                   0x000192f9   Thumb Code    62  strlen.o(.text)
-    __aeabi_memcpy                           0x0001933d   Thumb Code   130  rt_memcpy.o(.text)
-    __rt_memcpy                              0x0001933d   Thumb Code     0  rt_memcpy.o(.text)
-    _memset_w                                0x000193bf   Thumb Code    26  rt_memclr.o(.text)
-    _memset                                  0x000193d9   Thumb Code    30  rt_memclr.o(.text)
-    __aeabi_memclr                           0x000193f7   Thumb Code     4  rt_memclr.o(.text)
-    __rt_memclr                              0x000193f7   Thumb Code     0  rt_memclr.o(.text)
-    __aeabi_memclr4                          0x000193fb   Thumb Code     0  rt_memclr.o(.text)
-    __aeabi_memclr8                          0x000193fb   Thumb Code     0  rt_memclr.o(.text)
-    __rt_memclr_w                            0x000193fb   Thumb Code     4  rt_memclr.o(.text)
-    strncpy                                  0x00019401   Thumb Code   104  strncpy.o(.text)
-    __aeabi_uidiv                            0x0001946d   Thumb Code     0  aeabi_sdiv.o(.text)
-    __aeabi_uidivmod                         0x0001946d   Thumb Code    20  aeabi_sdiv.o(.text)
-    __aeabi_idiv                             0x00019481   Thumb Code     0  aeabi_sdiv.o(.text)
-    __aeabi_idivmod                          0x00019481   Thumb Code   326  aeabi_sdiv.o(.text)
-    __use_two_region_memory                  0x000195c7   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_escrow$2region                 0x000195c9   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_expand$2region                 0x000195cb   Thumb Code     2  heapauxi.o(.text)
-    __aeabi_d2f                              0x000195cd   Thumb Code     0  d2f.o(.text)
-    _d2f                                     0x000195cd   Thumb Code   120  d2f.o(.text)
-    __aeabi_d2uiz                            0x00019649   Thumb Code     0  dfixui.o(.text)
-    _dfixu                                   0x00019649   Thumb Code    64  dfixui.o(.text)
-    __aeabi_i2d_normalise                    0x0001968d   Thumb Code    66  dflti.o(.text)
-    __aeabi_i2d                              0x000196cf   Thumb Code    16  dflti.o(.text)
-    _dflt                                    0x000196cf   Thumb Code     0  dflti.o(.text)
-    __aeabi_ui2d                             0x000196df   Thumb Code     6  dflti.o(.text)
-    _dfltu                                   0x000196df   Thumb Code     0  dflti.o(.text)
-    __aeabi_dmul                             0x000196e5   Thumb Code     0  dmul.o(.text)
-    _dmul                                    0x000196e5   Thumb Code   592  dmul.o(.text)
-    __aeabi_f2d                              0x0001994d   Thumb Code     0  f2d.o(.text)
-    _f2d                                     0x0001994d   Thumb Code    80  f2d.o(.text)
-    __read_errno                             0x000199a1   Thumb Code    10  _rserrno.o(.text)
-    __set_errno                              0x000199ab   Thumb Code    12  _rserrno.o(.text)
-    __aeabi_dadd                             0x00019cb1   Thumb Code     0  daddsub.o(.text)
-    _dadd                                    0x00019cb1   Thumb Code    22  daddsub.o(.text)
-    __aeabi_dsub                             0x00019cc7   Thumb Code     0  daddsub.o(.text)
-    _dsub                                    0x00019cc7   Thumb Code    22  daddsub.o(.text)
-    __aeabi_drsub                            0x00019cdd   Thumb Code     0  daddsub.o(.text)
-    _drsb                                    0x00019cdd   Thumb Code    24  daddsub.o(.text)
-    __aeabi_ddiv                             0x00019d09   Thumb Code     0  ddiv.o(.text)
-    _ddiv                                    0x00019d09   Thumb Code  1072  ddiv.o(.text)
-    _drdiv                                   0x0001a139   Thumb Code    20  ddiv.o(.text)
-    _drnd                                    0x0001a151   Thumb Code   234  drnd.o(.text)
-    __ARM_scalbn                             0x0001a245   Thumb Code    80  dscalbn.o(.text)
-    __aeabi_errno_addr                       0x0001a2a1   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
-    __errno$intlibspace                      0x0001a2a1   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    __rt_errno_addr$intlibspace              0x0001a2a1   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    __fpl_dcmp_InfNaN                        0x0001a2a9   Thumb Code   140  dcmpin.o(.text)
-    __user_libspace                          0x0001a339   Thumb Code     8  libspace.o(.text)
-    __user_perproc_libspace                  0x0001a339   Thumb Code     0  libspace.o(.text)
-    __user_perthread_libspace                0x0001a339   Thumb Code     0  libspace.o(.text)
-    __user_setup_stackheap                   0x0001a341   Thumb Code    62  sys_stackheap_outer.o(.text)
-    exit                                     0x0001a37f   Thumb Code    12  exit.o(.text)
-    __fpl_cmpreturn                          0x0001a38d   Thumb Code    44  cmpret.o(.text)
-    __fpl_dcheck_NaN2                        0x0001a3bd   Thumb Code    14  dnan2.o(.text)
-    __fpl_return_NaN                         0x0001a3d1   Thumb Code    94  retnan.o(.text)
-    _sys_exit                                0x0001a431   Thumb Code     8  sys_exit.o(.text)
-    __I$use$semihosting                      0x0001a43d   Thumb Code     0  use_no_semi.o(.text)
-    __use_no_semihosting_swi                 0x0001a43d   Thumb Code     2  use_no_semi.o(.text)
-    __ARM_common_switch8                     0x0001a43f   Thumb Code    28  pstorage.o(i.__ARM_common_switch8)
-    __semihosting_library_function           0x0001a43f   Thumb Code     0  indicate_semi.o(.text)
-    __kernel_poly                            0x0001a45b   Thumb Code   172  poly.o(i.__kernel_poly)
-    log                                      0x0001a509   Thumb Code   784  log.o(i.log)
-    log10                                    0x0001a859   Thumb Code   208  log10.o(i.log10)
-    round                                    0x0001a951   Thumb Code   142  round.o(i.round)
-    __aeabi_cdcmpeq                          0x0001a9ed   Thumb Code     0  deqf.o(x$fpl$deqf)
-    _dcmpeq                                  0x0001a9ed   Thumb Code    94  deqf.o(x$fpl$deqf)
-    __aeabi_cdcmple                          0x0001aa51   Thumb Code     0  dlef.o(x$fpl$dleqf)
-    _dcmple                                  0x0001aa51   Thumb Code    94  dlef.o(x$fpl$dleqf)
-    __aeabi_cdrcmple                         0x0001aab5   Thumb Code     0  drlef.o(x$fpl$drleqf)
-    _drcmple                                 0x0001aab5   Thumb Code   100  drlef.o(x$fpl$drleqf)
-    __I$use$fp                               0x0001ab1c   Number         0  usenofp.o(x$fpl$usenofp)
-    CONFIG_REG                               0x0001ab40   Data           1  max_44009.o(.constdata)
-    HIGH_BYTE                                0x0001ab41   Data           1  max_44009.o(.constdata)
-    LOW_BYTE                                 0x0001ab42   Data           1  max_44009.o(.constdata)
-    THRESH_HIGH                              0x0001ab43   Data           1  max_44009.o(.constdata)
-    THRESH_LOW                               0x0001ab44   Data           1  max_44009.o(.constdata)
-    THRESH_TIMER                             0x0001ab45   Data           1  max_44009.o(.constdata)
-    __mathlib_zero                           0x0001ac00   Data           8  qnan.o(.constdata)
-    Region$$Table$$Base                      0x0001ac08   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0001ac28   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x00014b97   Thumb Code    72  main.o(.text)
+    ble_srv_report_ref_encode                0x00014d55   Thumb Code    60  ble_srv_common.o(.text)
+    ble_srv_ascii_to_utf8                    0x00014d91   Thumb Code    18  ble_srv_common.o(.text)
+    ble_dis_init                             0x00014ffd   Thumb Code   386  ble_dis.o(.text)
+    ble_lbe_on_ble_evt                       0x000152b7   Thumb Code    58  ble_lbe.o(.text)
+    ble_lbe_init                             0x000158d5   Thumb Code   182  ble_lbe.o(.text)
+    ble_lbe_LUX_1_update                     0x0001598b   Thumb Code    76  ble_lbe.o(.text)
+    ble_lbe_LUX_2_update                     0x000159d7   Thumb Code   122  ble_lbe.o(.text)
+    ble_lbe_LUX_3_update                     0x00015a51   Thumb Code   122  ble_lbe.o(.text)
+    ble_lbe_LUX_4_update                     0x00015acb   Thumb Code   140  ble_lbe.o(.text)
+    ble_lbe_Sample_rate_update               0x00015b57   Thumb Code    46  ble_lbe.o(.text)
+    ble_luxsync_on_ble_evt                   0x00015bcd   Thumb Code    58  ble_luxsync.o(.text)
+    ble_luxsync_init                         0x00015e21   Thumb Code   126  ble_luxsync.o(.text)
+    ble_luxsync_write_update                 0x00015e9f   Thumb Code    74  ble_luxsync.o(.text)
+    ble_luxsync_ACK_update                   0x00015ee9   Thumb Code    52  ble_luxsync.o(.text)
+    pstorage_sys_event_handler               0x0001645b   Thumb Code   326  pstorage.o(.text)
+    pstorage_init                            0x000165a1   Thumb Code   196  pstorage.o(.text)
+    pstorage_register                        0x00016665   Thumb Code   360  pstorage.o(.text)
+    pstorage_block_identifier_get            0x000167cd   Thumb Code   136  pstorage.o(.text)
+    pstorage_store                           0x00016855   Thumb Code   202  pstorage.o(.text)
+    pstorage_update                          0x0001691f   Thumb Code   202  pstorage.o(.text)
+    pstorage_load                            0x000169e9   Thumb Code   202  pstorage.o(.text)
+    pstorage_clear                           0x00016ab3   Thumb Code   184  pstorage.o(.text)
+    pstorage_access_status_get               0x00016b6b   Thumb Code    36  pstorage.o(.text)
+    ble_advdata_set                          0x0001711b   Thumb Code   122  ble_advdata.o(.text)
+    app_sched_init                           0x000171ad   Thumb Code    66  app_scheduler.o(.text)
+    app_sched_event_put                      0x000171ef   Thumb Code   238  app_scheduler.o(.text)
+    app_sched_execute                        0x00017331   Thumb Code    30  app_scheduler.o(.text)
+    RTC1_IRQHandler                          0x00017bbb   Thumb Code    34  app_timer.o(.text)
+    SWI0_IRQHandler                          0x00017bdd   Thumb Code     8  app_timer.o(.text)
+    app_timer_init                           0x00017be5   Thumb Code   246  app_timer.o(.text)
+    app_timer_create                         0x00017cdb   Thumb Code   108  app_timer.o(.text)
+    app_timer_start                          0x00017d69   Thumb Code    98  app_timer.o(.text)
+    app_timer_stop                           0x00017dcb   Thumb Code    60  app_timer.o(.text)
+    app_timer_stop_all                       0x00017e07   Thumb Code    26  app_timer.o(.text)
+    app_timer_cnt_get                        0x00017e21   Thumb Code    14  app_timer.o(.text)
+    app_timer_cnt_diff_compute               0x00017e2f   Thumb Code    22  app_timer.o(.text)
+    ble_conn_params_init                     0x00017fa3   Thumb Code    90  ble_conn_params.o(.text)
+    ble_conn_params_stop                     0x00017ffd   Thumb Code    12  ble_conn_params.o(.text)
+    ble_conn_params_on_ble_evt               0x0001814b   Thumb Code    62  ble_conn_params.o(.text)
+    ble_conn_params_change_conn_params       0x00018189   Thumb Code    86  ble_conn_params.o(.text)
+    softdevice_assertion_handler             0x00018205   Thumb Code    18  softdevice_handler.o(.text)
+    intern_softdevice_events_execute         0x00018217   Thumb Code   168  softdevice_handler.o(.text)
+    softdevice_handler_init                  0x000182bf   Thumb Code    84  softdevice_handler.o(.text)
+    softdevice_handler_sd_disable            0x00018313   Thumb Code    24  softdevice_handler.o(.text)
+    softdevice_ble_evt_handler_set           0x0001832b   Thumb Code    18  softdevice_handler.o(.text)
+    softdevice_sys_evt_handler_set           0x0001833d   Thumb Code    18  softdevice_handler.o(.text)
+    SWI2_IRQHandler                          0x0001834f   Thumb Code    52  softdevice_handler.o(.text)
+    app_button_init                          0x000184f1   Thumb Code   134  app_button.o(.text)
+    app_button_enable                        0x00018577   Thumb Code    24  app_button.o(.text)
+    app_button_disable                       0x0001858f   Thumb Code    42  app_button.o(.text)
+    app_button_is_pushed                     0x000185b9   Thumb Code   110  app_button.o(.text)
+    GPIOTE_IRQHandler                        0x000186fd   Thumb Code   158  app_gpiote.o(.text)
+    app_gpiote_init                          0x000187fd   Thumb Code   116  app_gpiote.o(.text)
+    app_gpiote_user_register                 0x00018871   Thumb Code   138  app_gpiote.o(.text)
+    app_gpiote_user_enable                   0x000188fb   Thumb Code   226  app_gpiote.o(.text)
+    app_gpiote_user_disable                  0x000189dd   Thumb Code    66  app_gpiote.o(.text)
+    app_gpiote_pins_state_get                0x00018a1f   Thumb Code    52  app_gpiote.o(.text)
+    ble_debug_assert_handler                 0x00018ae9   Thumb Code    46  ble_debug_assert_handler.o(.text)
+    config_max44009                          0x00018b25   Thumb Code    34  max_44009.o(.text)
+    getLightLevel                            0x00018b47   Thumb Code   138  max_44009.o(.text)
+    read_sensors                             0x00018bd1   Thumb Code   108  max_44009.o(.text)
+    encode_sensor_value                      0x00018c3d   Thumb Code   180  max_44009.o(.text)
+    nrf_delay_ms                             0x00018d21   Thumb Code    24  nrf_delay.o(.text)
+    i2c_eeprom_init                          0x00018d3d   Thumb Code    20  m24m02.o(.text)
+    i2c_eeprom_write_page                    0x00018d51   Thumb Code   112  m24m02.o(.text)
+    i2c_eeprom_write_buffer                  0x00018dc1   Thumb Code   124  m24m02.o(.text)
+    i2c_eeprom_write                         0x00018e3d   Thumb Code   182  m24m02.o(.text)
+    i2c_eeprom_erase                         0x00018ef3   Thumb Code    42  m24m02.o(.text)
+    i2c_eeprom_read_byte                     0x00018f1d   Thumb Code    64  m24m02.o(.text)
+    i2c_eeprom_read_buffer                   0x00018f5d   Thumb Code    76  m24m02.o(.text)
+    i2c_eeprom_read                          0x00018fa9   Thumb Code   178  m24m02.o(.text)
+    twi_master_init                          0x000190fb   Thumb Code    70  twi_sw_master.o(.text)
+    twi_master_transfer                      0x0001932d   Thumb Code   128  twi_sw_master.o(.text)
+    strlen                                   0x000193b5   Thumb Code    62  strlen.o(.text)
+    __aeabi_memcpy                           0x000193f9   Thumb Code   130  rt_memcpy.o(.text)
+    __rt_memcpy                              0x000193f9   Thumb Code     0  rt_memcpy.o(.text)
+    _memset_w                                0x0001947b   Thumb Code    26  rt_memclr.o(.text)
+    _memset                                  0x00019495   Thumb Code    30  rt_memclr.o(.text)
+    __aeabi_memclr                           0x000194b3   Thumb Code     4  rt_memclr.o(.text)
+    __rt_memclr                              0x000194b3   Thumb Code     0  rt_memclr.o(.text)
+    __aeabi_memclr4                          0x000194b7   Thumb Code     0  rt_memclr.o(.text)
+    __aeabi_memclr8                          0x000194b7   Thumb Code     0  rt_memclr.o(.text)
+    __rt_memclr_w                            0x000194b7   Thumb Code     4  rt_memclr.o(.text)
+    strncpy                                  0x000194bd   Thumb Code   104  strncpy.o(.text)
+    __aeabi_uidiv                            0x00019529   Thumb Code     0  aeabi_sdiv.o(.text)
+    __aeabi_uidivmod                         0x00019529   Thumb Code    20  aeabi_sdiv.o(.text)
+    __aeabi_idiv                             0x0001953d   Thumb Code     0  aeabi_sdiv.o(.text)
+    __aeabi_idivmod                          0x0001953d   Thumb Code   326  aeabi_sdiv.o(.text)
+    __use_two_region_memory                  0x00019683   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_escrow$2region                 0x00019685   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_expand$2region                 0x00019687   Thumb Code     2  heapauxi.o(.text)
+    __aeabi_d2f                              0x00019689   Thumb Code     0  d2f.o(.text)
+    _d2f                                     0x00019689   Thumb Code   120  d2f.o(.text)
+    __aeabi_d2uiz                            0x00019705   Thumb Code     0  dfixui.o(.text)
+    _dfixu                                   0x00019705   Thumb Code    64  dfixui.o(.text)
+    __aeabi_i2d_normalise                    0x00019749   Thumb Code    66  dflti.o(.text)
+    __aeabi_i2d                              0x0001978b   Thumb Code    16  dflti.o(.text)
+    _dflt                                    0x0001978b   Thumb Code     0  dflti.o(.text)
+    __aeabi_ui2d                             0x0001979b   Thumb Code     6  dflti.o(.text)
+    _dfltu                                   0x0001979b   Thumb Code     0  dflti.o(.text)
+    __aeabi_dmul                             0x000197a1   Thumb Code     0  dmul.o(.text)
+    _dmul                                    0x000197a1   Thumb Code   592  dmul.o(.text)
+    __aeabi_f2d                              0x00019a09   Thumb Code     0  f2d.o(.text)
+    _f2d                                     0x00019a09   Thumb Code    80  f2d.o(.text)
+    __read_errno                             0x00019a5d   Thumb Code    10  _rserrno.o(.text)
+    __set_errno                              0x00019a67   Thumb Code    12  _rserrno.o(.text)
+    __aeabi_dadd                             0x00019d6d   Thumb Code     0  daddsub.o(.text)
+    _dadd                                    0x00019d6d   Thumb Code    22  daddsub.o(.text)
+    __aeabi_dsub                             0x00019d83   Thumb Code     0  daddsub.o(.text)
+    _dsub                                    0x00019d83   Thumb Code    22  daddsub.o(.text)
+    __aeabi_drsub                            0x00019d99   Thumb Code     0  daddsub.o(.text)
+    _drsb                                    0x00019d99   Thumb Code    24  daddsub.o(.text)
+    __aeabi_ddiv                             0x00019dc5   Thumb Code     0  ddiv.o(.text)
+    _ddiv                                    0x00019dc5   Thumb Code  1072  ddiv.o(.text)
+    _drdiv                                   0x0001a1f5   Thumb Code    20  ddiv.o(.text)
+    _drnd                                    0x0001a20d   Thumb Code   234  drnd.o(.text)
+    __ARM_scalbn                             0x0001a301   Thumb Code    80  dscalbn.o(.text)
+    __aeabi_errno_addr                       0x0001a35d   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
+    __errno$intlibspace                      0x0001a35d   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    __rt_errno_addr$intlibspace              0x0001a35d   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    __fpl_dcmp_InfNaN                        0x0001a365   Thumb Code   140  dcmpin.o(.text)
+    __user_libspace                          0x0001a3f5   Thumb Code     8  libspace.o(.text)
+    __user_perproc_libspace                  0x0001a3f5   Thumb Code     0  libspace.o(.text)
+    __user_perthread_libspace                0x0001a3f5   Thumb Code     0  libspace.o(.text)
+    __user_setup_stackheap                   0x0001a3fd   Thumb Code    62  sys_stackheap_outer.o(.text)
+    exit                                     0x0001a43b   Thumb Code    12  exit.o(.text)
+    __fpl_cmpreturn                          0x0001a449   Thumb Code    44  cmpret.o(.text)
+    __fpl_dcheck_NaN2                        0x0001a479   Thumb Code    14  dnan2.o(.text)
+    __fpl_return_NaN                         0x0001a48d   Thumb Code    94  retnan.o(.text)
+    _sys_exit                                0x0001a4ed   Thumb Code     8  sys_exit.o(.text)
+    __I$use$semihosting                      0x0001a4f9   Thumb Code     0  use_no_semi.o(.text)
+    __use_no_semihosting_swi                 0x0001a4f9   Thumb Code     2  use_no_semi.o(.text)
+    __ARM_common_switch8                     0x0001a4fb   Thumb Code    28  pstorage.o(i.__ARM_common_switch8)
+    __semihosting_library_function           0x0001a4fb   Thumb Code     0  indicate_semi.o(.text)
+    __kernel_poly                            0x0001a517   Thumb Code   172  poly.o(i.__kernel_poly)
+    log                                      0x0001a5c5   Thumb Code   784  log.o(i.log)
+    log10                                    0x0001a915   Thumb Code   208  log10.o(i.log10)
+    round                                    0x0001aa0d   Thumb Code   142  round.o(i.round)
+    __aeabi_cdcmpeq                          0x0001aaa9   Thumb Code     0  deqf.o(x$fpl$deqf)
+    _dcmpeq                                  0x0001aaa9   Thumb Code    94  deqf.o(x$fpl$deqf)
+    __aeabi_cdcmple                          0x0001ab0d   Thumb Code     0  dlef.o(x$fpl$dleqf)
+    _dcmple                                  0x0001ab0d   Thumb Code    94  dlef.o(x$fpl$dleqf)
+    __aeabi_cdrcmple                         0x0001ab71   Thumb Code     0  drlef.o(x$fpl$drleqf)
+    _drcmple                                 0x0001ab71   Thumb Code   100  drlef.o(x$fpl$drleqf)
+    __I$use$fp                               0x0001abd8   Number         0  usenofp.o(x$fpl$usenofp)
+    CONFIG_REG                               0x0001abfc   Data           1  max_44009.o(.constdata)
+    HIGH_BYTE                                0x0001abfd   Data           1  max_44009.o(.constdata)
+    LOW_BYTE                                 0x0001abfe   Data           1  max_44009.o(.constdata)
+    THRESH_HIGH                              0x0001abff   Data           1  max_44009.o(.constdata)
+    THRESH_LOW                               0x0001ac00   Data           1  max_44009.o(.constdata)
+    THRESH_TIMER                             0x0001ac01   Data           1  max_44009.o(.constdata)
+    __mathlib_zero                           0x0001acc0   Data           8  qnan.o(.constdata)
+    Region$$Table$$Base                      0x0001acc8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0001ace8   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20002000   Data           4  system_nrf51.o(.data)
-    DEV_REVERSE_LOOKUP                       0x2000210d   Data           4  m24m02.o(.data)
-    __libspace_start                         0x20002828   Data          96  libspace.o(.bss)
-    __temporary_stack_top$libspace           0x20002888   Data           0  libspace.o(.bss)
+    DEV_REVERSE_LOOKUP                       0x20002111   Data           4  m24m02.o(.data)
+    __libspace_start                         0x20002840   Data          96  libspace.o(.bss)
+    __temporary_stack_top$libspace           0x200028a0   Data           0  libspace.o(.bss)
 
 
 
@@ -1109,165 +1113,166 @@ Memory Map of the image
 
   Image Entry point : 0x000140c1
 
-  Load Region LR_IROM1 (Base: 0x00014000, Size: 0x00006d3c, Max: 0x0002b000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00014000, Size: 0x00006e00, Max: 0x0002b000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x00014000, Size: 0x00006c28, Max: 0x0002b000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x00014000, Size: 0x00006ce8, Max: 0x0002b000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00014000   0x000000c0   Data   RO            3    RESET               arm_startup_nrf51.o
-    0x000140c0   0x00000008   Code   RO          947  * !!!main             c_p.l(__main.o)
-    0x000140c8   0x0000003c   Code   RO         1177    !!!scatter          c_p.l(__scatter.o)
-    0x00014104   0x0000001a   Code   RO         1179    !!handler_copy      c_p.l(__scatter_copy.o)
+    0x000140c0   0x00000008   Code   RO          949  * !!!main             c_p.l(__main.o)
+    0x000140c8   0x0000003c   Code   RO         1179    !!!scatter          c_p.l(__scatter.o)
+    0x00014104   0x0000001a   Code   RO         1181    !!handler_copy      c_p.l(__scatter_copy.o)
     0x0001411e   0x00000002   PAD
-    0x00014120   0x0000001c   Code   RO         1181    !!handler_zi        c_p.l(__scatter_zi.o)
-    0x0001413c   0x00000002   Code   RO         1046    .ARM.Collect$$libinit$$00000000  c_p.l(libinit.o)
-    0x0001413e   0x00000004   Code   RO         1060    .ARM.Collect$$libinit$$00000001  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1064    .ARM.Collect$$libinit$$00000008  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1066    .ARM.Collect$$libinit$$0000000A  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1068    .ARM.Collect$$libinit$$0000000C  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1071    .ARM.Collect$$libinit$$0000000F  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1073    .ARM.Collect$$libinit$$00000011  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1075    .ARM.Collect$$libinit$$00000013  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1077    .ARM.Collect$$libinit$$00000015  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1079    .ARM.Collect$$libinit$$00000017  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1081    .ARM.Collect$$libinit$$00000019  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1083    .ARM.Collect$$libinit$$0000001B  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1085    .ARM.Collect$$libinit$$0000001D  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1087    .ARM.Collect$$libinit$$0000001F  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1089    .ARM.Collect$$libinit$$00000021  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1091    .ARM.Collect$$libinit$$00000023  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1095    .ARM.Collect$$libinit$$0000002A  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1097    .ARM.Collect$$libinit$$0000002C  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1099    .ARM.Collect$$libinit$$0000002E  c_p.l(libinit2.o)
-    0x00014142   0x00000000   Code   RO         1101    .ARM.Collect$$libinit$$00000030  c_p.l(libinit2.o)
-    0x00014142   0x00000002   Code   RO         1102    .ARM.Collect$$libinit$$00000031  c_p.l(libinit2.o)
-    0x00014144   0x00000002   Code   RO         1135    .ARM.Collect$$libshutdown$$00000000  c_p.l(libshutdown.o)
-    0x00014146   0x00000000   Code   RO         1162    .ARM.Collect$$libshutdown$$00000003  c_p.l(libshutdown2.o)
-    0x00014146   0x00000000   Code   RO         1165    .ARM.Collect$$libshutdown$$00000006  c_p.l(libshutdown2.o)
-    0x00014146   0x00000000   Code   RO         1168    .ARM.Collect$$libshutdown$$00000009  c_p.l(libshutdown2.o)
-    0x00014146   0x00000000   Code   RO         1170    .ARM.Collect$$libshutdown$$0000000B  c_p.l(libshutdown2.o)
-    0x00014146   0x00000000   Code   RO         1173    .ARM.Collect$$libshutdown$$0000000E  c_p.l(libshutdown2.o)
-    0x00014146   0x00000002   Code   RO         1174    .ARM.Collect$$libshutdown$$0000000F  c_p.l(libshutdown2.o)
-    0x00014148   0x00000000   Code   RO          969    .ARM.Collect$$rtentry$$00000000  c_p.l(rtentry.o)
-    0x00014148   0x00000000   Code   RO         1001    .ARM.Collect$$rtentry$$00000002  c_p.l(rtentry2.o)
-    0x00014148   0x00000006   Code   RO         1013    .ARM.Collect$$rtentry$$00000004  c_p.l(rtentry4.o)
-    0x0001414e   0x00000000   Code   RO         1003    .ARM.Collect$$rtentry$$00000009  c_p.l(rtentry2.o)
-    0x0001414e   0x00000004   Code   RO         1004    .ARM.Collect$$rtentry$$0000000A  c_p.l(rtentry2.o)
-    0x00014152   0x00000000   Code   RO         1006    .ARM.Collect$$rtentry$$0000000C  c_p.l(rtentry2.o)
-    0x00014152   0x00000008   Code   RO         1007    .ARM.Collect$$rtentry$$0000000D  c_p.l(rtentry2.o)
-    0x0001415a   0x00000002   Code   RO         1052    .ARM.Collect$$rtexit$$00000000  c_p.l(rtexit.o)
-    0x0001415c   0x00000000   Code   RO         1108    .ARM.Collect$$rtexit$$00000002  c_p.l(rtexit2.o)
-    0x0001415c   0x00000004   Code   RO         1109    .ARM.Collect$$rtexit$$00000003  c_p.l(rtexit2.o)
-    0x00014160   0x00000006   Code   RO         1110    .ARM.Collect$$rtexit$$00000004  c_p.l(rtexit2.o)
+    0x00014120   0x0000001c   Code   RO         1183    !!handler_zi        c_p.l(__scatter_zi.o)
+    0x0001413c   0x00000002   Code   RO         1048    .ARM.Collect$$libinit$$00000000  c_p.l(libinit.o)
+    0x0001413e   0x00000004   Code   RO         1062    .ARM.Collect$$libinit$$00000001  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1066    .ARM.Collect$$libinit$$00000008  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1068    .ARM.Collect$$libinit$$0000000A  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1070    .ARM.Collect$$libinit$$0000000C  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1073    .ARM.Collect$$libinit$$0000000F  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1075    .ARM.Collect$$libinit$$00000011  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1077    .ARM.Collect$$libinit$$00000013  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1079    .ARM.Collect$$libinit$$00000015  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1081    .ARM.Collect$$libinit$$00000017  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1083    .ARM.Collect$$libinit$$00000019  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1085    .ARM.Collect$$libinit$$0000001B  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1087    .ARM.Collect$$libinit$$0000001D  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1089    .ARM.Collect$$libinit$$0000001F  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1091    .ARM.Collect$$libinit$$00000021  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1093    .ARM.Collect$$libinit$$00000023  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1097    .ARM.Collect$$libinit$$0000002A  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1099    .ARM.Collect$$libinit$$0000002C  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1101    .ARM.Collect$$libinit$$0000002E  c_p.l(libinit2.o)
+    0x00014142   0x00000000   Code   RO         1103    .ARM.Collect$$libinit$$00000030  c_p.l(libinit2.o)
+    0x00014142   0x00000002   Code   RO         1104    .ARM.Collect$$libinit$$00000031  c_p.l(libinit2.o)
+    0x00014144   0x00000002   Code   RO         1137    .ARM.Collect$$libshutdown$$00000000  c_p.l(libshutdown.o)
+    0x00014146   0x00000000   Code   RO         1164    .ARM.Collect$$libshutdown$$00000003  c_p.l(libshutdown2.o)
+    0x00014146   0x00000000   Code   RO         1167    .ARM.Collect$$libshutdown$$00000006  c_p.l(libshutdown2.o)
+    0x00014146   0x00000000   Code   RO         1170    .ARM.Collect$$libshutdown$$00000009  c_p.l(libshutdown2.o)
+    0x00014146   0x00000000   Code   RO         1172    .ARM.Collect$$libshutdown$$0000000B  c_p.l(libshutdown2.o)
+    0x00014146   0x00000000   Code   RO         1175    .ARM.Collect$$libshutdown$$0000000E  c_p.l(libshutdown2.o)
+    0x00014146   0x00000002   Code   RO         1176    .ARM.Collect$$libshutdown$$0000000F  c_p.l(libshutdown2.o)
+    0x00014148   0x00000000   Code   RO          971    .ARM.Collect$$rtentry$$00000000  c_p.l(rtentry.o)
+    0x00014148   0x00000000   Code   RO         1003    .ARM.Collect$$rtentry$$00000002  c_p.l(rtentry2.o)
+    0x00014148   0x00000006   Code   RO         1015    .ARM.Collect$$rtentry$$00000004  c_p.l(rtentry4.o)
+    0x0001414e   0x00000000   Code   RO         1005    .ARM.Collect$$rtentry$$00000009  c_p.l(rtentry2.o)
+    0x0001414e   0x00000004   Code   RO         1006    .ARM.Collect$$rtentry$$0000000A  c_p.l(rtentry2.o)
+    0x00014152   0x00000000   Code   RO         1008    .ARM.Collect$$rtentry$$0000000C  c_p.l(rtentry2.o)
+    0x00014152   0x00000008   Code   RO         1009    .ARM.Collect$$rtentry$$0000000D  c_p.l(rtentry2.o)
+    0x0001415a   0x00000002   Code   RO         1054    .ARM.Collect$$rtexit$$00000000  c_p.l(rtexit.o)
+    0x0001415c   0x00000000   Code   RO         1110    .ARM.Collect$$rtexit$$00000002  c_p.l(rtexit2.o)
+    0x0001415c   0x00000004   Code   RO         1111    .ARM.Collect$$rtexit$$00000003  c_p.l(rtexit2.o)
+    0x00014160   0x00000006   Code   RO         1112    .ARM.Collect$$rtexit$$00000004  c_p.l(rtexit2.o)
     0x00014166   0x00000002   PAD
-    0x00014168   0x0000001e   Code   RO          568    .emb_text           app_timer.o
+    0x00014168   0x0000001e   Code   RO          572    .emb_text           app_timer.o
     0x00014186   0x00000002   PAD
-    0x00014188   0x0000001e   Code   RO          852    .emb_text           nrf_delay.o
+    0x00014188   0x0000001e   Code   RO          854    .emb_text           nrf_delay.o
     0x000141a6   0x00000002   PAD
-    0x000141a8   0x0000001e   Code   RO          904    .emb_text           twi_sw_master.o
+    0x000141a8   0x0000001e   Code   RO          906    .emb_text           twi_sw_master.o
     0x000141c6   0x00000002   PAD
-    0x000141c8   0x00000038   Code   RO          933    .emb_text           c_p.l(rt_memcpy.o)
+    0x000141c8   0x00000038   Code   RO          935    .emb_text           c_p.l(rt_memcpy.o)
     0x00014200   0x00000048   Code   RO            4    .text               arm_startup_nrf51.o
     0x00014248   0x000000e8   Code   RO           12    .text               system_nrf51.o
-    0x00014330   0x00000a9c   Code   RO           69    .text               main.o
-    0x00014dcc   0x00000088   Code   RO          233    .text               ble_srv_common.o
-    0x00014e54   0x000003f4   Code   RO          283    .text               ble_dis.o
-    0x00015248   0x00000958   Code   RO          326    .text               ble_lbe.o
-    0x00015ba0   0x00000384   Code   RO          384    .text               ble_luxsync.o
-    0x00015f24   0x00000c80   Code   RO          446    .text               pstorage.o
-    0x00016ba4   0x00000604   Code   RO          505    .text               ble_advdata.o
-    0x000171a8   0x00000264   Code   RO          531    .text               app_scheduler.o
-    0x0001740c   0x00000aec   Code   RO          569    .text               app_timer.o
-    0x00017ef8   0x00000308   Code   RO          615    .text               ble_conn_params.o
-    0x00018200   0x000001d4   Code   RO          657    .text               softdevice_handler.o
-    0x000183d4   0x000002a4   Code   RO          712    .text               app_button.o
-    0x00018678   0x0000046c   Code   RO          746    .text               app_gpiote.o
-    0x00018ae4   0x0000003c   Code   RO          777    .text               ble_debug_assert_handler.o
-    0x00018b20   0x00000144   Code   RO          818    .text               max_44009.o
-    0x00018c64   0x0000001c   Code   RO          853    .text               nrf_delay.o
-    0x00018c80   0x00000330   Code   RO          877    .text               m24m02.o
-    0x00018fb0   0x00000348   Code   RO          905    .text               twi_sw_master.o
-    0x000192f8   0x00000044   Code   RO          931    .text               c_p.l(strlen.o)
-    0x0001933c   0x00000082   Code   RO          934    .text               c_p.l(rt_memcpy.o)
-    0x000193be   0x00000040   Code   RO          937    .text               c_p.l(rt_memclr.o)
-    0x000193fe   0x00000002   PAD
-    0x00019400   0x0000006c   Code   RO          939    .text               c_p.l(strncpy.o)
-    0x0001946c   0x0000015a   Code   RO          941    .text               c_p.l(aeabi_sdiv.o)
-    0x000195c6   0x00000006   Code   RO          945    .text               c_p.l(heapauxi.o)
-    0x000195cc   0x0000007c   Code   RO          949    .text               fz_ps.l(d2f.o)
-    0x00019648   0x00000044   Code   RO          951    .text               fz_ps.l(dfixui.o)
-    0x0001968c   0x00000058   Code   RO          953    .text               fz_ps.l(dflti.o)
-    0x000196e4   0x00000268   Code   RO          955    .text               fz_ps.l(dmul.o)
-    0x0001994c   0x00000054   Code   RO          957    .text               fz_ps.l(f2d.o)
-    0x000199a0   0x00000016   Code   RO          974    .text               c_p.l(_rserrno.o)
-    0x000199b6   0x00000002   PAD
-    0x000199b8   0x00000350   Code   RO          976    .text               fz_ps.l(daddsub.o)
-    0x00019d08   0x00000448   Code   RO          978    .text               fz_ps.l(ddiv.o)
-    0x0001a150   0x000000f4   Code   RO          985    .text               fz_ps.l(drnd.o)
-    0x0001a244   0x0000005c   Code   RO          987    .text               fz_ps.l(dscalbn.o)
-    0x0001a2a0   0x00000008   Code   RO         1020    .text               c_p.l(rt_errno_addr_intlibspace.o)
-    0x0001a2a8   0x00000090   Code   RO         1022    .text               fz_ps.l(dcmpin.o)
-    0x0001a338   0x00000008   Code   RO         1029    .text               c_p.l(libspace.o)
-    0x0001a340   0x0000003e   Code   RO         1032    .text               c_p.l(sys_stackheap_outer.o)
-    0x0001a37e   0x0000000c   Code   RO         1035    .text               c_p.l(exit.o)
-    0x0001a38a   0x00000002   PAD
-    0x0001a38c   0x00000030   Code   RO         1047    .text               fz_ps.l(cmpret.o)
-    0x0001a3bc   0x00000014   Code   RO         1049    .text               fz_ps.l(dnan2.o)
-    0x0001a3d0   0x0000005e   Code   RO         1103    .text               fz_ps.l(retnan.o)
-    0x0001a42e   0x00000002   PAD
-    0x0001a430   0x0000000c   Code   RO         1105    .text               c_p.l(sys_exit.o)
-    0x0001a43c   0x00000002   Code   RO         1124    .text               c_p.l(use_no_semi.o)
-    0x0001a43e   0x00000000   Code   RO         1126    .text               c_p.l(indicate_semi.o)
-    0x0001a43e   0x0000001c   Code   RO          464    i.__ARM_common_switch8  pstorage.o
-    0x0001a45a   0x000000ac   Code   RO         1026    i.__kernel_poly     m_ps.l(poly.o)
-    0x0001a506   0x00000002   PAD
-    0x0001a508   0x00000350   Code   RO          991    i.log               m_ps.l(log.o)
-    0x0001a858   0x000000f8   Code   RO          960    i.log10             m_ps.l(log10.o)
-    0x0001a950   0x0000009c   Code   RO          967    i.round             m_ps.l(round.o)
-    0x0001a9ec   0x00000064   Code   RO         1024    x$fpl$deqf          fz_ps.l(deqf.o)
-    0x0001aa50   0x00000064   Code   RO          981    x$fpl$dleqf         fz_ps.l(dlef.o)
-    0x0001aab4   0x00000068   Code   RO          983    x$fpl$drleqf        fz_ps.l(drlef.o)
-    0x0001ab1c   0x00000000   Code   RO          989    x$fpl$usenofp       fz_ps.l(usenofp.o)
-    0x0001ab1c   0x00000004   Data   RO           71    .constdata          main.o
-    0x0001ab20   0x00000010   Data   RO          327    .constdata          ble_lbe.o
-    0x0001ab30   0x00000010   Data   RO          385    .constdata          ble_luxsync.o
-    0x0001ab40   0x00000006   Data   RO          819    .constdata          max_44009.o
-    0x0001ab46   0x00000080   Data   RO          979    .constdata          fz_ps.l(ddiv.o)
-    0x0001abc6   0x00000002   PAD
-    0x0001abc8   0x00000038   Data   RO          992    .constdata          m_ps.l(log.o)
-    0x0001ac00   0x00000008   Data   RO         1028    .constdata          m_ps.l(qnan.o)
-    0x0001ac08   0x00000020   Data   RO         1175    Region$$Table       anon$$obj.o
+    0x00014330   0x00000a24   Code   RO           69    .text               main.o
+    0x00014d54   0x00000088   Code   RO          233    .text               ble_srv_common.o
+    0x00014ddc   0x000003f4   Code   RO          283    .text               ble_dis.o
+    0x000151d0   0x000009c8   Code   RO          326    .text               ble_lbe.o
+    0x00015b98   0x00000390   Code   RO          385    .text               ble_luxsync.o
+    0x00015f28   0x00000c80   Code   RO          450    .text               pstorage.o
+    0x00016ba8   0x00000604   Code   RO          509    .text               ble_advdata.o
+    0x000171ac   0x00000264   Code   RO          535    .text               app_scheduler.o
+    0x00017410   0x00000aec   Code   RO          573    .text               app_timer.o
+    0x00017efc   0x00000308   Code   RO          619    .text               ble_conn_params.o
+    0x00018204   0x000001d4   Code   RO          655    .text               softdevice_handler.o
+    0x000183d8   0x000002a4   Code   RO          710    .text               app_button.o
+    0x0001867c   0x0000046c   Code   RO          744    .text               app_gpiote.o
+    0x00018ae8   0x0000003c   Code   RO          775    .text               ble_debug_assert_handler.o
+    0x00018b24   0x000001fc   Code   RO          816    .text               max_44009.o
+    0x00018d20   0x0000001c   Code   RO          855    .text               nrf_delay.o
+    0x00018d3c   0x00000330   Code   RO          879    .text               m24m02.o
+    0x0001906c   0x00000348   Code   RO          907    .text               twi_sw_master.o
+    0x000193b4   0x00000044   Code   RO          933    .text               c_p.l(strlen.o)
+    0x000193f8   0x00000082   Code   RO          936    .text               c_p.l(rt_memcpy.o)
+    0x0001947a   0x00000040   Code   RO          939    .text               c_p.l(rt_memclr.o)
+    0x000194ba   0x00000002   PAD
+    0x000194bc   0x0000006c   Code   RO          941    .text               c_p.l(strncpy.o)
+    0x00019528   0x0000015a   Code   RO          943    .text               c_p.l(aeabi_sdiv.o)
+    0x00019682   0x00000006   Code   RO          947    .text               c_p.l(heapauxi.o)
+    0x00019688   0x0000007c   Code   RO          951    .text               fz_ps.l(d2f.o)
+    0x00019704   0x00000044   Code   RO          953    .text               fz_ps.l(dfixui.o)
+    0x00019748   0x00000058   Code   RO          955    .text               fz_ps.l(dflti.o)
+    0x000197a0   0x00000268   Code   RO          957    .text               fz_ps.l(dmul.o)
+    0x00019a08   0x00000054   Code   RO          959    .text               fz_ps.l(f2d.o)
+    0x00019a5c   0x00000016   Code   RO          976    .text               c_p.l(_rserrno.o)
+    0x00019a72   0x00000002   PAD
+    0x00019a74   0x00000350   Code   RO          978    .text               fz_ps.l(daddsub.o)
+    0x00019dc4   0x00000448   Code   RO          980    .text               fz_ps.l(ddiv.o)
+    0x0001a20c   0x000000f4   Code   RO          987    .text               fz_ps.l(drnd.o)
+    0x0001a300   0x0000005c   Code   RO          989    .text               fz_ps.l(dscalbn.o)
+    0x0001a35c   0x00000008   Code   RO         1022    .text               c_p.l(rt_errno_addr_intlibspace.o)
+    0x0001a364   0x00000090   Code   RO         1024    .text               fz_ps.l(dcmpin.o)
+    0x0001a3f4   0x00000008   Code   RO         1031    .text               c_p.l(libspace.o)
+    0x0001a3fc   0x0000003e   Code   RO         1034    .text               c_p.l(sys_stackheap_outer.o)
+    0x0001a43a   0x0000000c   Code   RO         1037    .text               c_p.l(exit.o)
+    0x0001a446   0x00000002   PAD
+    0x0001a448   0x00000030   Code   RO         1049    .text               fz_ps.l(cmpret.o)
+    0x0001a478   0x00000014   Code   RO         1051    .text               fz_ps.l(dnan2.o)
+    0x0001a48c   0x0000005e   Code   RO         1105    .text               fz_ps.l(retnan.o)
+    0x0001a4ea   0x00000002   PAD
+    0x0001a4ec   0x0000000c   Code   RO         1107    .text               c_p.l(sys_exit.o)
+    0x0001a4f8   0x00000002   Code   RO         1126    .text               c_p.l(use_no_semi.o)
+    0x0001a4fa   0x00000000   Code   RO         1128    .text               c_p.l(indicate_semi.o)
+    0x0001a4fa   0x0000001c   Code   RO          468    i.__ARM_common_switch8  pstorage.o
+    0x0001a516   0x000000ac   Code   RO         1028    i.__kernel_poly     m_ps.l(poly.o)
+    0x0001a5c2   0x00000002   PAD
+    0x0001a5c4   0x00000350   Code   RO          993    i.log               m_ps.l(log.o)
+    0x0001a914   0x000000f8   Code   RO          962    i.log10             m_ps.l(log10.o)
+    0x0001aa0c   0x0000009c   Code   RO          969    i.round             m_ps.l(round.o)
+    0x0001aaa8   0x00000064   Code   RO         1026    x$fpl$deqf          fz_ps.l(deqf.o)
+    0x0001ab0c   0x00000064   Code   RO          983    x$fpl$dleqf         fz_ps.l(dlef.o)
+    0x0001ab70   0x00000068   Code   RO          985    x$fpl$drleqf        fz_ps.l(drlef.o)
+    0x0001abd8   0x00000000   Code   RO          991    x$fpl$usenofp       fz_ps.l(usenofp.o)
+    0x0001abd8   0x00000004   Data   RO           71    .constdata          main.o
+    0x0001abdc   0x00000010   Data   RO          328    .constdata          ble_lbe.o
+    0x0001abec   0x00000010   Data   RO          386    .constdata          ble_luxsync.o
+    0x0001abfc   0x00000006   Data   RO          817    .constdata          max_44009.o
+    0x0001ac02   0x00000080   Data   RO          981    .constdata          fz_ps.l(ddiv.o)
+    0x0001ac82   0x00000006   PAD
+    0x0001ac88   0x00000038   Data   RO          994    .constdata          m_ps.l(log.o)
+    0x0001acc0   0x00000008   Data   RO         1030    .constdata          m_ps.l(qnan.o)
+    0x0001acc8   0x00000020   Data   RO         1177    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Base: 0x20002000, Size: 0x00001888, Max: 0x00002000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Base: 0x20002000, Size: 0x000018a0, Max: 0x00002000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x20002000   0x00000004   Data   RW           13    .data               system_nrf51.o
-    0x20002004   0x00000010   Data   RW           72    .data               main.o
-    0x20002014   0x0000004a   Data   RW          284    .data               ble_dis.o
-    0x2000205e   0x00000002   PAD
-    0x20002060   0x00000010   Data   RW          448    .data               pstorage.o
-    0x20002070   0x0000000e   Data   RW          532    .data               app_scheduler.o
-    0x2000207e   0x00000002   PAD
-    0x20002080   0x00000028   Data   RW          570    .data               app_timer.o
-    0x200020a8   0x00000019   Data   RW          617    .data               ble_conn_params.o
-    0x200020c1   0x00000003   PAD
-    0x200020c4   0x00000014   Data   RW          658    .data               softdevice_handler.o
-    0x200020d8   0x00000020   Data   RW          713    .data               app_button.o
-    0x200020f8   0x0000000c   Data   RW          747    .data               app_gpiote.o
-    0x20002104   0x00000008   Data   RW          779    .data               ble_debug_assert_handler.o
-    0x2000210c   0x00000001   Data   RW          820    .data               max_44009.o
-    0x2000210d   0x00000004   Data   RW          878    .data               m24m02.o
-    0x20002111   0x00000003   PAD
-    0x20002114   0x000003fc   Zero   RW           70    .bss                main.o
-    0x20002510   0x0000027c   Zero   RW          447    .bss                pstorage.o
-    0x2000278c   0x0000001c   Zero   RW          616    .bss                ble_conn_params.o
-    0x200027a8   0x00000080   Zero   RW          778    .bss                ble_debug_assert_handler.o
-    0x20002828   0x00000060   Zero   RW         1030    .bss                c_p.l(libspace.o)
-    0x20002888   0x00000800   Zero   RW            2    HEAP                arm_startup_nrf51.o
-    0x20003088   0x00000800   Zero   RW            1    STACK               arm_startup_nrf51.o
+    0x20002004   0x00000014   Data   RW           72    .data               main.o
+    0x20002018   0x0000004a   Data   RW          284    .data               ble_dis.o
+    0x20002062   0x00000002   PAD
+    0x20002064   0x00000010   Data   RW          452    .data               pstorage.o
+    0x20002074   0x0000000e   Data   RW          536    .data               app_scheduler.o
+    0x20002082   0x00000002   PAD
+    0x20002084   0x00000028   Data   RW          574    .data               app_timer.o
+    0x200020ac   0x00000019   Data   RW          621    .data               ble_conn_params.o
+    0x200020c5   0x00000003   PAD
+    0x200020c8   0x00000014   Data   RW          656    .data               softdevice_handler.o
+    0x200020dc   0x00000020   Data   RW          711    .data               app_button.o
+    0x200020fc   0x0000000c   Data   RW          745    .data               app_gpiote.o
+    0x20002108   0x00000008   Data   RW          777    .data               ble_debug_assert_handler.o
+    0x20002110   0x00000001   Data   RW          818    .data               max_44009.o
+    0x20002111   0x00000004   Data   RW          880    .data               m24m02.o
+    0x20002115   0x00000003   PAD
+    0x20002118   0x00000400   Zero   RW           70    .bss                main.o
+    0x20002518   0x00000010   Zero   RW          327    .bss                ble_lbe.o
+    0x20002528   0x0000027c   Zero   RW          451    .bss                pstorage.o
+    0x200027a4   0x0000001c   Zero   RW          620    .bss                ble_conn_params.o
+    0x200027c0   0x00000080   Zero   RW          776    .bss                ble_debug_assert_handler.o
+    0x20002840   0x00000060   Zero   RW         1032    .bss                c_p.l(libspace.o)
+    0x200028a0   0x00000800   Zero   RW            2    HEAP                arm_startup_nrf51.o
+    0x200030a0   0x00000800   Zero   RW            1    STACK               arm_startup_nrf51.o
 
 
 ==============================================================================
@@ -1283,15 +1288,15 @@ Image component sizes
       2826        184          0         40          0      24217   app_timer.o
         72         32        192          0       4096        732   arm_startup_nrf51.o
       1540          6          0          0          0       8550   ble_advdata.o
-       776         38          0         25         28      14826   ble_conn_params.o
+       776         38          0         25         28       7434   ble_conn_params.o
         60         14          0          8        128       1311   ble_debug_assert_handler.o
       1012         64          0         74          0      11907   ble_dis.o
-      2392         20         16          0          0      30985   ble_lbe.o
-       900         12         16          0          0       5046   ble_luxsync.o
+      2504         24         16          0         16      38637   ble_lbe.o
+       912         12         16          0          0       5054   ble_luxsync.o
        136         58          0          0          0      22766   ble_srv_common.o
        816          8          0          4          0       5486   m24m02.o
-      2716        350          4         16       1020      57625   main.o
-       324         24          6          1          0       4436   max_44009.o
+      2596        356          4         20       1024      57533   main.o
+       508         28          6          1          0       4768   max_44009.o
         58          4          0          0          0       1263   nrf_delay.o
       3228         90          0         16        636      13070   pstorage.o
        468         86          0         20          0      21588   softdevice_handler.o
@@ -1299,7 +1304,7 @@ Image component sizes
        870          8          0          0          0       4214   twi_sw_master.o
 
     ----------------------------------------------------------------------
-     20852       1244        266        276       5908     282592   Object Totals
+     21040       1258        266        280       5928     283100   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          6          0          0         10          0          0   (incl. Padding)
 
@@ -1358,8 +1363,8 @@ Image component sizes
        156         14          0          0          0         84   round.o
 
     ----------------------------------------------------------------------
-      6376        278        194          0         96       2980   Library Totals
-        14          0          2          0          0          0   (incl. Padding)
+      6376        278        198          0         96       2980   Library Totals
+        14          0          6          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1370,7 +1375,7 @@ Image component sizes
       1424        118         64          0          0        356   m_ps.l
 
     ----------------------------------------------------------------------
-      6376        278        194          0         96       2980   Library Totals
+      6376        278        198          0         96       2980   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -1379,15 +1384,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     27228       1522        460        276       6004     283076   Grand Totals
-     27228       1522        460        276       6004     283076   ELF Image Totals
-     27228       1522        460        276          0          0   ROM Totals
+     27416       1536        464        280       6024     283584   Grand Totals
+     27416       1536        464        280       6024     283584   ELF Image Totals
+     27416       1536        464        280          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                27688 (  27.04kB)
-    Total RW  Size (RW Data + ZI Data)              6280 (   6.13kB)
-    Total ROM Size (Code + RO Data + RW Data)      27964 (  27.31kB)
+    Total RO  Size (Code + RO Data)                27880 (  27.23kB)
+    Total RW  Size (RW Data + ZI Data)              6304 (   6.16kB)
+    Total ROM Size (Code + RO Data + RW Data)      28160 (  27.50kB)
 
 ==============================================================================
 

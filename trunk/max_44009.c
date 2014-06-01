@@ -12,6 +12,7 @@
 #include "twi_master.h"
 #include "nrf_delay.h"
 #include "cy_io.h"
+#include "math.h"
 
 //Device address  
 #define MAX_LUX_ADDR_1	0x96            //!< 6 MSBs of the MAX 44009 I2C ADD
@@ -118,3 +119,24 @@ void read_sensors(light_reading_t * p_lux_value)
 //nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
 
 }
+/**@brief Function for encoding a Light Measurement.
+ *
+ * @param[in]   p_lux_value        Light reading float.
+ * @param[in]   p_encoded_light_reading         Measurement to be encoded.
+ * 
+ *
+ * @return      n/a.
+ */
+
+
+void encode_sensor_value(light_reading_t * p_lux_value,encoded_light_reading_t * p_encoded_light_reading)
+{
+		p_encoded_light_reading->u4_top    =(uint8_t)round(50*(log10(p_lux_value->u4_top)));
+		p_encoded_light_reading->u5_up     =(uint8_t)round(50*(log10(p_lux_value->u5_up)));
+		p_encoded_light_reading->u6_down_1 =(uint8_t)round(50*(log10(p_lux_value->u6_down_1)));
+		p_encoded_light_reading->u7_down_2 =(uint8_t)round(50*(log10(p_lux_value->u7_down_2)));
+	
+}
+	
+	
+
