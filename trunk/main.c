@@ -341,17 +341,23 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 {
   switch(ACK_data)
 	{		
-		case 1:
-		    nrf_gpio_pin_set(ASSERT_LED_PIN_NO); 
+		case 1:                               
+			    //Phone ready to recieve data
+		      //Change ACK value to 2
+		      ble_luxsync_ACK_update(&m_luxsync,0x02);
 		    break;	
 		case 2:
-			  nrf_gpio_pin_clear(ASSERT_LED_PIN_NO); 
+			  //Sending data to device
+        nrf_gpio_pin_clear(ASSERT_LED_PIN_NO); 
 		    break;
 		case 3:
 			  nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); 
 		    break;
 		case 4:
 			  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); 
+		  
+		
+		i2c_eeprom_erase();
 		    break;
 		default:
 			   break;
@@ -879,19 +885,18 @@ int main(void)
 	  conn_params_init();
     sec_params_init();
 	  i2c_eeprom_init();
-		//i2c_eeprom_erase();
-	  //uint8_t data_buff[120]={1};
+	  /*
+	  //i2c_eeprom_erase();
+	  uint8_t data_buff[120]={1};
     uint32_t addss=0x00080;		
 	  uint8_t read_by[2];
-		read_by[1] = 250;
+		read_by[1] = 25;
 		read_by[0] = i2c_eeprom_read_byte( 0xA8,(uint8_t)(addss & 0xFF));
+		i2c_eeprom_read(addss,data_buff, 120);
+	  */
 		
-		 // i2c_eeprom_read(addss,data_buff, 120);
-		 //data_buff[1]= 2;
-		//Sensor Sim
-	  //srand(343);
-	  //sensor_sim_init();
-    // Start execution
+				
+    //Start execution
     timers_start();
 	  advertising_start();
 		

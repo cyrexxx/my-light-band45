@@ -60,7 +60,7 @@ void i2c_eeprom_init()
 bool i2c_eeprom_erase() 
 {
   // initialize all bytes to 0
-  uint8_t data[128] = {1,2,33,44,0 };
+  uint8_t data[128] = {0};
   uint32_t addr = 0x0;
    //  Erasing EEPROM
   while (addr < BLOCK_MAX) 
@@ -186,9 +186,9 @@ uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress )
 	add_buffer[1]=(uint8_t)(eeaddress & 0xFF);
 	if(twi_master_transfer(dev_id,add_buffer,2,TWI_DONT_ISSUE_STOP))
 	{
-	 nrf_delay_us(2);
 	 if(twi_master_transfer(dev_id|TWI_READ_BIT,&read_byte,1,TWI_ISSUE_STOP))
 	 {
+	  //Read successful
 	 }
 	}
 return read_byte;
