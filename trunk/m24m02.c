@@ -140,6 +140,7 @@ bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, ui
 	if (twi_master_transfer(dev_id,data_buffer,buffer_len,TWI_ISSUE_STOP))
 	{
 	  nrf_gpio_pin_set(WC);
+		nrf_delay_ms(15);
 		return true;
 	
 	}
