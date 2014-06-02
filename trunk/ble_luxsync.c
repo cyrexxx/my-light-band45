@@ -20,7 +20,11 @@
 #include "nordic_common.h"
 #include "ble_srv_common.h"
 #include "app_util.h"
+#include "cy_io.h"
+#include "m24m02.h"
+#include "nrf_delay.h"
 
+#define MEMORY_LED_PIN_NO               LED_2
 
 
 
@@ -277,9 +281,30 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
     hvx_params.p_data = &Lux_Ack;
     hvx_params.p_len = &len;
     err_code = sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
-	
+	  err_code=NRF_SUCCESS;
     return err_code;
 			
 		
 }
+void send_data_stream(ble_luxsync_t * p_luxsync)
+{
+  ble_luxsync_ACK_update(p_luxsync,0x02);    // •	The device acknowledges by changing it to 0x02 and starts sending data 
+	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
+	//code
+	nrf_delay_ms(50000);
+	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+}
 
+void upload_done(ble_luxsync_t * p_luxsync)
+{ 
+  ble_luxsync_ACK_update(p_luxsync,0x08);
+	//lux_timers_stop();
+	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
+	//code to erase memory
+	i2c_eeprom_erase();
+	//timers_start();
+	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+	NVIC_SystemReset(); // reset device as the connection usually fails during erase. 
+}
+	

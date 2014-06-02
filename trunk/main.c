@@ -35,6 +35,7 @@
 
 #include "ble_lbe.h"
 #include "ble_luxsync.h"
+#include "ble_time.h"
 #include "ble.h"
 #include "ble_hci.h"
 #include "ble_srv_common.h"
@@ -44,6 +45,7 @@
 #include "ble_dis.h"
 //dasibel for custom HW
 #include "cy_io.h"
+#include "ble_date_time.h"
 //#include "boards.h"
 //For sumlated sensor value
 
@@ -125,6 +127,7 @@ static app_timer_id_t                         m_lux_timer_id;
 
 static ble_lbe_t                        m_lbe;
 static ble_luxsync_t       							m_luxsync;
+static ble_time_t                       m_current_time;
 static light_reading_t                  m_lux_values;               // Lux values in Float 
 static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
  
@@ -196,18 +199,9 @@ static void service_error_handler(uint32_t nrf_error)
 } */
 
   
-/**@brief Function for populating simulated health thermometer measurement.
- 
-static void lux_sim_measurement(ble_lbe_float_meas_t * p_meas)
-{
-    float sim_value;
-	  sim_value = rand();
-  
-   	p_meas->light_level =sim_value; // ble_sensorsim_measure(&m_LUX_sim_state, &m_LUX_sim_cfg);
-}
-*/
 
-/**@brief Function for simulating and sending one Temperature Measurement.
+
+/**@brief Function for  sending one Light Measurement. This Function is called evey 10 seconds
  */
 static void lux_measurement_send(void)
 {
@@ -226,7 +220,10 @@ static void lux_measurement_send(void)
                 // Measurement was successfully sent, wait for confirmation.
                 //m_lux_meas_ind_conf_pending = true;
                 break;
-
+            case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
+							  // Ignore error.
+                break;
+						
             case NRF_ERROR_INVALID_STATE:
                 // Ignore error.
                 break;
@@ -241,6 +238,9 @@ static void lux_measurement_send(void)
             case NRF_SUCCESS:
                 // Measurement was successfully sent, wait for confirmation.
                 //m_lux_meas_ind_conf_pending = true;
+                break;
+						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
+							  // Ignore error.
                 break;
 
             case NRF_ERROR_INVALID_STATE:
@@ -258,6 +258,9 @@ static void lux_measurement_send(void)
                 // Measurement was successfully sent, wait for confirmation.
                 //m_lux_meas_ind_conf_pending = true;
                 break;
+						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
+							  // Ignore error.
+                break;
 
             case NRF_ERROR_INVALID_STATE:
                 // Ignore error.
@@ -274,6 +277,9 @@ static void lux_measurement_send(void)
                 // Measurement was successfully sent, wait for confirmation.
                 //m_lux_meas_ind_conf_pending = true;
                 break;
+						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
+							  // Ignore error.
+                break;
 
             case NRF_ERROR_INVALID_STATE:
                 // Ignore error.
@@ -287,6 +293,7 @@ static void lux_measurement_send(void)
 
 		}		
 }
+//Time out handler for the m_lux_timer_id timer 
 
 static void lux_meas_timeout_handler(void * p_context)
 {
@@ -328,26 +335,42 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 		case 1:                               
 			    //Phone ready to recieve data
 		      //Change ACK value to 2
-		      ble_luxsync_ACK_update(&m_luxsync,0x02);
+		      send_data_stream(&m_luxsync);
 		    break;	
-		case 2:
+		//case 2:
 			  //Sending data to device
-        nrf_gpio_pin_clear(ASSERT_LED_PIN_NO); 
-		    break;
-		case 3:
-			  nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); 
-		    break;
-		case 4:
-			  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); 
-		  
-		
-		i2c_eeprom_erase();
-		    break;
+       
+		//case 4:
+			  //end of data stream;
+		case 7:
+			//Erase memory
+		  upload_done(&m_luxsync);
+			 break;
 		default:
 			   break;
 	}
 
 }
+/** Function to handle Write requests to Hight time byte
+
+*/
+static void ble_time_high_write_handler(ble_time_t * p_time , uint8_t new_time)
+{
+// decode value & call update time function 
+	uint8_t temp ;
+	temp = new_time;
+}
+
+/** Function to handle Write requests to Hight time byte
+
+*/
+static void ble_time_low_write_handler(ble_time_t * p_time , uint8_t new_time)
+{
+// decode value & call update time function 
+	uint8_t temp ;
+	temp = new_time;
+}
+
 
 /**@brief Function for the power bus initialization.
  *
@@ -366,7 +389,7 @@ static void pw_bus_init(void)
     nrf_gpio_pin_clear(MEM_WC);
     
 
-  }
+}
 /**@brief Function for the LEDs initialization.
  *
  * @details Initializes all LEDs used by the application.
@@ -486,6 +509,7 @@ static void services_init(void)
 	  ble_dis_init_t 			dis_init;
 	  ble_lbe_init_t 			lbe_init;
 	  ble_luxsync_init_t  luxsync_init;
+	  ble_time_init_t     current_time_init;
 	
 	  
 	  
@@ -520,6 +544,15 @@ static void services_init(void)
 	luxsync_init.Luxsync_ack_write_handler = Luxsync_ack_write_handler;
   err_code = ble_luxsync_init(&m_luxsync, &luxsync_init);
   APP_ERROR_CHECK(err_code);
+	
+	//Initialize Time service
+	//m_current_time
+	memset(&current_time_init, 0, sizeof(current_time_init));
+	current_time_init.time_high_write_handler=ble_time_high_write_handler;
+	current_time_init.time_low_write_handler =ble_time_low_write_handler;
+	err_code = ble_time_init(&m_current_time, &current_time_init);
+  APP_ERROR_CHECK(err_code);
+	
 	
 }
 
@@ -590,7 +623,15 @@ static void conn_params_init(void)
     err_code = ble_conn_params_init(&cp_init);
     APP_ERROR_CHECK(err_code);
 }
-
+/**@brief Function for stopping timers.
+*/
+static void lux_timers_stop(void)
+{
+	//add all times that are started so that they can be paused while mem operation
+	uint32_t err_code;	
+	err_code =app_timer_stop(m_lux_timer_id);
+	APP_ERROR_CHECK(err_code);
+}
 
 /**@brief Function for starting timers.
 */
@@ -737,6 +778,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     ble_conn_params_on_ble_evt(p_ble_evt);
 	  ble_lbe_on_ble_evt(&m_lbe, p_ble_evt);
 	  ble_luxsync_on_ble_evt(&m_luxsync, p_ble_evt);
+	  ble_time_on_ble_evt(&m_current_time,p_ble_evt);
 	
     /*
     YOUR_JOB: Add service ble_evt handlers calls here, like, for example:
@@ -884,7 +926,7 @@ int main(void)
 				
     //Start execution
     timers_start();
-	  advertising_start();
+		advertising_start();
 		
 			  
 

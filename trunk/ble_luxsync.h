@@ -164,6 +164,9 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data);
  */
 uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack);
 
+void send_data_stream(ble_luxsync_t * p_luxsync);
+void upload_done(ble_luxsync_t * p_luxsync);
+
 #endif // BLE_LUXSYNC_H__
 
 /** @} */
