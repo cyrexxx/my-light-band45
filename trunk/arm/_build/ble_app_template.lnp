@@ -23,6 +23,7 @@
 ".\_build\nrf_delay.o"
 ".\_build\m24m02.o"
 ".\_build\twi_sw_master.o"
+".\_build\ble_flash.o"
 --strict --scatter ".\_build\ble_app_template.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -17,9 +17,6 @@
 
 	
 
-
-
-
 void i2c_eeprom_init();
 /**
  *	Function:	i2c_eeprom_erase
@@ -126,7 +123,8 @@ bool i2c_eeprom_read(uint32_t address, uint8_t* data, uint32_t length);
 bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, uint16_t length); 
 
 
+uint32_t eeprom_find_add_pointer(void);
 
-
+bool eeprom_updateadd_pointer(uint32_t address);
 
 #endif // M24m02_H__

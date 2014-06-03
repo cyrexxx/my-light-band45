@@ -141,7 +141,7 @@ void ble_luxsync_on_ble_evt(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt);
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data);
+uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t *mem_data,uint8_t length);
 
 
 /**@brief Function for Syncing the data in memory.
@@ -164,7 +164,7 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data);
  */
 uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack);
 
-void send_data_stream(ble_luxsync_t * p_luxsync);
+void send_data_stream(ble_luxsync_t * p_luxsync,uint32_t present_mem_ptr);
 void upload_done(ble_luxsync_t * p_luxsync);
 
 #endif // BLE_LUXSYNC_H__
