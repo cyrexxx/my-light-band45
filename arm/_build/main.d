@@ -35,7 +35,6 @@
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble_hci.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_advdata.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_conn_params.h
-.\_build\main.o: ..\Flash_rw.h
 .\_build\main.o: ..\ble_dis.h
 .\_build\main.o: ..\cy_io.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_scheduler.h

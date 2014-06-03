@@ -525,9 +525,6 @@ uint32_t ble_lbe_init(ble_lbe_t * p_lbe, const ble_lbe_init_t * p_lbe_init)
 }
 
 
-
-
-
 /**@brief Function for Updating  Light Measurement.
  *
  * @param[in]   p_ple              Light Band Exger Service structure.

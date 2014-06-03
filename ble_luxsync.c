@@ -244,7 +244,7 @@ uint32_t ble_luxsync_init(ble_luxsync_t * p_luxsync, const ble_luxsync_init_t * 
 }
 
 
-uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data)
+uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t *mem_data,uint8_t buff_length)
 {
  
 	uint32_t err_code = NRF_SUCCESS;  	    		        
@@ -253,7 +253,7 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data)
         {
             ble_gatts_hvx_params_t hvx_params;
             uint16_t               len;
-						len = sizeof(mem_data);
+						len = buff_length;//sizeof(mem_data);
 						
             memset(&hvx_params, 0, sizeof(hvx_params));
                 
@@ -261,7 +261,7 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t mem_data)
             hvx_params.type     = BLE_GATT_HVX_NOTIFICATION;
             hvx_params.offset   = 0;
             hvx_params.p_len    = &len;
-            hvx_params.p_data   = &mem_data;
+            hvx_params.p_data   = mem_data;
 					  err_code = sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
          }   
      return err_code;
@@ -286,14 +286,25 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
 			
 		
 }
-void send_data_stream(ble_luxsync_t * p_luxsync)
+void send_data_stream(ble_luxsync_t * p_luxsync,uint32_t present_mem_ptr)
 {
+  uint32_t err_code = NRF_SUCCESS;
   ble_luxsync_ACK_update(p_luxsync,0x02);    // •	The device acknowledges by changing it to 0x02 and starts sending data 
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code
-	//nrf_delay_ms(50000);
-//	mem_pointer
-	//
+	uint32_t i;
+	uint8_t read_length =7;
+	uint8_t databuffer[10]={0};
+	for (i=0;i <= present_mem_ptr;i=(i+read_length))
+	{
+	   if(i2c_eeprom_read(((uint32_t) i), databuffer, (uint32_t) read_length))
+		 {
+			 err_code=ble_luxsync_write_update(p_luxsync, databuffer,read_length);
+			 APP_ERROR_CHECK(err_code);
+		 }
+	}
+	
+	
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
 }
@@ -306,6 +317,7 @@ void upload_done(ble_luxsync_t * p_luxsync)
 	//code to erase memory
 	i2c_eeprom_erase();
 	//timers_start();
+	eeprom_updateadd_pointer((uint32_t)0x00);
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	NVIC_SystemReset(); // reset device as the connection usually fails during erase. 
 }

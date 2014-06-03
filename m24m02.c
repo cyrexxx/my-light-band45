@@ -28,7 +28,7 @@ terms block and devices is used interchangeably
 
 //Memory Blocks 
 #define BLOCK_SIZE        0x10000
-#define BLOCK_MAX         (4*BLOCK_SIZE)   //0x40000
+#define BLOCK_MAX         0x3FFF0 //((4*BLOCK_SIZE)-15)   //0x40000 //saving last 15 bytes to save memory location.
 
 
 #define BUS             true            //Bool valve to select bus 
@@ -44,7 +44,7 @@ extern float SCALE_FACTOR;	       // captures scaling factors to map from % brig
 #define WC        MEM_WC 
 #define E2        MEM_EN
 
-
+#define pointer_address 0xFFF5  //on AE device
 
 void i2c_eeprom_init() 
 {
@@ -60,7 +60,7 @@ void i2c_eeprom_init()
 bool i2c_eeprom_erase() 
 {
   // initialize all bytes to 0
-  uint8_t data[128] = {11,22,33,44,0};
+  uint8_t data[128] = {0};
   uint32_t addr = 0x0;
    //  Erasing EEPROM
   while (addr < BLOCK_MAX) 
@@ -242,6 +242,37 @@ bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, u
      success = false;
     } 
 	return success;	
+}
+
+uint32_t eeprom_find_add_pointer(void)
+{
+  uint8_t dev_id     = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[3];
+  uint8_t pointer_address_buffer[4];
+  uint8_t length = 4;
+
+  if(i2c_eeprom_read_buffer(dev_id,(uint16_t)pointer_address, pointer_address_buffer, (uint16_t)length))
+	{
+	 uint32_t t_buffer = (uint32_t)*pointer_address_buffer;
+	 return t_buffer;
+	}
+
+ return ((uint32_t)0);
+}
+
+bool eeprom_updateadd_pointer(uint32_t address)
+{
+  uint8_t dev_id     = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[3];
+  uint8_t pointer_address_buffer[4];
+  uint8_t lenght_send = sizeof(uint32_t);
+	
+	//conver 32 bit address in to 8 bytes chunks.
+	
+	pointer_address_buffer[0]=(uint8_t)((address >> 24) &0x000000FF);
+	pointer_address_buffer[1]=(uint8_t)((address >> 16) &0x000000FF);
+	pointer_address_buffer[2]=(uint8_t)((address >> 8) &0x000000FF);
+	pointer_address_buffer[3]=(uint8_t)(address & 0x000000FF);
+	
+	return i2c_eeprom_write_page(dev_id,(uint16_t)pointer_address,pointer_address_buffer,lenght_send);
 }
 
 

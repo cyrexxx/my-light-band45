@@ -41,7 +41,9 @@
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_conn_params.h"
-#include "flash_rw.h"
+
+//#include "flash_rw.h"
+//#include "ble_flash.h"
 
 #include "ble_dis.h"
 //dasibel for custom HW
@@ -63,6 +65,7 @@
 #include "m24m02.h"
 
 #include "ble_sensorsim.h"
+
 
 
 
@@ -116,7 +119,7 @@
 static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 //static ble_gap_adv_params_t             m_adv_params;                          /**< Parameters to be passed to the stack when starting advertising. */
-
+//Variables for flash
 
 
 //for Sumating sensor values 
@@ -127,7 +130,7 @@ static app_timer_id_t                         m_lux_timer_id;
 #define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 static app_timer_id_t                         m_mem_write_id;
-#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(90000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(10000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 
 
@@ -139,7 +142,8 @@ static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lu
 static ble_date_time_t                  m_current_date_time_value;
 uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
 uint8_t write_to_mem_buffer[128]; //Buffer to save reading and timestamp
-uint32_t mem_pointer = 0x0;
+uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
+uint8_t buffpointer=0;
 
 // YOUR_JOB: Modify these according to requirements (e.g. if other event types are to pass through
 //           the scheduler).
@@ -303,6 +307,19 @@ static void lux_measurement_send(void)
 
 		}		
 }
+
+void append_mem_buffer(encoded_light_reading_t *p_encoded_light_reading,uint8_t *p_write_to_mem_buffer,uint8_t buff_pntr )
+{
+	uint8_t i;
+	for(i=0;i<3;i++)
+	{
+  *(p_write_to_mem_buffer+buff_pntr+i)=date_timebuffer[i];
+	}
+	*(p_write_to_mem_buffer+buff_pntr+3)=p_encoded_light_reading->u4_top;
+	*(p_write_to_mem_buffer+buff_pntr+4)=p_encoded_light_reading->u5_up;
+	*(p_write_to_mem_buffer+buff_pntr+5)=p_encoded_light_reading->u6_down_1;
+	*(p_write_to_mem_buffer+buff_pntr+6)=p_encoded_light_reading->u7_down_2;
+}
 //Time out handler for the m_lux_timer_id timer 
 
 static void lux_meas_timeout_handler(void * p_context)
@@ -310,6 +327,8 @@ static void lux_meas_timeout_handler(void * p_context)
     UNUSED_PARAMETER(p_context);
     update_current_time(&m_current_time,&m_current_date_time_value,date_timebuffer);
 	  lux_measurement_send();
+	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
+	  buffpointer+=7;
 	  
 }
 
@@ -317,9 +336,13 @@ static void lux_meas_timeout_handler(void * p_context)
 
 static void mem_write_timeout_handler(void * p_context)
 {
-	uint8_t length = sizeof(write_to_mem_buffer);
-  i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
-	mem_pointer+=length;
+	 UNUSED_PARAMETER(p_context);
+	 uint8_t length = buffpointer;
+   i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
+	 mem_pointer+=length;
+	 //eeprom_updateadd_pointer(mem_pointer);
+	 buffpointer=0;
+	
 }
 
 
@@ -357,7 +380,7 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 		case 1:                               
 			    //Phone ready to recieve data
 		      //Change ACK value to 2
-		      send_data_stream(&m_luxsync);
+		      send_data_stream(&m_luxsync,mem_pointer);
 		    break;	
 		//case 2:
 			  //Sending data to device
@@ -937,55 +960,57 @@ m_current_date_time_value.day=3;
 /**@brief Function for application main entry.
  */
 int main(void)
-{
+{ 
+	  
+
     // Initialize
     leds_init();
     timers_init();
     gpiote_init();
     buttons_init();
 	  pw_bus_init();
+	  i2c_eeprom_init();
     ble_stack_init();
     scheduler_init();    
     gap_params_init();
     services_init();
-	  date_time_struc_init();
-	  
-	  
+	  date_time_struc_init();  
+	   	  
     advertising_init();
 	  conn_params_init();
     sec_params_init();
-	  i2c_eeprom_init();
+	  //mem_pointer=eeprom_find_add_pointer();
+	  //uint32_t temp;
+	 // temp =mem_pointer;
+	  
+	  /*
+		 
 	  uint8_t i;
 	  for (i=0;i<=240;i++)
-   	{
-			uint8_t temp[3];
+   	{uint8_t temp[3];
 			uint8_t j;
 			update_current_time(&m_current_time,&m_current_date_time_value,date_timebuffer);
 			for (j=0;j<3;j++)			{
 			temp[j]=date_timebuffer[j];
 			}
-			
-		}
-	  /*
-		
-
+			}
+	 	
 	  //i2c_eeprom_erase();
-	  uint8_t data_buff[120]={1};
-    uint32_t addss=0x00001;		
+	  uint8_t data_buff[5]={1};
+    uint32_t addss=0xFFF5;		
 	  uint8_t read_by[2];
 		read_by[0] = 03;
 		read_by[1] = 25;
-		read_by[0] = i2c_eeprom_read_byte( 0xA8,(uint8_t)(addss & 0xFF));
-		i2c_eeprom_read(addss,data_buff, 120);
+		read_by[0] = i2c_eeprom_read_byte( 0xAE,(uint16_t)(addss & 0x0FFFF));
+		i2c_eeprom_read(addss,data_buff, 4);
 	  read_by[1]=2;
 		*/
-		
+				
 				
     //Start execution
     timers_start();
 		advertising_start();
-		
-			  
+					  
 
     // Enter main loop
     for (;;)
