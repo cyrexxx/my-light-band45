@@ -41,6 +41,7 @@
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_conn_params.h"
+#include "flash_rw.h"
 
 #include "ble_dis.h"
 //dasibel for custom HW
@@ -77,7 +78,7 @@
 
 //Device Information Service 
 #define MANUFACTURER_NAME               "Exeger Sweden AB"                                   /**< Manufacturer. Will be passed to Device Information Service. */
-#define SERIAL_NUMBER                   "001"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
+#define SERIAL_NUMBER                   "042"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
 #define HW_REVISION              				"V 2.0 (May 13 2014)"																		 /**< Hardware Version of the device.Will be passed to Device Information Service. */
 #define FW_REVISION                     "V 1.0"																		  /**< Firmware Revision of the device.Will be passed to Device Information Service. */
 #define MODEL_NUMBER                    "Kartik.karuna@exeger.com" 
@@ -87,7 +88,7 @@
 
 // YOUR_JOB: Modify these according to requirements.
 #define APP_TIMER_PRESCALER             0                                           /**< Value of the RTC1 PRESCALER register. */
-#define APP_TIMER_MAX_TIMERS            3                                           /**< Maximum number of simultaneously created timers. */
+#define APP_TIMER_MAX_TIMERS            4                                           /**< Maximum number of simultaneously created timers. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
 
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(500, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.5 seconds). */
