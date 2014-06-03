@@ -30,6 +30,8 @@
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_services\ble_srv_common.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_util.h
 .\_build\main.o: ..\ble_luxsync.h
+.\_build\main.o: ..\ble_time.h
+.\_build\main.o: ..\ble_date_time.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble_hci.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_advdata.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_conn_params.h

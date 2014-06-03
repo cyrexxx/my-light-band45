@@ -125,12 +125,21 @@ static bool                                  m_lux_meas_ind_conf_pending = false
 static app_timer_id_t                         m_lux_timer_id;
 #define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
+static app_timer_id_t                         m_mem_write_id;
+#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(90000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+
+
+
 static ble_lbe_t                        m_lbe;
 static ble_luxsync_t       							m_luxsync;
 static ble_time_t                       m_current_time;
 static light_reading_t                  m_lux_values;               // Lux values in Float 
 static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
- 
+static ble_date_time_t                  m_current_date_time_value;
+uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
+uint8_t write_to_mem_buffer[128]; //Buffer to save reading and timestamp
+uint32_t mem_pointer = 0x0;
+
 // YOUR_JOB: Modify these according to requirements (e.g. if other event types are to pass through
 //           the scheduler).
 #define SCHED_MAX_EVENT_DATA_SIZE       sizeof(app_timer_event_t)                   /**< Maximum size of scheduler events. Note that scheduler BLE stack events do not contain any data, as the events are being pulled from the stack in the event handler. */
@@ -298,8 +307,20 @@ static void lux_measurement_send(void)
 static void lux_meas_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    lux_measurement_send();
+    update_current_time(&m_current_time,&m_current_date_time_value,date_timebuffer);
+	  lux_measurement_send();
+	  
 }
+
+//Time out handler for the m_lux_timer_id timer 
+
+static void mem_write_timeout_handler(void * p_context)
+{
+	uint8_t length = sizeof(write_to_mem_buffer);
+  i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
+	mem_pointer+=length;
+}
+
 
 /** Function to handle Write requests to sample rate char
 
@@ -351,26 +372,32 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 	}
 
 }
-/** Function to handle Write requests to Hight time byte
+/** Function to handle Write requests to Byte2 time byte
 
 */
-static void ble_time_high_write_handler(ble_time_t * p_time , uint8_t new_time)
+static void ble_time_byte2_write_handler(ble_time_t * p_time , uint8_t new_time)
 {
-// decode value & call update time function 
-	uint8_t temp ;
-	temp = new_time;
+  // decode value & call update time function 
+	date_timebuffer[0] = new_time;
 }
 
-/** Function to handle Write requests to Hight time byte
+/** Function to handle Write requests to byte1 time byte
 
 */
-static void ble_time_low_write_handler(ble_time_t * p_time , uint8_t new_time)
+static void ble_time_byte1_write_handler(ble_time_t * p_time , uint8_t new_time)
 {
-// decode value & call update time function 
-	uint8_t temp ;
-	temp = new_time;
+  // decode value & call update time function 
+	 date_timebuffer[1] = new_time;
 }
+/** Function to handle Write requests to byte1 time byte
 
+*/
+static void ble_time_byte0_write_handler(ble_time_t * p_time , uint8_t new_time)
+{
+  // decode value & call update time function 
+	date_timebuffer[2] = new_time;
+	cy_date_time_decode(&m_current_date_time_value,date_timebuffer);
+}
 
 /**@brief Function for the power bus initialization.
  *
@@ -427,7 +454,10 @@ static void timers_init(void)
     APP_ERROR_CHECK(err_code); */
 	   err_code = app_timer_create(&m_lux_timer_id,APP_TIMER_MODE_REPEATED,
                                 lux_meas_timeout_handler);
-    APP_ERROR_CHECK(err_code); 
+    APP_ERROR_CHECK(err_code);
+    err_code = app_timer_create(&m_mem_write_id,APP_TIMER_MODE_REPEATED,
+                                mem_write_timeout_handler);
+    APP_ERROR_CHECK(err_code); 	
 	
 }
 
@@ -548,8 +578,9 @@ static void services_init(void)
 	//Initialize Time service
 	//m_current_time
 	memset(&current_time_init, 0, sizeof(current_time_init));
-	current_time_init.time_high_write_handler=ble_time_high_write_handler;
-	current_time_init.time_low_write_handler =ble_time_low_write_handler;
+	current_time_init.time_byte2_write_handler =ble_time_byte2_write_handler;
+	current_time_init.time_byte1_write_handler =ble_time_byte1_write_handler;
+	current_time_init.time_byte0_write_handler =ble_time_byte0_write_handler;
 	err_code = ble_time_init(&m_current_time, &current_time_init);
   APP_ERROR_CHECK(err_code);
 	
@@ -642,7 +673,10 @@ static void timers_start(void)
 	  uint32_t err_code;
 
     err_code = app_timer_start(m_lux_timer_id, lux_LEVEL_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code); 
+    APP_ERROR_CHECK(err_code);
+    err_code = app_timer_start(m_mem_write_id, MEM_WRITE_MEAS_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);	
+	
 }
 
 
@@ -891,7 +925,13 @@ static void power_manage(void)
     uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
+void date_time_struc_init()
+{
+m_current_date_time_value.year=2014;
+m_current_date_time_value.month=6;
+m_current_date_time_value.day=3;
 
+}
 
 /**@brief Function for application main entry.
  */
@@ -907,21 +947,37 @@ int main(void)
     scheduler_init();    
     gap_params_init();
     services_init();
+	  date_time_struc_init();
 	  
 	  
     advertising_init();
 	  conn_params_init();
     sec_params_init();
 	  i2c_eeprom_init();
+	  uint8_t i;
+	  for (i=0;i<=240;i++)
+   	{
+			uint8_t temp[3];
+			uint8_t j;
+			update_current_time(&m_current_time,&m_current_date_time_value,date_timebuffer);
+			for (j=0;j<3;j++)			{
+			temp[j]=date_timebuffer[j];
+			}
+			
+		}
 	  /*
+		
+
 	  //i2c_eeprom_erase();
 	  uint8_t data_buff[120]={1};
-    uint32_t addss=0x00080;		
+    uint32_t addss=0x00001;		
 	  uint8_t read_by[2];
+		read_by[0] = 03;
 		read_by[1] = 25;
 		read_by[0] = i2c_eeprom_read_byte( 0xA8,(uint8_t)(addss & 0xFF));
 		i2c_eeprom_read(addss,data_buff, 120);
-	  */
+	  read_by[1]=2;
+		*/
 		
 				
     //Start execution

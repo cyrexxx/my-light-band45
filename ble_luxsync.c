@@ -291,7 +291,9 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
   ble_luxsync_ACK_update(p_luxsync,0x02);    // •	The device acknowledges by changing it to 0x02 and starts sending data 
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code
-	nrf_delay_ms(50000);
+	//nrf_delay_ms(50000);
+	mem_pointer
+	//
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
 }

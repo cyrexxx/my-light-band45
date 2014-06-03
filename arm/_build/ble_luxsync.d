@@ -24,3 +24,11 @@
 .\_build\ble_luxsync.o: ..\..\..\..\..\Include\app_common\app_error.h
 .\_build\ble_luxsync.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\_build\ble_luxsync.o: ..\..\..\..\..\Include\nordic_common.h
+.\_build\ble_luxsync.o: ..\cy_io.h
+.\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf_gpio.h
+.\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf51_bitfields.h
+.\_build\ble_luxsync.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cm0.h
+.\_build\ble_luxsync.o: ..\m24m02.h
+.\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf_delay.h
+.\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf.h
+.\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf51_deprecated.h
