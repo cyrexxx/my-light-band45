@@ -60,7 +60,7 @@ void i2c_eeprom_init()
 bool i2c_eeprom_erase() 
 {
   // initialize all bytes to 0
-  uint8_t data[128] = {0};
+  uint8_t data[128] = {11,22,33,44,0};
   uint32_t addr = 0x0;
    //  Erasing EEPROM
   while (addr < BLOCK_MAX) 
@@ -180,7 +180,7 @@ if(twi_master_transfer(dev_id|TWI_READ_BIT,&read_byte,1,TWI_ISSUE_STOP))
 uint8_t i2c_eeprom_read_byte(uint8_t dev_id, uint16_t eeaddress ) 
 {
   nrf_gpio_pin_set(WC); 
-	uint8_t read_byte = 0xFF;
+	uint8_t read_byte = 0xDB;
 	uint8_t add_buffer[2];
 	add_buffer[0]=(uint8_t)((eeaddress >> 8) &0xFF);
 	add_buffer[1]=(uint8_t)(eeaddress & 0xFF);

@@ -6,6 +6,7 @@
 ".\_build\ble_dis.o"
 ".\_build\ble_lbe.o"
 ".\_build\ble_luxsync.o"
+".\_build\ble_time.o"
 ".\_build\ble_error_log.o"
 ".\_build\pstorage.o"
 ".\_build\crc16.o"
