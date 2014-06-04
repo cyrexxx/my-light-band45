@@ -27,7 +27,7 @@
 #define MEMORY_LED_PIN_NO               LED_2
 
 
-
+static luxsync_char_notifications_t   m_luxsync_char_notifications;
 
 /**@brief Function for handling the Connect event.
  *
@@ -67,7 +67,40 @@ static void on_write(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt)
     {
         p_luxsync->Luxsync_ack_write_handler(p_luxsync, p_evt_write->data[0]);
     }
-}
+		if (p_luxsync->is_notification_supported)
+    {
+		  if ((p_evt_write->handle == p_luxsync->LuxSync_handles.cccd_handle)&&((p_evt_write->len == 2)))
+			{  
+				// CCCD written, set flags
+				
+			  if (ble_srv_is_notification_enabled(p_evt_write->data))
+         {
+					m_luxsync_char_notifications.lux_sync_notification_st =BLE_LUXSYNC_EVT_NOTIFICATION_ENABLED;
+					}
+				else 
+				{
+				 m_luxsync_char_notifications.lux_sync_notification_st =BLE_LUXSYNC_EVT_NOTIFICATION_DISABLED;
+				}
+									
+			}
+			else if ((p_evt_write->handle == p_luxsync->LuxSync_ACK_handles.cccd_handle)&&((p_evt_write->len == 2)))
+			{  
+				// CCCD written, set flags
+				
+			  if (ble_srv_is_notification_enabled(p_evt_write->data))
+         {
+					m_luxsync_char_notifications.lux_sync_act_notification_st =BLE_LUXSYNC_EVT_NOTIFICATION_ENABLED;
+					}
+				else 
+				{
+				 m_luxsync_char_notifications.lux_sync_act_notification_st = BLE_LUXSYNC_EVT_NOTIFICATION_DISABLED;
+				}
+			}
+				
+		}  
+		
+		    
+		}
 
 
 void ble_luxsync_on_ble_evt(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt)
@@ -110,20 +143,22 @@ static uint32_t LuxSync_char_add(ble_luxsync_t * p_luxsync, const ble_luxsync_in
         
     
     // Add LuxSync characteristic
+	if(p_luxsync->is_notification_supported)
+	{
     memset(&cccd_md, 0, sizeof(cccd_md));
                 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
 		cccd_md.vloc = BLE_GATTS_VLOC_STACK;
-       
+	}  
     memset(&char_md, 0, sizeof(char_md));
     
     char_md.char_props.read   = 1;
-    char_md.char_props.notify = 1;
+    char_md.char_props.notify = (p_luxsync->is_notification_supported)? 1 : 0;;
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
     char_md.p_user_desc_md    = NULL;
-    char_md.p_cccd_md         = &cccd_md;
+    char_md.p_cccd_md         = (p_luxsync->is_notification_supported)? &cccd_md: NULL;
     char_md.p_sccd_md         = NULL;
     
     //Add UUID for the CHAR
@@ -145,7 +180,7 @@ static uint32_t LuxSync_char_add(ble_luxsync_t * p_luxsync, const ble_luxsync_in
     attr_char_value.p_attr_md    = &attr_md;
     attr_char_value.init_len     = sizeof(uint8_t);
     attr_char_value.init_offs    = 0;
-    attr_char_value.max_len      = sizeof(uint8_t);
+    attr_char_value.max_len      = 7;
 		attr_char_value.p_value      = NULL;
 		
 				
@@ -249,19 +284,30 @@ uint32_t ble_luxsync_write_update(ble_luxsync_t * p_luxsync, uint8_t *mem_data,u
  
 	uint32_t err_code = NRF_SUCCESS;  	    		        
         // Send value if connected and notifying
- if ((p_luxsync->conn_handle != BLE_CONN_HANDLE_INVALID) && p_luxsync->is_notification_supported)
+ if ((p_luxsync->conn_handle != BLE_CONN_HANDLE_INVALID) )
         {
-            ble_gatts_hvx_params_t hvx_params;
-            uint16_t               len;
+           uint8_t  encoded_buffer[7];
+					 uint8_t i;
+					
+          for (i=0;i<buff_length;i++)
+					{
+						encoded_buffer[i]=*(mem_data+i);
+					}
+					  uint16_t               len;
 						len = buff_length;//sizeof(mem_data);
-						
+					  //err_code =sd_ble_gatts_value_set(p_luxsync->LuxSync_handles.value_handle,0,&len,encoded_buffer);
+					  if (err_code != NRF_SUCCESS)
+					{
+							return err_code;
+					}                                                                           
+						ble_gatts_hvx_params_t hvx_params;
             memset(&hvx_params, 0, sizeof(hvx_params));
                 
             hvx_params.handle   = p_luxsync->LuxSync_handles.value_handle;
             hvx_params.type     = BLE_GATT_HVX_NOTIFICATION;
-            hvx_params.offset   = 0;
+            //hvx_params.offset   = 0;
             hvx_params.p_len    = &len;
-            hvx_params.p_data   = mem_data;
+            hvx_params.p_data   = encoded_buffer;
 					  err_code = sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
          }   
      return err_code;
@@ -281,7 +327,7 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
     hvx_params.p_data = &Lux_Ack;
     hvx_params.p_len = &len;
     err_code = sd_ble_gatts_hvx(p_luxsync->conn_handle, &hvx_params);
-	  err_code=NRF_SUCCESS;
+	  //err_code=NRF_SUCCESS;
     return err_code;
 			
 		
@@ -295,12 +341,30 @@ void send_data_stream(ble_luxsync_t * p_luxsync,uint32_t present_mem_ptr)
 	uint32_t i;
 	uint8_t read_length =7;
 	uint8_t databuffer[10]={0};
-	for (i=0;i <= present_mem_ptr;i=(i+read_length))
+	for (i=0;i < present_mem_ptr;i=(i+read_length))
 	{
 	   if(i2c_eeprom_read(((uint32_t) i), databuffer, (uint32_t) read_length))
 		 {
 			 err_code=ble_luxsync_write_update(p_luxsync, databuffer,read_length);
-			 APP_ERROR_CHECK(err_code);
+			  switch (err_code)
+        {
+            case NRF_SUCCESS:
+                // Measurement was successfully sent, wait for confirmation.
+                //m_lux_meas_ind_conf_pending = true;
+                break;
+						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
+							  // Ignore error.
+                break;
+
+            case NRF_ERROR_INVALID_STATE:
+                // Ignore error.
+                break;
+
+            default:
+                APP_ERROR_HANDLER(err_code);
+                break;
+        }
+			 
 		 }
 	}
 	

@@ -73,8 +73,8 @@
 // YOUR_JOB: Define any other buttons to be used by the applications:
 // #define MY_BUTTON_PIN                   BUTTON_1
 
-#define ADVERTISING_LED_PIN_NO          LED_0                                       /**< Is on when device is advertising. */
-#define CONNECTED_LED_PIN_NO            LED_1                                       /**< Is on when device has connected. */
+#define ADVERTISING_LED_PIN_NO          LED_1                                       /**< Is on when device is advertising. */
+#define CONNECTED_LED_PIN_NO            LED_0                                       /**< Is on when device has connected. */
 #define ASSERT_LED_PIN_NO               LED_2                                       /**< Is on when application has asserted. */
 
 #define DEVICE_NAME                     "Light Band"                               /**< Name of device. Will be included in the advertising data. */
@@ -118,7 +118,7 @@
 
 static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
-//static ble_gap_adv_params_t             m_adv_params;                          /**< Parameters to be passed to the stack when starting advertising. */
+static ble_gap_adv_params_t             m_adv_params;                          /**< Parameters to be passed to the stack when starting advertising. */
 //Variables for flash
 
 
@@ -164,7 +164,8 @@ void pstorage_sys_event_handler (uint32_t p_evt);
  */
 void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
 {
-    nrf_gpio_pin_set(ASSERT_LED_PIN_NO);
+    nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
+	  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
 
     // This call can be used for debug purposes during application development.
     // @note CAUTION: Activating this code will write the stack to flash on an error.
@@ -329,6 +330,8 @@ static void lux_meas_timeout_handler(void * p_context)
 	  lux_measurement_send();
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
+	  if(buffpointer>128)
+		{buffpointer=0;}
 	  
 }
 
@@ -336,12 +339,16 @@ static void lux_meas_timeout_handler(void * p_context)
 
 static void mem_write_timeout_handler(void * p_context)
 {
-	 UNUSED_PARAMETER(p_context);
+	UNUSED_PARAMETER(p_context);
+	if (m_lux_meas_ind_conf_pending==false)
+	{
 	 uint8_t length = buffpointer;
    i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
 	 mem_pointer+=length;
-	 //eeprom_updateadd_pointer(mem_pointer);
 	 buffpointer=0;
+	}
+	 //eeprom_updateadd_pointer(mem_pointer);
+	
 	
 }
 
@@ -380,7 +387,7 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 		case 1:                               
 			    //Phone ready to recieve data
 		      //Change ACK value to 2
-		      send_data_stream(&m_luxsync,mem_pointer);
+		      send_data_stream(p_luxsync,mem_pointer);//send_data_stream(&m_luxsync,mem_pointer);
 		    break;	
 		//case 2:
 			  //Sending data to device
@@ -389,7 +396,7 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 			  //end of data stream;
 		case 7:
 			//Erase memory
-		  upload_done(&m_luxsync);
+		  upload_done(p_luxsync);
 			 break;
 		default:
 			   break;
@@ -450,8 +457,8 @@ static void leds_init(void)
     nrf_gpio_cfg_output(ADVERTISING_LED_PIN_NO);
     nrf_gpio_cfg_output(CONNECTED_LED_PIN_NO);
     nrf_gpio_cfg_output(ASSERT_LED_PIN_NO);
-	  nrf_gpio_pin_clear(LED_0);
-    nrf_gpio_pin_clear(LED_1);
+	  nrf_gpio_pin_set(LED_0);
+    nrf_gpio_pin_set(LED_1);
     nrf_gpio_pin_set(LED_2);
 
     // YOUR_JOB: Add additional LED initialiazations if needed.
@@ -739,8 +746,8 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
-            nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+            nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
+            nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             m_lux_meas_ind_conf_pending = true;
             /* YOUR_JOB: Uncomment this part if you are using the app_button module to handle button
@@ -755,7 +762,9 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
+           nrf_gpio_pin_set(CONNECTED_LED_PIN_NO); 
+				   nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+				    
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             m_lux_meas_ind_conf_pending = false;
             
@@ -803,7 +812,8 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         case BLE_GAP_EVT_TIMEOUT:
             if (p_ble_evt->evt.gap_evt.params.timeout.src == BLE_GAP_TIMEOUT_SRC_ADVERTISEMENT)
             {
-                nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+              
+							
 
                 // Configure buttons with sense level low as wakeup source.
                 nrf_gpio_cfg_sense_input(WAKEUP_BUTTON_PIN,
@@ -811,8 +821,11 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
                                          NRF_GPIO_PIN_SENSE_LOW);
                 
                 // Go to system-off mode (this function will not return; wakeup will cause a reset)                
-                err_code = sd_power_system_off();
-                APP_ERROR_CHECK(err_code);
+                //err_code = sd_power_system_off();
+                //APP_ERROR_CHECK(err_code);
+							  nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);  
+							  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
+						  	advertising_start();
             }
             break;
 
@@ -949,6 +962,7 @@ static void power_manage(void)
     uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
+
 void date_time_struc_init()
 {
 m_current_date_time_value.year=2014;
@@ -979,9 +993,10 @@ int main(void)
     advertising_init();
 	  conn_params_init();
     sec_params_init();
-	  //mem_pointer=eeprom_find_add_pointer();
-	  //uint32_t temp;
-	 // temp =mem_pointer;
+	  //eeprom_updateadd_pointer((uint32_t)0x00);  // erase the memory pointer only once 
+	  mem_pointer=eeprom_find_add_pointer();
+	  uint32_t temp;
+	  temp = mem_pointer;
 	  
 	  /*
 		 
@@ -1010,6 +1025,7 @@ int main(void)
     //Start execution
     timers_start();
 		advertising_start();
+		nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
 					  
 
     // Enter main loop

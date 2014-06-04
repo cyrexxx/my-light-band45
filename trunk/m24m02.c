@@ -249,10 +249,12 @@ uint32_t eeprom_find_add_pointer(void)
   uint8_t dev_id     = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[3];
   uint8_t pointer_address_buffer[4];
   uint8_t length = 4;
+	uint8_t i;
 
-  if(i2c_eeprom_read_buffer(dev_id,(uint16_t)pointer_address, pointer_address_buffer, (uint16_t)length))
+  if(i2c_eeprom_read_buffer(dev_id,(uint16_t)pointer_address,(uint8_t*)&pointer_address_buffer[0], (uint16_t)length))
 	{
-	 uint32_t t_buffer = (uint32_t)*pointer_address_buffer;
+    uint32_t t_buffer = ((((uint32_t)pointer_address_buffer[0])<<24)|(((uint32_t)pointer_address_buffer[1])<<16)|(((uint32_t)pointer_address_buffer[2])<<8)|(((uint32_t)pointer_address_buffer[0])));       ;
+		 // t_buffer = (uint32_t)pointer_address_buffer;
 	 return t_buffer;
 	}
 

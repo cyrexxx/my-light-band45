@@ -56,13 +56,21 @@ typedef enum
 {
     BLE_LUXSYNC_EVT_NOTIFICATION_ENABLED,                             /**< LUX Sync value notification enabled event. */
     BLE_LUXSYNC_EVT_NOTIFICATION_DISABLED                             /**< LUX Sync value notification disabled event. */
-} ble_luxsync_evt_type_t;
+}  ble_luxsync_evt_type_t;
 
 /**@brief LUX Sync Service event. */
 typedef struct
 {
     ble_luxsync_evt_type_t evt_type;                                  /**< Type of event. */
 } ble_luxsync_evt_t;
+
+
+typedef struct
+	{
+		ble_luxsync_evt_type_t  lux_sync_notification_st;
+    ble_luxsync_evt_type_t  lux_sync_act_notification_st;
+		
+	} luxsync_char_notifications_t;
 
 // Forward declaration of the ble_luxsync_t type. 
 typedef struct ble_luxsync_s ble_luxsync_t;
@@ -89,9 +97,11 @@ typedef struct ble_luxsync_s
 {
     ble_luxsync_evt_handler_t     evt_handler;                    /**< Event handler to be called for handling events in the LUX Sync Service. */
     uint16_t                      service_handle;                 /**< Handle of LUX Sync Service (as provided by the BLE stack). */
-    ble_gatts_char_handles_t      LuxSync_handles;
+    
+	  ble_gatts_char_handles_t      LuxSync_handles;
     ble_gatts_char_handles_t      LuxSync_ACK_handles;          /**< Handles related to the LUX Sync Level characteristic. */
-    ble_luxsync_ack_write_handler_t  Luxsync_ack_write_handler;
+    
+	  ble_luxsync_ack_write_handler_t  Luxsync_ack_write_handler;
     uint8_t                       Lux_Ack;                     
     uint8_t                       uuid_type;
 	
