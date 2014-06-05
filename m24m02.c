@@ -227,6 +227,7 @@ bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, u
 {
     bool success;
     nrf_gpio_pin_set(WC);
+	  nrf_delay_ms(5);
 	  uint8_t add_buffer[2];
 	  add_buffer[0]=(uint8_t)((address >> 8) &0xFF);
 	  add_buffer[1]=(uint8_t)(address & 0xFF);

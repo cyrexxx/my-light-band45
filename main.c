@@ -841,6 +841,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
                 // Go to system-off mode (this function will not return; wakeup will cause a reset)                
                 //err_code = sd_power_system_off();
                 //APP_ERROR_CHECK(err_code);
+							  m_lux_meas_ind_conf_pending = false;
 							  nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);  
 							  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
 						  	advertising_start();
@@ -1028,7 +1029,8 @@ int main(void)
 			temp[j]=date_timebuffer[j];
 			}
 			}
-	 	
+	 	*/
+		/*
 	  //i2c_eeprom_erase();
 		uint8_t err_cy =0x00;
 	  uint8_t he_data_buff[50]={0x31,0x1B,0xC8,0x00,0x00,0x00,0x00,0x31,0x1B,0xD0,0x44,0x32,0x7F,0xF0,0x31,0x1C,0x18,0x00,0x55,0xA2,0x07,0x31,0x1C,0x20,0x60,0xC0,0xE3,0x00,0x31,0x1C,0x28,0x29,0x10,0x0A,0xFF};

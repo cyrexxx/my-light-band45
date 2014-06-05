@@ -25,6 +25,7 @@
 #include "nrf_delay.h"
 #include "nrf_delay.h"
 
+
 #define MEMORY_LED_PIN_NO               LED_2
 
 uint16_t read_length1 =0x69;//245;
@@ -355,19 +356,24 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
   uint32_t err_code = NRF_SUCCESS;
   ble_luxsync_ACK_update(p_luxsync,0x02);    // •	The device acknowledges by changing it to 0x02 and starts sending data 
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
-	flag_send_data=true;
+	
 	//code
 	nrf_delay_ms(200);
-	uint32_t present_mem_ptr=eeprom_find_add_pointer();
+	uint32_t present_mem_ptr=30;  //eeprom_find_add_pointer();
 	uint32_t i=0;
   m_remaining_data=0;
 	
-	if(!(i2c_eeprom_read(((uint32_t) i), (uint8_t *)&databuffer[0], (uint32_t) read_length1*2)))
+	
+  uint8_t m_remaining_data=0;
+	//(
+	
+	if(!(i2c_eeprom_read(((uint32_t) i),(uint8_t *)&databuffer[0], (uint32_t) read_length1)))
 		 {
 			 err_code = 0xDB; //Memory not read 
 		 }
- if(err_code ==NRF_SUCCESS)  // if EEp rom read 
+ if(err_code!=0xDB)  // if EEp rom read 
 		 {
+			 flag_send_data=true;
 			 err_code=send_data_stream_ble(p_luxsync);
 	   }
 		 
@@ -415,6 +421,7 @@ if (m_remaining_data>=read_length1)
 	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
   nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	flag_send_data=false;
+	//timers_start();
 	}
  return err_code;
 }
