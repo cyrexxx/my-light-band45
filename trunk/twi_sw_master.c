@@ -54,7 +54,8 @@ bool twi_master_init(void)
     // Configure both pins to output Standard 0, No-drive (open-drain) 1
     TWI_SDA_STANDARD0_NODRIVE1(); /*lint !e416 "Creation of out of bounds pointer" */
     TWI_SCL_STANDARD0_NODRIVE1(); /*lint !e416 "Creation of out of bounds pointer" */
-
+     
+	  NRF_TWI1->FREQUENCY       = TWI_FREQUENCY_FREQUENCY_K400 << TWI_FREQUENCY_FREQUENCY_Pos;
     // Configure SCL as output
     TWI_SCL_HIGH();
     TWI_SCL_OUTPUT();
