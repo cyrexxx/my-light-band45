@@ -23,9 +23,15 @@
 #include "cy_io.h"
 #include "m24m02.h"
 #include "nrf_delay.h"
+#include "nrf_delay.h"
 
 #define MEMORY_LED_PIN_NO               LED_2
 
+uint16_t read_length1 =0x69;//245;
+uint8_t write_lenth=7;
+uint8_t m_remaining_data=0;
+uint8_t databuffer[110]={0};
+bool flag_send_data = false;
 
 static luxsync_char_notifications_t   m_luxsync_char_notifications;
 
@@ -118,7 +124,16 @@ void ble_luxsync_on_ble_evt(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt)
         case BLE_GATTS_EVT_WRITE:
             on_write(p_luxsync, p_ble_evt);
             break;
-            
+				
+        case BLE_EVT_TX_COMPLETE:
+					   if(flag_send_data)
+						 { 
+							 send_data_stream_ble(p_luxsync);
+						 }
+						 
+            //heart_rate_meas_send();
+            break;    
+				
         default:
             // No implementation needed.
             break;
@@ -332,46 +347,78 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
 			
 		
 }
-void send_data_stream(ble_luxsync_t * p_luxsync,uint32_t present_mem_ptr)
+
+void send_data_stream(ble_luxsync_t * p_luxsync)
 {
+	
+	
   uint32_t err_code = NRF_SUCCESS;
   ble_luxsync_ACK_update(p_luxsync,0x02);    // •	The device acknowledges by changing it to 0x02 and starts sending data 
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
+	flag_send_data=true;
 	//code
-	uint32_t i;
-	uint8_t read_length =7;
-	uint8_t databuffer[10]={0};
-	for (i=0;i < present_mem_ptr;i=(i+read_length))
-	{
-	   if(i2c_eeprom_read(((uint32_t) i), databuffer, (uint32_t) read_length))
+	nrf_delay_ms(200);
+	uint32_t present_mem_ptr=eeprom_find_add_pointer();
+	uint32_t i=0;
+  m_remaining_data=0;
+	
+	if(!(i2c_eeprom_read(((uint32_t) i), (uint8_t *)&databuffer[0], (uint32_t) read_length1*2)))
 		 {
-			 err_code=ble_luxsync_write_update(p_luxsync, databuffer,read_length);
-			  switch (err_code)
-        {
-            case NRF_SUCCESS:
-                // Measurement was successfully sent, wait for confirmation.
-                //m_lux_meas_ind_conf_pending = true;
-                break;
-						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
-							  // Ignore error.
-                break;
-
-            case NRF_ERROR_INVALID_STATE:
-                // Ignore error.
-                break;
-
-            default:
-                APP_ERROR_HANDLER(err_code);
-                break;
-        }
-			 
+			 err_code = 0xDB; //Memory not read 
 		 }
+ if(err_code ==NRF_SUCCESS)  // if EEp rom read 
+		 {
+			 err_code=send_data_stream_ble(p_luxsync);
+	   }
+		 
+
+	if (err_code==0xDB)
+	{
+		ble_luxsync_ACK_update(p_luxsync,0x05); // indicates memory not read
 	}
-	
-	
+  else if(err_code==BLE_ERROR_NO_TX_BUFFERS){} //do nothing ,wait for intrupt from on_evt
+	else 
+		{
+			ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+			flag_send_data=false;
+		}	
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
-	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+	
 }
+
+uint32_t send_data_stream_ble(ble_luxsync_t * p_luxsync)
+{
+	uint32_t err_code = NRF_SUCCESS;
+	while(m_remaining_data<read_length1)
+	{
+		err_code=ble_luxsync_write_update(p_luxsync,(uint8_t *)&databuffer[m_remaining_data],write_lenth);
+		if ( err_code== NRF_SUCCESS||
+				 err_code==BLE_ERROR_GATTS_SYS_ATTR_MISSING||
+				 err_code==NRF_ERROR_INVALID_STATE) 
+				{
+				// Ignore error.
+				m_remaining_data =(m_remaining_data+write_lenth);
+				}
+				else if (err_code==BLE_ERROR_NO_TX_BUFFERS )
+				{
+				 break;
+				}
+				else 
+				{
+				APP_ERROR_HANDLER(err_code);
+													
+		    }	
+    
+		}
+if (m_remaining_data>=read_length1)
+	{
+	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+  nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+	flag_send_data=false;
+	}
+ return err_code;
+}
+
 
 void upload_done(ble_luxsync_t * p_luxsync)
 { 

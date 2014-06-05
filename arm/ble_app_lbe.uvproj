@@ -535,14 +535,14 @@
               <FilePath>..\m24m02.c</FilePath>
             </File>
             <File>
-              <FileName>twi_sw_master.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\twi_sw_master.c</FilePath>
-            </File>
-            <File>
               <FileName>ble_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ble_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>twi_hw_master.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\twi_hw_master.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1077,14 +1077,14 @@
               <FilePath>..\m24m02.c</FilePath>
             </File>
             <File>
-              <FileName>twi_sw_master.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\twi_sw_master.c</FilePath>
-            </File>
-            <File>
               <FileName>ble_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ble_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>twi_hw_master.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\twi_hw_master.c</FilePath>
             </File>
           </Files>
         </Group>

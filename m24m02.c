@@ -253,7 +253,7 @@ uint32_t eeprom_find_add_pointer(void)
 
   if(i2c_eeprom_read_buffer(dev_id,(uint16_t)pointer_address,(uint8_t*)&pointer_address_buffer[0], (uint16_t)length))
 	{
-    uint32_t t_buffer = ((((uint32_t)pointer_address_buffer[0])<<24)|(((uint32_t)pointer_address_buffer[1])<<16)|(((uint32_t)pointer_address_buffer[2])<<8)|(((uint32_t)pointer_address_buffer[0])));       ;
+    uint32_t t_buffer = ((((uint32_t)pointer_address_buffer[0])<<24)|(((uint32_t)pointer_address_buffer[1])<<16)|(((uint32_t)pointer_address_buffer[2])<<8)|(((uint32_t)pointer_address_buffer[3])));       ;
 		 // t_buffer = (uint32_t)pointer_address_buffer;
 	 return t_buffer;
 	}

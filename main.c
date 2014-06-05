@@ -42,6 +42,7 @@
 #include "ble_advdata.h"
 #include "ble_conn_params.h"
 
+
 //#include "flash_rw.h"
 //#include "ble_flash.h"
 
@@ -127,10 +128,10 @@ static bool                                  m_lux_meas_ind_conf_pending = false
 //static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
 //static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
 static app_timer_id_t                         m_lux_timer_id;
-#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 static app_timer_id_t                         m_mem_write_id;
-#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(10000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(20000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 
 
@@ -142,7 +143,7 @@ static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lu
 static ble_date_time_t                  m_current_date_time_value;
 uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
 uint8_t write_to_mem_buffer[128]; //Buffer to save reading and timestamp
-uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
+//uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
 uint8_t buffpointer=0;
 
 // YOUR_JOB: Modify these according to requirements (e.g. if other event types are to pass through
@@ -328,10 +329,12 @@ static void lux_meas_timeout_handler(void * p_context)
     UNUSED_PARAMETER(p_context);
     update_current_time(&m_current_time,&m_current_date_time_value,date_timebuffer);
 	  lux_measurement_send();
+	if (m_lux_meas_ind_conf_pending==false)
+	{
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
-	  if(buffpointer>128)
-		{buffpointer=0;}
+	  if(buffpointer>128){buffpointer=0;}
+	}
 	  
 }
 
@@ -342,13 +345,49 @@ static void mem_write_timeout_handler(void * p_context)
 	UNUSED_PARAMETER(p_context);
 	if (m_lux_meas_ind_conf_pending==false)
 	{
+	 nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also start mem write
+	 nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
+		uint32_t mem_pointer=eeprom_find_add_pointer();
 	 uint8_t length = buffpointer;
    i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
 	 mem_pointer+=length;
 	 buffpointer=0;
+	 eeprom_updateadd_pointer((uint32_t)mem_pointer);
+	  mem_pointer =0;
+	 nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also end mem write
+	 nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
+		
 	}
 	 //eeprom_updateadd_pointer(mem_pointer);
 	
+	
+}
+
+/**@brief Function for stopping timers.
+*/
+static void lux_timers_stop(void)
+{
+	//add all times that are started so that they can be paused while mem operation
+	uint32_t err_code;	
+	err_code =app_timer_stop(m_lux_timer_id);
+	APP_ERROR_CHECK(err_code);
+	err_code =app_timer_stop(m_mem_write_id);
+	APP_ERROR_CHECK(err_code);
+	
+}
+
+/**@brief Function for starting timers.
+*/
+static void timers_start(void)
+{
+    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
+     */
+	  uint32_t err_code;
+
+    err_code = app_timer_start(m_lux_timer_id, lux_LEVEL_MEAS_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+    err_code = app_timer_start(m_mem_write_id, MEM_WRITE_MEAS_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);	
 	
 }
 
@@ -387,8 +426,11 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 		case 1:                               
 			    //Phone ready to recieve data
 		      //Change ACK value to 2
-		      send_data_stream(p_luxsync,mem_pointer);//send_data_stream(&m_luxsync,mem_pointer);
-		    break;	
+		      lux_timers_stop();
+		      
+		      send_data_stream(p_luxsync);//send_data_stream(&m_luxsync,mem_pointer);
+		      timers_start();
+		break;	
 		//case 2:
 			  //Sending data to device
        
@@ -685,30 +727,6 @@ static void conn_params_init(void)
     err_code = ble_conn_params_init(&cp_init);
     APP_ERROR_CHECK(err_code);
 }
-/**@brief Function for stopping timers.
-*/
-static void lux_timers_stop(void)
-{
-	//add all times that are started so that they can be paused while mem operation
-	uint32_t err_code;	
-	err_code =app_timer_stop(m_lux_timer_id);
-	APP_ERROR_CHECK(err_code);
-}
-
-/**@brief Function for starting timers.
-*/
-static void timers_start(void)
-{
-    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
-     */
-	  uint32_t err_code;
-
-    err_code = app_timer_start(m_lux_timer_id, lux_LEVEL_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);
-    err_code = app_timer_start(m_mem_write_id, MEM_WRITE_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);	
-	
-}
 
 
 /**@brief Function for starting advertising.
@@ -994,11 +1012,12 @@ int main(void)
 	  conn_params_init();
     sec_params_init();
 	  //eeprom_updateadd_pointer((uint32_t)0x00);  // erase the memory pointer only once 
-	  mem_pointer=eeprom_find_add_pointer();
+	  
+	 /*
 	  uint32_t temp;
 	  temp = mem_pointer;
 	  
-	  /*
+	 
 		 
 	  uint8_t i;
 	  for (i=0;i<=240;i++)
@@ -1011,15 +1030,28 @@ int main(void)
 			}
 	 	
 	  //i2c_eeprom_erase();
-	  uint8_t data_buff[5]={1};
-    uint32_t addss=0xFFF5;		
-	  uint8_t read_by[2];
-		read_by[0] = 03;
-		read_by[1] = 25;
-		read_by[0] = i2c_eeprom_read_byte( 0xAE,(uint16_t)(addss & 0x0FFFF));
-		i2c_eeprom_read(addss,data_buff, 4);
-	  read_by[1]=2;
+		uint8_t err_cy =0x00;
+	  uint8_t he_data_buff[50]={0x31,0x1B,0xC8,0x00,0x00,0x00,0x00,0x31,0x1B,0xD0,0x44,0x32,0x7F,0xF0,0x31,0x1C,0x18,0x00,0x55,0xA2,0x07,0x31,0x1C,0x20,0x60,0xC0,0xE3,0x00,0x31,0x1C,0x28,0x29,0x10,0x0A,0xFF};
+    uint32_t addss=0;
+		for(addss=0;addss<12075;addss=addss+35)
+			{
+			if(!i2c_eeprom_write(addss,(uint8_t*)&he_data_buff[0],35))
+				{
+				err_cy=0xFF;
+				}
+			}
+			eeprom_updateadd_pointer((uint32_t)12075);
 		*/
+		//uint32_t addss=0xFFF5;	
+		//uint8_t read_by[40];
+		//i2c_eeprom_read(0x00,(uint8_t*)&read_by[0],(uint32_t)0x27);
+		//
+	  //read_by[0] = 03;
+		//read_by[1] = 25;
+		//read_by[0] = i2c_eeprom_read_byte( 0xAE,(uint16_t)(addss & 0x0FFF5));
+		//i2c_eeprom_read(addss,data_buff, 42);
+	  //read_by[1]=2;
+		
 				
 				
     //Start execution
