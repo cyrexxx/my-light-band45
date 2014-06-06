@@ -142,7 +142,7 @@ static light_reading_t                  m_lux_values;               // Lux value
 static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
 static ble_date_time_t                  m_current_date_time_value;
 uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
-uint8_t write_to_mem_buffer[128]; //Buffer to save reading and timestamp
+uint8_t write_to_mem_buffer[30];//[128]; //Buffer to save reading and timestamp
 //uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
 uint8_t buffpointer=0;
 
@@ -175,10 +175,10 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
     //                The flash write will happen EVEN if the radio is active, thus interrupting
     //                any communication.
     //                Use with care. Un-comment the line below to use.
-     ble_debug_assert_handler(error_code, line_num, p_file_name);
+     //ble_debug_assert_handler(error_code, line_num, p_file_name);
 
     // On assert, the system can only recover with a reset.
-   // NVIC_SystemReset();
+    NVIC_SystemReset();
 }
 
 
@@ -333,7 +333,7 @@ static void lux_meas_timeout_handler(void * p_context)
 	{
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
-	  if(buffpointer>128){buffpointer=0;}
+	  if(buffpointer>30){buffpointer=0;}
 	}
 	  
 }
