@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+
 //uint8_t lightReadingCounter;	
 
 typedef struct light_reading_s

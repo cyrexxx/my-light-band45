@@ -56,6 +56,7 @@
 #include "app_scheduler.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
+#include "nrf_delay.h"
 //#include "ble_error_log.h"
 
 #include "app_gpiote.h"
@@ -167,7 +168,8 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
 {
     nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
 	  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO);
-
+	  nrf_delay_ms(500);
+	
     // This call can be used for debug purposes during application development.
     // @note CAUTION: Activating this code will write the stack to flash on an error.
     //                This function should NOT be used in a final product.
@@ -229,7 +231,7 @@ static void lux_measurement_send(void)
 		{			
 	   		    
       
-			err_code = ble_lbe_LUX_1_update(&m_lbe, m_encoded_light_reading.u4_top); 
+			err_code = ble_lbe_LUX_1_update(&m_lbe, &m_encoded_light_reading); 
         switch (err_code)
         {
             case NRF_SUCCESS:
@@ -248,65 +250,7 @@ static void lux_measurement_send(void)
                 APP_ERROR_HANDLER(err_code);
                 break;
         }
-			 err_code = ble_lbe_LUX_2_update(&m_lbe, m_encoded_light_reading.u5_up); 
-        switch (err_code)
-        {
-            case NRF_SUCCESS:
-                // Measurement was successfully sent, wait for confirmation.
-                //m_lux_meas_ind_conf_pending = true;
-                break;
-						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
-							  // Ignore error.
-                break;
-
-            case NRF_ERROR_INVALID_STATE:
-                // Ignore error.
-                break;
-
-            default:
-                APP_ERROR_HANDLER(err_code);
-                break;
-        }
-       err_code = ble_lbe_LUX_3_update(&m_lbe, m_encoded_light_reading.u6_down_1); 
-        switch (err_code)
-        {
-            case NRF_SUCCESS:
-                // Measurement was successfully sent, wait for confirmation.
-                //m_lux_meas_ind_conf_pending = true;
-                break;
-						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
-							  // Ignore error.
-                break;
-
-            case NRF_ERROR_INVALID_STATE:
-                // Ignore error.
-                break;
-
-            default:
-                APP_ERROR_HANDLER(err_code);
-                break;
-        }
-			err_code = ble_lbe_LUX_4_update(&m_lbe, m_encoded_light_reading.u7_down_2); 
-        switch (err_code)
-        {
-            case NRF_SUCCESS:
-                // Measurement was successfully sent, wait for confirmation.
-                //m_lux_meas_ind_conf_pending = true;
-                break;
-						case BLE_ERROR_GATTS_SYS_ATTR_MISSING:
-							  // Ignore error.
-                break;
-
-            case NRF_ERROR_INVALID_STATE:
-                // Ignore error.
-                break;
-
-            default:
-                APP_ERROR_HANDLER(err_code);
-                break;
-        }
-
-
+			 
 		}		
 }
 
@@ -391,31 +335,6 @@ static void timers_start(void)
 	
 }
 
-
-/** Function to handle Write requests to sample rate char
-
-*/
-static void s_rate_write_handler(ble_lbe_t * p_lbe, uint8_t s_rate)
-{
-  switch(s_rate)
-	{		
-		case 1:
-		    nrf_gpio_pin_set(ASSERT_LED_PIN_NO); 
-		    break;	
-		case 2:
-			  nrf_gpio_pin_clear(ASSERT_LED_PIN_NO); 
-		    break;
-		case 3:
-			  nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); 
-		    break;
-		case 4:
-			  nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); 
-		    break;
-		default:
-			   break;
-	}
-
-}
 /** Function to handle Write requests to Sync ACK char
 
 */
@@ -637,7 +556,6 @@ static void services_init(void)
 	//lbe_init.evt_handler = on_lbe_evt;   
 	lbe_init.evt_handler = NULL;
 	lbe_init.support_notification = true;
-	lbe_init.s_rate_write_handler = s_rate_write_handler;
 	err_code = ble_lbe_init(&m_lbe, &lbe_init);
   APP_ERROR_CHECK(err_code);
 	

@@ -30,6 +30,7 @@
 
 uint16_t read_length1 =0x69;//245;
 uint8_t write_lenth=7;
+
 uint8_t m_remaining_data=0;
 uint8_t databuffer[110]={0};
 bool flag_send_data = false;
@@ -364,7 +365,7 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
   m_remaining_data=0;
 	
 	
-  uint8_t m_remaining_data=0;
+  
 	//(
 	
 	if(!(i2c_eeprom_read(((uint32_t) i),(uint8_t *)&databuffer[0], (uint32_t) read_length1)))
