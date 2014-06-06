@@ -2,6 +2,7 @@
 .\_build\ble_lbe.o: ..\ble_lbe.h
 .\_build\ble_lbe.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
 .\_build\ble_lbe.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\_build\ble_lbe.o: ..\max_44009.h
 .\_build\ble_lbe.o: ..\..\..\..\..\Include\s110\ble.h
 .\_build\ble_lbe.o: ..\..\..\..\..\Include\s110\ble_ranges.h
 .\_build\ble_lbe.o: ..\..\..\..\..\Include\s110\ble_types.h

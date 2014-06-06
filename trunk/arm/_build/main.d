@@ -17,6 +17,7 @@
 .\_build\main.o: ..\..\..\..\..\Include\s110\nrf_error.h
 .\_build\main.o: ..\..\..\..\..\Include\nrf_gpio.h
 .\_build\main.o: ..\ble_lbe.h
+.\_build\main.o: ..\max_44009.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble_ranges.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble_types.h
@@ -48,11 +49,11 @@
 .\_build\main.o: ..\..\..\..\..\Include\sd_common\ant_stack_handler_types.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_timer.h
 .\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\_build\main.o: ..\..\..\..\..\Include\nrf_delay.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_gpiote.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_button.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_debug_assert_handler.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\pstorage.h
 .\_build\main.o: ..\pstorage_platform.h
-.\_build\main.o: ..\max_44009.h
 .\_build\main.o: ..\m24m02.h
 .\_build\main.o: ..\ble_sensorsim.h

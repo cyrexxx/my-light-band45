@@ -381,7 +381,7 @@ else
 
 uint32_t update_current_time(ble_time_t * p_time,ble_date_time_t * p_current_date_time,uint8_t * p_date_timebuffer)
 { uint32_t err_code = NRF_SUCCESS;
-	uint8_t  len;
+	
 	uint8_t date_timebuffer_temp[3];
 	p_current_date_time->seconds+=10;
 	if(p_current_date_time->seconds>=60)
@@ -433,7 +433,7 @@ uint32_t update_current_time(ble_time_t * p_time,ble_date_time_t * p_current_dat
 			}
 		}
 	}
-  len=cy_date_time_encode(p_current_date_time,date_timebuffer_temp);
+	cy_date_time_encode(p_current_date_time,date_timebuffer_temp);
 	*p_date_timebuffer=date_timebuffer_temp[0];
   *(p_date_timebuffer+1)=date_timebuffer_temp[1];
 	*(p_date_timebuffer+2)=date_timebuffer_temp[2];
