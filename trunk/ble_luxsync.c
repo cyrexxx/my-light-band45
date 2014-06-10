@@ -382,14 +382,16 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
 	if (err_code==0xDB)
 	{
 		ble_luxsync_ACK_update(p_luxsync,0x05); // indicates memory not read
-	}
+	  nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+	 }
   else if(err_code==BLE_ERROR_NO_TX_BUFFERS){} //do nothing ,wait for intrupt from on_evt
 	else 
 		{
 			ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+			nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 			flag_send_data=false;
 		}	
-	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+	
 	
 }
 
@@ -430,7 +432,7 @@ if (m_remaining_data>=read_length1)
 
 void upload_done(ble_luxsync_t * p_luxsync)
 { 
-  ble_luxsync_ACK_update(p_luxsync,0x08);
+  ble_luxsync_ACK_update(p_luxsync,0x09);
 	//lux_timers_stop();
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code to erase memory
