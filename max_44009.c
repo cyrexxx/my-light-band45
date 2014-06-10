@@ -87,7 +87,7 @@ float getLightLevel(uint8_t slaveAddr)
 
 void read_sensors(light_reading_t * p_lux_value)
 {
-	 float lux;
+	 
 	 if (!twi_master_init())
     {
 		//Wait for Initilization 
@@ -97,26 +97,25 @@ void read_sensors(light_reading_t * p_lux_value)
 		nrf_gpio_pin_set(BUS_UP);        //Turn on the sensors on the UP line --
 	  
 	  config_max44009(MAX_LUX_ADDR_1);
-	  nrf_delay_ms(400);
-    lux = getLightLevel(MAX_LUX_ADDR_1);
-	  p_lux_value->u4_top= lux;
 		config_max44009(MAX_LUX_ADDR_2);
-		lux = getLightLevel(MAX_LUX_ADDR_2);
-	  p_lux_value->u5_up= lux;
+	  nrf_delay_ms(400);
+    p_lux_value->u4_top = getLightLevel(MAX_LUX_ADDR_1);
+		p_lux_value->u5_up = getLightLevel(MAX_LUX_ADDR_2);
+	 
 		//switch power line 
 		nrf_gpio_pin_clear(BUS_UP);         //Turn off the sensors on the UP line --
 		nrf_gpio_pin_set(BUS_DOWN);        //Turn on the sensors on the Down line    
 	  //Read sensors on the Down line 
-		nrf_delay_ms(400);
-		lux = getLightLevel(MAX_LUX_ADDR_1);
-	  p_lux_value->u6_down_1= lux;
+		config_max44009(MAX_LUX_ADDR_1);
 		config_max44009(MAX_LUX_ADDR_2);
-		lux = getLightLevel(MAX_LUX_ADDR_2);
-	  p_lux_value->u7_down_2= lux;
+		nrf_delay_ms(400);
+		p_lux_value->u6_down_1= getLightLevel(MAX_LUX_ADDR_1);
+
+		p_lux_value->u7_down_2 = getLightLevel(MAX_LUX_ADDR_2);
+	  
 		
-   // getLightLevel(MAX_LUX_ADDR_2);
-   //light_reading_t.u4_top temp1= 
-//nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
+   
+   //nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
 
 }
 /**@brief Function for encoding a Light Measurement.
