@@ -46,6 +46,7 @@ extern float SCALE_FACTOR;	       // captures scaling factors to map from % brig
 
 #define pointer_address 0xFFF5  //on AE device
 
+
 void i2c_eeprom_init() 
 {
   if (!twi_master_init())
@@ -119,11 +120,12 @@ bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, ui
   }
   if (!success) {return false; }
   uint16_t lenght_send = end_byte - start_byte;
-  return i2c_eeprom_write_page(dev_id, start_byte, &(data[start_byte - address]), lenght_send);
+  return i2c_eeprom_write_page(dev_id, start_byte, &(data[start_byte - address]), (uint8_t) lenght_send);
 }
 
 bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, uint8_t length ) 
-{
+{ 
+	uint8_t count_i2cwrite=0;
   nrf_gpio_pin_clear(WC);
 	uint8_t buffer_len=length+2;
 	uint8_t data_buffer[130];
@@ -138,12 +140,19 @@ bool i2c_eeprom_write_page(uint8_t dev_id, uint16_t eeaddress, uint8_t* data, ui
 	{
 	 data_buffer[i+2]= *(data+i);
 	}
+	
+	if (buffer_len>40)
+		{
+		 nrf_gpio_pin_set(WC);
+		}
+	
 	if (twi_master_transfer(dev_id,data_buffer,buffer_len,TWI_ISSUE_STOP))
 	{
-	  nrf_gpio_pin_set(WC);
+	  
+		nrf_gpio_pin_set(WC);
 		nrf_delay_ms(10);
 		return true;
-	
+			
 	}
   else 
 	{
@@ -246,7 +255,7 @@ bool i2c_eeprom_read_buffer(uint8_t dev_id, uint16_t address, uint8_t *buffer, u
 }
 
 uint32_t eeprom_find_add_pointer(void)
-{
+{  
   uint8_t dev_id     = MEM_BASE_ADD | DEV_REVERSE_LOOKUP[3];
   uint8_t pointer_address_buffer[4];
   uint8_t length = 4;
@@ -254,7 +263,8 @@ uint32_t eeprom_find_add_pointer(void)
 
   if(i2c_eeprom_read_buffer(dev_id,(uint16_t)pointer_address,(uint8_t*)&pointer_address_buffer[0], (uint16_t)length))
 	{
-    uint32_t t_buffer = ((((uint32_t)pointer_address_buffer[0])<<24)|(((uint32_t)pointer_address_buffer[1])<<16)|(((uint32_t)pointer_address_buffer[2])<<8)|(((uint32_t)pointer_address_buffer[3])));       ;
+    uint32_t t_buffer ;
+		t_buffer = ((((uint32_t)pointer_address_buffer[0])<<24)|(((uint32_t)pointer_address_buffer[1])<<16)|(((uint32_t)pointer_address_buffer[2])<<8)|(((uint32_t)pointer_address_buffer[3])));       ;
 		 // t_buffer = (uint32_t)pointer_address_buffer;
 	 return t_buffer;
 	}

@@ -236,9 +236,9 @@ uint32_t ble_lbe_LUX_1_update(ble_lbe_t * p_lbe, encoded_light_reading_t * p_lig
 			uint8_t                 encoded_buffer[4];
       
 		 encoded_buffer[0]=p_light_level->u4_top;
-	   encoded_buffer[1]=p_light_level->u4_top;  // Change to other sensor values later.
-  	 encoded_buffer[2]=p_light_level->u4_top;
-     encoded_buffer[3]=p_light_level->u4_top;	
+	   encoded_buffer[1]=p_light_level->u5_up;  // Change to other sensor values later.
+  	 encoded_buffer[2]=p_light_level->u6_down_1;
+     encoded_buffer[3]=p_light_level->u7_down_2;	
 	   		
 	 if(encoded_buffer[0] != p_lbe->LUX_1_Level_last)
 	 {

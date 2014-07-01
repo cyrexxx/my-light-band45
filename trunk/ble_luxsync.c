@@ -32,7 +32,7 @@ uint16_t read_length1 =0x69;//245;
 uint8_t write_lenth=7;
 
 uint8_t m_remaining_data=0;
-uint8_t databuffer[110]={0};
+uint8_t databuffer[110]={0xFF};
 bool flag_send_data = false;
 
 static luxsync_char_notifications_t   m_luxsync_char_notifications;
@@ -436,9 +436,10 @@ void upload_done(ble_luxsync_t * p_luxsync)
 	//lux_timers_stop();
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code to erase memory
+	eeprom_updateadd_pointer((uint32_t)0x00);
 	i2c_eeprom_erase();
 	//timers_start();
-	eeprom_updateadd_pointer((uint32_t)0x00);
+	
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	NVIC_SystemReset(); // reset device as the connection usually fails during erase. 
 }

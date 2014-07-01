@@ -83,7 +83,7 @@
 
 //Device Information Service 
 #define MANUFACTURER_NAME               "Exeger Sweden AB"                                   /**< Manufacturer. Will be passed to Device Information Service. */
-#define SERIAL_NUMBER                   "042"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
+#define SERIAL_NUMBER                   "92"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
 #define HW_REVISION              				"V 2.0 (May 13 2014)"																		 /**< Hardware Version of the device.Will be passed to Device Information Service. */
 #define FW_REVISION                     "V 1.0"																		  /**< Firmware Revision of the device.Will be passed to Device Information Service. */
 #define MODEL_NUMBER                    "Kartik.karuna@exeger.com" 
@@ -129,7 +129,7 @@ static bool                                  m_lux_meas_ind_conf_pending = false
 //static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
 //static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
 static app_timer_id_t                         m_lux_timer_id;
-#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(4000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 static app_timer_id_t                         m_mem_write_id;
 #define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(20000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
@@ -142,8 +142,9 @@ static ble_time_t                       m_current_time;
 static light_reading_t                  m_lux_values;               // Lux values in Float 
 static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
 static ble_date_time_t                  m_current_date_time_value;
+uint8_t break_point_flag =0;
 uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
-uint8_t write_to_mem_buffer[30];//[128]; //Buffer to save reading and timestamp
+uint8_t write_to_mem_buffer[40];//[128]; //Buffer to save reading and timestamp
 //uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
 uint8_t buffpointer=0;
 
@@ -177,10 +178,10 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
     //                The flash write will happen EVEN if the radio is active, thus interrupting
     //                any communication.
     //                Use with care. Un-comment the line below to use.
-     //ble_debug_assert_handler(error_code, line_num, p_file_name);
+     ble_debug_assert_handler(error_code, line_num, p_file_name);
 
     // On assert, the system can only recover with a reset.
-    NVIC_SystemReset();
+    // NVIC_SystemReset();
 }
 
 
@@ -225,8 +226,13 @@ static void lux_measurement_send(void)
 {
    uint32_t       err_code;
 	
-	 read_sensors(&m_lux_values);
-	 encode_sensor_value(&m_lux_values,&m_encoded_light_reading);  // Encode the lux values from Float to log 
+	 //read_sensors(&m_lux_values); //Desabled for debug 
+	//desabled reading in i2c to check mem func.
+	 m_encoded_light_reading.u4_top=0x94;
+	 m_encoded_light_reading.u5_up=0x90;
+	 m_encoded_light_reading.u6_down_1=0x92;
+	 m_encoded_light_reading.u7_down_2=0x93;
+	 //encode_sensor_value(&m_lux_values,&m_encoded_light_reading);  // Encode the lux values from Float to log 
     if (m_lux_meas_ind_conf_pending==true)
 		{			
 	   		    
@@ -277,7 +283,8 @@ static void lux_meas_timeout_handler(void * p_context)
 	{
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
-	  if(buffpointer>30){buffpointer=0;}
+	  
+   if(buffpointer>=40){buffpointer=0;}
 	}
 	  
 }
@@ -291,16 +298,25 @@ static void mem_write_timeout_handler(void * p_context)
 	{
 	 nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also start mem write
 	 nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
-		uint32_t mem_pointer=eeprom_find_add_pointer();
-	 uint8_t length = buffpointer;
-   i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
+	 uint32_t mem_pointer=eeprom_find_add_pointer();
+	 uint8_t length = 35;//(buffpointer);
+	 uint8_t trmp=0;
+	 if (break_point_flag==1)
+	 {
+	 trmp++;	 
+	 }
+	 i2c_eeprom_write(mem_pointer, write_to_mem_buffer,(uint32_t)length);
 	 mem_pointer+=length;
 	 buffpointer=0;
 	 eeprom_updateadd_pointer((uint32_t)mem_pointer);
 	  mem_pointer =0;
 	 nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also end mem write
 	 nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
+	 
 		
+		
+		break_point_flag++;
+	 
 	}
 	 //eeprom_updateadd_pointer(mem_pointer);
 	
@@ -355,10 +371,17 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
        
 		//case 4:
 			  //end of data stream;
+		//Case 5:
+		//EEProm Not read
 		case 7:
 			//Erase memory
 		  upload_done(p_luxsync);
 			 break;
+		case 8:
+			//restart te device 
+			NVIC_SystemReset();
+		  break;
+			  //Sending data to device
 		default:
 			   break;
 	}
