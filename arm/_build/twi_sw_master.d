@@ -1,7 +1,7 @@
-.\_build\twi_sw_master.o: ..\twi_sw_master.c
+.\_build\twi_sw_master.o: ..\twi_master\twi_sw_master.c
 .\_build\twi_sw_master.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
 .\_build\twi_sw_master.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
-.\_build\twi_sw_master.o: ..\..\..\..\..\Include\twi_master.h
+.\_build\twi_sw_master.o: ..\twi_master\twi_master.h
 .\_build\twi_sw_master.o: ..\..\..\..\..\Include\nrf_delay.h
 .\_build\twi_sw_master.o: ..\..\..\..\..\Include\nrf.h
 .\_build\twi_sw_master.o: ..\..\..\..\..\Include\nrf51.h

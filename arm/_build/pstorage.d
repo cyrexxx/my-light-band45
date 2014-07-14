@@ -20,6 +20,8 @@
 .\_build\pstorage.o: ..\..\..\..\..\Include\s110\nrf_soc.h
 .\_build\pstorage.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
 .\_build\pstorage.o: ..\..\..\..\..\Include\s110\nrf_svc.h
+.\_build\pstorage.o: ..\..\..\..\..\Include\s110\nrf51.h
+.\_build\pstorage.o: ..\..\..\..\..\Include\s110\nrf51_bitfields.h
 .\_build\pstorage.o: ..\..\..\..\..\Include\s110\nrf_error_soc.h
 .\_build\pstorage.o: ..\..\..\..\..\Include\app_common\app_util.h
 .\_build\pstorage.o: ..\..\..\..\..\Include\app_common\app_error.h

@@ -8,14 +8,15 @@
 .\_build\app_scheduler.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\s110\nrf_soc.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\s110\nrf_svc.h
-.\_build\app_scheduler.o: ..\..\..\..\..\Include\nrf51.h
+.\_build\app_scheduler.o: ..\..\..\..\..\Include\s110\nrf51.h
 .\_build\app_scheduler.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cm0.h
 .\_build\app_scheduler.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cmInstr.h
 .\_build\app_scheduler.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cmFunc.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\system_nrf51.h
-.\_build\app_scheduler.o: ..\..\..\..\..\Include\nrf51_bitfields.h
+.\_build\app_scheduler.o: ..\..\..\..\..\Include\s110\nrf51_bitfields.h
 .\_build\app_scheduler.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cm0.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\s110\nrf_error_soc.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\nrf_assert.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\app_common\app_util.h
 .\_build\app_scheduler.o: ..\..\..\..\..\Include\compiler_abstraction.h
+.\_build\app_scheduler.o: ..\..\..\..\..\Include\nrf51.h

@@ -32,3 +32,4 @@
 .\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf_delay.h
 .\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf.h
 .\_build\ble_luxsync.o: ..\..\..\..\..\Include\nrf51_deprecated.h
+.\_build\ble_luxsync.o: ..\defines.h
