@@ -171,7 +171,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -305,8 +305,8 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x14000</StartAddress>
-                <Size>0x2b000</Size>
+                <StartAddress>0x15000</StartAddress>
+                <Size>0xb000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -535,14 +535,19 @@
               <FilePath>..\m24m02.c</FilePath>
             </File>
             <File>
-              <FileName>ble_flash.c</FileName>
+              <FileName>twi_sw_master.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\ble_flash.c</FilePath>
+              <FilePath>..\twi_master\twi_sw_master.c</FilePath>
             </File>
             <File>
-              <FileName>twi_hw_master.c</FileName>
+              <FileName>simple_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\twi_hw_master.c</FilePath>
+              <FilePath>..\..\..\..\..\Source\simple_uart\simple_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\defines.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1077,14 +1082,19 @@
               <FilePath>..\m24m02.c</FilePath>
             </File>
             <File>
-              <FileName>ble_flash.c</FileName>
+              <FileName>twi_sw_master.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\ble_flash.c</FilePath>
+              <FilePath>..\twi_master\twi_sw_master.c</FilePath>
             </File>
             <File>
-              <FileName>twi_hw_master.c</FileName>
+              <FileName>simple_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\twi_hw_master.c</FilePath>
+              <FilePath>..\..\..\..\..\Source\simple_uart\simple_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\defines.h</FilePath>
             </File>
           </Files>
         </Group>

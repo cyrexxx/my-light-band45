@@ -1,4 +1,5 @@
 .\_build\main.o: ..\main.c
+.\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
 .\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
 .\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\_build\main.o: ..\..\..\..\..\Include\nordic_common.h
@@ -36,19 +37,21 @@
 .\_build\main.o: ..\..\..\..\..\Include\s110\ble_hci.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_advdata.h
 .\_build\main.o: ..\..\..\..\..\Include\ble\ble_conn_params.h
+.\_build\main.o: ..\..\..\..\..\Include\simple_uart.h
 .\_build\main.o: ..\ble_dis.h
 .\_build\main.o: ..\cy_io.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_scheduler.h
 .\_build\main.o: ..\..\..\..\..\Include\sd_common\softdevice_handler.h
 .\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\nrf_sdm.h
+.\_build\main.o: ..\..\..\..\..\Include\s110\nrf51.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\nrf_soc.h
+.\_build\main.o: ..\..\..\..\..\Include\s110\nrf51_bitfields.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\nrf_error_soc.h
 .\_build\main.o: ..\..\..\..\..\Include\s110\nrf_error_sdm.h
 .\_build\main.o: ..\..\..\..\..\Include\sd_common\ble_stack_handler_types.h
 .\_build\main.o: ..\..\..\..\..\Include\sd_common\ant_stack_handler_types.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_timer.h
-.\_build\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
 .\_build\main.o: ..\..\..\..\..\Include\nrf_delay.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_gpiote.h
 .\_build\main.o: ..\..\..\..\..\Include\app_common\app_button.h
@@ -57,3 +60,4 @@
 .\_build\main.o: ..\pstorage_platform.h
 .\_build\main.o: ..\m24m02.h
 .\_build\main.o: ..\ble_sensorsim.h
+.\_build\main.o: ..\defines.h

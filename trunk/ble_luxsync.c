@@ -1,4 +1,5 @@
-/* Copyright (c) 2012 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2012 Nordic Semiconductowrite
+r. All Rights Reserved.
  *
  * The information contained herein is property of Nordic Semiconductor ASA.
  * Terms and conditions of usage are described in detail in NORDIC
@@ -23,17 +24,28 @@
 #include "cy_io.h"
 #include "m24m02.h"
 #include "nrf_delay.h"
-#include "nrf_delay.h"
 
+#include "defines.h"
 
 #define MEMORY_LED_PIN_NO               LED_2
 
-uint16_t read_length1 =0x69;//245;
-uint8_t write_lenth=7;
+#define CHUNKS_PER_TRANSFER (8)
+#define ENTRIES_PER_CHUNK	(20)
 
-uint8_t m_remaining_data=0;
-uint8_t databuffer[110]={0xFF};
+#define WRITE_LENGTH (7)
+#define READ_LENGTH (ENTRIES_PER_CHUNK * WRITE_LENGTH)
+
+
+//uint16_t read_length1 =0x69;//245;
+//uint8_t write_lenth=7;
+
+//uint8_t m_remaining_data=0;
+//uint8_t databuffer[110]={0};
 bool flag_send_data = false;
+
+extern uint8_t sendDataFlag;
+extern uint8_t fetchMoreData;
+
 
 static luxsync_char_notifications_t   m_luxsync_char_notifications;
 
@@ -128,10 +140,15 @@ void ble_luxsync_on_ble_evt(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt)
             break;
 				
         case BLE_EVT_TX_COMPLETE:
+					sendDataFlag = 1;
 					   if(flag_send_data)
 						 { 
-							 send_data_stream_ble(p_luxsync);
+							 send_data_stream_ble(p_luxsync, fetchMoreData, 0);
+							 if ( fetchMoreData ) 
+							   fetchMoreData = 0;
 						 }
+						 
+						 
 						 
             //heart_rate_meas_send();
             break;    
@@ -140,6 +157,9 @@ void ble_luxsync_on_ble_evt(ble_luxsync_t * p_luxsync, ble_evt_t * p_ble_evt)
             // No implementation needed.
             break;
     }
+		
+	
+						 
 }
 
 
@@ -349,6 +369,8 @@ uint32_t ble_luxsync_ACK_update(ble_luxsync_t * p_luxsync, uint8_t Lux_Ack)
 			
 		
 }
+//sync
+
 
 void send_data_stream(ble_luxsync_t * p_luxsync)
 {
@@ -360,15 +382,20 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
 	
 	//code
 	nrf_delay_ms(200);
-	uint32_t present_mem_ptr=30;  //eeprom_find_add_pointer();
-	uint32_t i=0;
-  m_remaining_data=0;
+	//uint32_t present_mem_ptr=30;  //eeprom_find_add_pointer();
+	//uint32_t i=0;
+ 
 	
 	
   
 	//(
+
+  print("Starting transmission\r\n");
+	flag_send_data=true;
+  err_code=send_data_stream_ble(p_luxsync, 1, 1);
 	
-	if(!(i2c_eeprom_read(((uint32_t) i),(uint8_t *)&databuffer[0], (uint32_t) read_length1)))
+	
+/*	if(!(i2c_eeprom_read(((uint32_t) i),(uint8_t *)&databuffer[0], (uint32_t) read_length1)))
 		 {
 			 err_code = 0xDB; //Memory not read 
 		 }
@@ -391,40 +418,135 @@ void send_data_stream(ble_luxsync_t * p_luxsync)
 			nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 			flag_send_data=false;
 		}	
-	
+	*/
 	
 }
 
-uint32_t send_data_stream_ble(ble_luxsync_t * p_luxsync)
+/*
+	if(!(i2c_eeprom_read(((uint32_t) i),(uint8_t *)&databuffer[0], (uint32_t) read_length1)))
+		 {
+			 err_code = 0xDB; //Memory not read 
+		 }
+ if(err_code!=0xDB)  // if EEp rom read 
+		 {
+			 flag_send_data=true;
+			 err_code=send_data_stream_ble(p_luxsync);
+	   }
+*/		 
+
+uint32_t send_data_stream_ble(ble_luxsync_t * p_luxsync, uint8_t fetchData, uint8_t init)
 {
+	static uint8_t databuffer[READ_LENGTH+10];
+	static uint32_t currentPosition = 0;
+	
+	static uint32_t stopPosition = 0;
+	static uint32_t remainingData = 0;
+	static uint16_t read_length;
 	uint32_t err_code = NRF_SUCCESS;
-	while(m_remaining_data<read_length1)
+	static uint32_t endOfChunk = 0;
+	static int x = 0;
+		
+	
+	if ( init ) 
 	{
-		err_code=ble_luxsync_write_update(p_luxsync,(uint8_t *)&databuffer[m_remaining_data],write_lenth);
-		if ( err_code== NRF_SUCCESS||
-				 err_code==BLE_ERROR_GATTS_SYS_ATTR_MISSING||
-				 err_code==NRF_ERROR_INVALID_STATE) 
-				{
-				// Ignore error.
-				m_remaining_data =(m_remaining_data+write_lenth);
-				}
-				else if (err_code==BLE_ERROR_NO_TX_BUFFERS )
-				{
-				 break;
-				}
-				else 
-				{
-				APP_ERROR_HANDLER(err_code);
-													
-		    }	
-    
+		currentPosition = 0;
+		stopPosition = eeprom_find_add_pointer();
+		remainingData = 0;
+	}
+	
+	if ( fetchData )
+	{
+		print("Getting more data\r\n");
+		endOfChunk = currentPosition + READ_LENGTH * CHUNKS_PER_TRANSFER; 
+	}
+	
+	if ( currentPosition < endOfChunk )
+		fetchData = 1;
+	
+	do {
+		
+		if ( remainingData <= 0 && fetchData )
+		{
+			
+			if ( (stopPosition - currentPosition) < READ_LENGTH )
+				read_length = stopPosition - currentPosition;
+			else
+				read_length = READ_LENGTH;
+			
+			if ( !(i2c_eeprom_read(currentPosition,databuffer, read_length)) )
+				 {
+					 err_code = 0xDB; //Memory not read 
+				 }
+			else
+				 {
+					 print("*[%d]", currentPosition);
+					 remainingData = read_length;
+					 currentPosition += read_length;
+				 }
+			}	
+		
+			
+		
+print(".");		
+		while(remainingData > 0 ) //< read_length)
+		{
+
+			err_code=ble_luxsync_write_update(p_luxsync,databuffer+(read_length-remainingData),WRITE_LENGTH);
+			if ( err_code== NRF_SUCCESS||
+					 err_code==BLE_ERROR_GATTS_SYS_ATTR_MISSING||
+					 err_code==NRF_ERROR_INVALID_STATE) 
+					{
+					// Ignore error.
+		//			m_remaining_data =(m_remaining_data+write_lenth);
+						remainingData -= WRITE_LENGTH;
+					}
+					else if (err_code==BLE_ERROR_NO_TX_BUFFERS )
+					{
+						//print(".[%d]", remainingData);
+					 break;
+					}
+					else 
+					{
+//					APP_ERROR_HANDLER(err_code);
+														
+					}	
 		}
-if (m_remaining_data>=read_length1)
+print("/");
+		
+		print("%d %d %d\r\n", currentPosition, endOfChunk, stopPosition);
+	} while( currentPosition < endOfChunk && currentPosition < stopPosition && err_code != BLE_ERROR_NO_TX_BUFFERS );
+print("E");
+
+	
+//		nrf_gpio_pin_set(MEMORY_LED_PIN_NO); /// debug
+		
+	//if (m_remaining_data>=read_length1)
+	if ( currentPosition >= stopPosition ) 
 	{
-	ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
-  nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
-	flag_send_data=false;
-	//timers_start();
+//		nrf_delay_ms(50);
+		err_code = ble_luxsync_ACK_update(p_luxsync,0x04);   //•	Once all the data is sent it changes sync ACk to 0x04 indicating end of data stream
+		
+		if ( err_code== NRF_SUCCESS||
+					 err_code==BLE_ERROR_GATTS_SYS_ATTR_MISSING||
+					 err_code==NRF_ERROR_INVALID_STATE) 
+					{
+					// Ignore error.
+						nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
+						flag_send_data=false;
+						
+						print("DONE transmitting\r\n");
+						
+						//timers_start();				
+					}
+/*					else if (err_code==BLE_ERROR_NO_TX_BUFFERS )
+					{
+		//			 break;
+					}
+					else 
+					{
+					APP_ERROR_HANDLER(err_code);
+					}	 */
+		
 	}
  return err_code;
 }
@@ -436,10 +558,9 @@ void upload_done(ble_luxsync_t * p_luxsync)
 	//lux_timers_stop();
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code to erase memory
-	eeprom_updateadd_pointer((uint32_t)0x00);
-	i2c_eeprom_erase();
+//	i2c_eeprom_erase();
 	//timers_start();
-	
+//	eeprom_updateadd_pointer((uint32_t)0x00);
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	NVIC_SystemReset(); // reset device as the connection usually fails during erase. 
 }

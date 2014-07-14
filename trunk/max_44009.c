@@ -95,25 +95,26 @@ void read_sensors(light_reading_t * p_lux_value)
 		}
 	  nrf_gpio_pin_clear(BUS_DOWN);    //Turn off the sensors on the lower line --
 		nrf_gpio_pin_set(BUS_UP);        //Turn on the sensors on the UP line --
-	  // Config the light sensors on the up line
+	  
 	  config_max44009(MAX_LUX_ADDR_1);
 		config_max44009(MAX_LUX_ADDR_2);
-	  nrf_delay_ms(400); //Wait 400 ms for the sensor to intigrate the measurement 
-		//Read sensors on the UP line
+	  nrf_delay_ms(400);
     p_lux_value->u4_top = getLightLevel(MAX_LUX_ADDR_1);
 		p_lux_value->u5_up = getLightLevel(MAX_LUX_ADDR_2);
 	 
 		//switch power line 
 		nrf_gpio_pin_clear(BUS_UP);         //Turn off the sensors on the UP line --
-		nrf_gpio_pin_set(BUS_DOWN);         //Turn on the sensors on the Down line    
-	   // Config the light sensors on the down line
+		nrf_gpio_pin_set(BUS_DOWN);        //Turn on the sensors on the Down line    
+	  //Read sensors on the Down line 
 		config_max44009(MAX_LUX_ADDR_1);
 		config_max44009(MAX_LUX_ADDR_2);
 		nrf_delay_ms(400);
-	  //Read sensors on the Down line 
 		p_lux_value->u6_down_1= getLightLevel(MAX_LUX_ADDR_1);
+
 		p_lux_value->u7_down_2 = getLightLevel(MAX_LUX_ADDR_2);
 	  
+		
+   
    //nrf_gpio_pin_clear(ASSERT_LED_PIN_NO);
 
 }
@@ -125,6 +126,7 @@ void read_sensors(light_reading_t * p_lux_value)
  *
  * @return      n/a.
  */
+
 
 void encode_sensor_value(light_reading_t * p_lux_value,encoded_light_reading_t * p_encoded_light_reading)
 {

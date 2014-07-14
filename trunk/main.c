@@ -24,6 +24,7 @@
  * with 'YOUR_JOB' indicates where and how you can customize.
  */
 
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include "nordic_common.h"
@@ -43,6 +44,7 @@
 #include "ble_conn_params.h"
 
 
+#include "simple_uart.h"
 //#include "flash_rw.h"
 //#include "ble_flash.h"
 
@@ -68,7 +70,7 @@
 
 #include "ble_sensorsim.h"
 
-
+#include "defines.h"
 
 
 #define WAKEUP_BUTTON_PIN               BUTTON_0                                    /**< Button used to wake up the application. */
@@ -83,7 +85,7 @@
 
 //Device Information Service 
 #define MANUFACTURER_NAME               "Exeger Sweden AB"                                   /**< Manufacturer. Will be passed to Device Information Service. */
-#define SERIAL_NUMBER                   "92"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
+#define SERIAL_NUMBER                   "942"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
 #define HW_REVISION              				"V 2.0 (May 13 2014)"																		 /**< Hardware Version of the device.Will be passed to Device Information Service. */
 #define FW_REVISION                     "V 1.0"																		  /**< Firmware Revision of the device.Will be passed to Device Information Service. */
 #define MODEL_NUMBER                    "Kartik.karuna@exeger.com" 
@@ -96,10 +98,10 @@
 #define APP_TIMER_MAX_TIMERS            4                                           /**< Maximum number of simultaneously created timers. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(500, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.5 seconds). */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (1 second). */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(20/*500*/, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.5 seconds). */
+#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(40/*1000*/, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (1 second). */
 #define SLAVE_LATENCY                   0                                           /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)             /**< Connection supervisory timeout (4 seconds). */
+#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(300/*4000*/, UNIT_10_MS)             /**< Connection supervisory timeout (4 seconds). */
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(20000, APP_TIMER_PRESCALER) /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (15 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER)  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (5 seconds). */
 #define MAX_CONN_PARAMS_UPDATE_COUNT    3                                           /**< Number of attempts before giving up the connection parameter negotiation. */
@@ -142,7 +144,6 @@ static ble_time_t                       m_current_time;
 static light_reading_t                  m_lux_values;               // Lux values in Float 
 static encoded_light_reading_t          m_encoded_light_reading;   // Encoded lux values 
 static ble_date_time_t                  m_current_date_time_value;
-uint8_t break_point_flag =0;
 uint8_t date_timebuffer[3];   //Buffer to store encoded date time values
 uint8_t write_to_mem_buffer[40];//[128]; //Buffer to save reading and timestamp
 //uint32_t mem_pointer = 0x0;   /// pointer to keep  track of eeprom memory location 
@@ -152,6 +153,29 @@ uint8_t buffpointer=0;
 //           the scheduler).
 #define SCHED_MAX_EVENT_DATA_SIZE       sizeof(app_timer_event_t)                   /**< Maximum size of scheduler events. Note that scheduler BLE stack events do not contain any data, as the events are being pulled from the stack in the event handler. */
 #define SCHED_QUEUE_SIZE                10                                          /**< Maximum number of events in the scheduler queue. */
+
+uint8_t sendDataFlag = 0;
+extern bool flag_send_data;
+
+uint8_t fetchMoreData = 0;
+
+
+char print_buffer[200];
+#ifdef DEBUG
+#define print(...) { sprintf(print_buffer, __VA_ARGS__); simple_uart_putstring(print_buffer);}
+#else
+#define print(...)
+#endif 
+
+
+
+
+
+
+
+
+
+
 
 // Persistent storage system event handler
 void pstorage_sys_event_handler (uint32_t p_evt);
@@ -181,7 +205,7 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
      ble_debug_assert_handler(error_code, line_num, p_file_name);
 
     // On assert, the system can only recover with a reset.
-    // NVIC_SystemReset();
+    //NVIC_SystemReset();
 }
 
 
@@ -226,13 +250,8 @@ static void lux_measurement_send(void)
 {
    uint32_t       err_code;
 	
-	 //read_sensors(&m_lux_values); //Desabled for debug 
-	//desabled reading in i2c to check mem func.
-	 m_encoded_light_reading.u4_top=0x94;
-	 m_encoded_light_reading.u5_up=0x90;
-	 m_encoded_light_reading.u6_down_1=0x92;
-	 m_encoded_light_reading.u7_down_2=0x93;
-	 //encode_sensor_value(&m_lux_values,&m_encoded_light_reading);  // Encode the lux values from Float to log 
+	 read_sensors(&m_lux_values);
+	 encode_sensor_value(&m_lux_values,&m_encoded_light_reading);  // Encode the lux values from Float to log 
     if (m_lux_meas_ind_conf_pending==true)
 		{			
 	   		    
@@ -283,10 +302,26 @@ static void lux_meas_timeout_handler(void * p_context)
 	{
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
-	  
-   if(buffpointer>=40){buffpointer=0;}
+	  if(buffpointer>40){buffpointer=0;}
 	}
 	  
+	//fetchMoreData = 1;
+	print("TIMER\r\n");
+	 if(flag_send_data)
+	 { 
+		 send_data_stream_ble(&m_luxsync, 1, 0);
+		 
+	 }
+	
+/*	if ( sendDataFlag > 0 )
+	{
+		sendDataFlag = 0;
+	
+		if(flag_send_data)
+		{ 
+			 send_data_stream_ble(&m_luxsync, 1, 0);
+		}
+	}*/
 }
 
 //Time out handler for the m_lux_timer_id timer 
@@ -298,25 +333,16 @@ static void mem_write_timeout_handler(void * p_context)
 	{
 	 nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also start mem write
 	 nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
-	 uint32_t mem_pointer=eeprom_find_add_pointer();
-	 uint8_t length = 35;//(buffpointer);
-	 uint8_t trmp=0;
-	 if (break_point_flag==1)
-	 {
-	 trmp++;	 
-	 }
-	 i2c_eeprom_write(mem_pointer, write_to_mem_buffer,(uint32_t)length);
+		uint32_t mem_pointer=eeprom_find_add_pointer();
+	 uint8_t length = buffpointer;
+   i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
 	 mem_pointer+=length;
 	 buffpointer=0;
 	 eeprom_updateadd_pointer((uint32_t)mem_pointer);
 	  mem_pointer =0;
 	 nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also end mem write
 	 nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
-	 
 		
-		
-		break_point_flag++;
-	 
 	}
 	 //eeprom_updateadd_pointer(mem_pointer);
 	
@@ -361,27 +387,21 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
 		case 1:                               
 			    //Phone ready to recieve data
 		      //Change ACK value to 2
-		      lux_timers_stop();
+		      //lux_timers_stop();
 		      
 		      send_data_stream(p_luxsync);//send_data_stream(&m_luxsync,mem_pointer);
-		      timers_start();
+		      //timers_start();
 		break;	
 		//case 2:
 			  //Sending data to device
        
 		//case 4:
 			  //end of data stream;
-		//Case 5:
-		//EEProm Not read
 		case 7:
 			//Erase memory
 		  upload_done(p_luxsync);
 			 break;
-		case 8:
-			//restart te device 
-			NVIC_SystemReset();
-		  break;
-			  //Sending data to device
+		
 		default:
 			   break;
 	}
@@ -631,8 +651,9 @@ static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
 
     if(p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
     {
-        err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
-        APP_ERROR_CHECK(err_code);
+			print("ERROR!");
+//        err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
+//        APP_ERROR_CHECK(err_code);
     }
 }
 
@@ -733,7 +754,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             err_code = app_button_disable();
             APP_ERROR_CHECK(err_code);
             */
-            
+            print("Disconnected.");
                 advertising_start();
             break;
 
@@ -937,7 +958,7 @@ int main(void)
 { 
 	  
 
-    // Initialize
+    // Initialize 
     leds_init();
     timers_init();
     gpiote_init();
@@ -995,6 +1016,31 @@ int main(void)
 		//i2c_eeprom_read(addss,data_buff, 42);
 	  //read_by[1]=2;
 		
+				
+#if 1		
+#define TX_PIN_NUMBER (2)
+#define RX_PIN_NUMBER	(3)
+
+	 simple_uart_config(0, TX_PIN_NUMBER,0, RX_PIN_NUMBER, 0);
+
+
+  //uart_start();
+	
+
+/*	while(true)
+  {
+		uint8_t cr = 'A';  
+		
+    simple_uart_put(cr);
+  }
+		*/
+#endif
+
+
+
+	
+	
+   print("Starting....\r\n");
 				
 				
     //Start execution

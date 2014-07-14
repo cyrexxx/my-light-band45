@@ -18,6 +18,8 @@
 .\_build\app_timer.o: C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include\core_cm0.h
 .\_build\app_timer.o: ..\..\..\..\..\Include\s110\nrf_soc.h
 .\_build\app_timer.o: ..\..\..\..\..\Include\s110\nrf_svc.h
+.\_build\app_timer.o: ..\..\..\..\..\Include\s110\nrf51.h
+.\_build\app_timer.o: ..\..\..\..\..\Include\s110\nrf51_bitfields.h
 .\_build\app_timer.o: ..\..\..\..\..\Include\s110\nrf_error_soc.h
 .\_build\app_timer.o: ..\..\..\..\..\Include\nrf_delay.h
 .\_build\app_timer.o: ..\..\..\..\..\Include\nrf.h
