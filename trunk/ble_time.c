@@ -383,7 +383,7 @@ uint32_t update_current_time(ble_time_t * p_time,ble_date_time_t * p_current_dat
 { uint32_t err_code = NRF_SUCCESS;
 	
 	uint8_t date_timebuffer_temp[3];
-	p_current_date_time->seconds+=4; //10;
+	p_current_date_time->seconds+=10; //10;
 	if(p_current_date_time->seconds>=60)
 	{
 		p_current_date_time->seconds=0;

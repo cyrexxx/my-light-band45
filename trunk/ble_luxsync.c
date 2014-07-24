@@ -30,7 +30,7 @@ r. All Rights Reserved.
 #define MEMORY_LED_PIN_NO               LED_2
 
 #define CHUNKS_PER_TRANSFER (8)
-#define ENTRIES_PER_CHUNK	(20)
+#define ENTRIES_PER_CHUNK	(60)
 
 #define WRITE_LENGTH (7)
 #define READ_LENGTH (ENTRIES_PER_CHUNK * WRITE_LENGTH)
@@ -558,9 +558,9 @@ void upload_done(ble_luxsync_t * p_luxsync)
 	//lux_timers_stop();
 	nrf_gpio_pin_clear(MEMORY_LED_PIN_NO);     // to indicate Memory is busy
 	//code to erase memory
-//	i2c_eeprom_erase();
+	i2c_eeprom_erase();
 	//timers_start();
-//	eeprom_updateadd_pointer((uint32_t)0x00);
+	eeprom_updateadd_pointer((uint32_t)0x00);
 	nrf_gpio_pin_set(MEMORY_LED_PIN_NO);
 	NVIC_SystemReset(); // reset device as the connection usually fails during erase. 
 }

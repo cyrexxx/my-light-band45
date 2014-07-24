@@ -85,9 +85,9 @@
 
 //Device Information Service 
 #define MANUFACTURER_NAME               "Exeger Sweden AB"                                   /**< Manufacturer. Will be passed to Device Information Service. */
-#define SERIAL_NUMBER                   "942"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
-#define HW_REVISION              				"V 2.0 (May 13 2014)"																		 /**< Hardware Version of the device.Will be passed to Device Information Service. */
-#define FW_REVISION                     "V 1.0"																		  /**< Firmware Revision of the device.Will be passed to Device Information Service. */
+#define SERIAL_NUMBER                   "(942)"                                      /**< Serial Number of the device.Will be passed to Device Information Service. */
+#define HW_REVISION              				"V 2.5 (June,24 2014)"																		 /**< Hardware Version of the device.Will be passed to Device Information Service. */
+#define FW_REVISION                     "V 3.0"																		  /**< Firmware Revision of the device.Will be passed to Device Information Service. */
 #define MODEL_NUMBER                    "Kartik.karuna@exeger.com" 
 
 #define APP_ADV_INTERVAL                64                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */
@@ -98,7 +98,7 @@
 #define APP_TIMER_MAX_TIMERS            4                                           /**< Maximum number of simultaneously created timers. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(20/*500*/, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.5 seconds). */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(10/*500*/, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.5 seconds). */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(40/*1000*/, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (1 second). */
 #define SLAVE_LATENCY                   0                                           /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(300/*4000*/, UNIT_10_MS)             /**< Connection supervisory timeout (4 seconds). */
@@ -122,7 +122,7 @@
 
 static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
-static ble_gap_adv_params_t             m_adv_params;                          /**< Parameters to be passed to the stack when starting advertising. */
+//static ble_gap_adv_params_t             m_adv_params;                          /**< Parameters to be passed to the stack when starting advertising. */
 //Variables for flash
 
 
@@ -131,10 +131,10 @@ static bool                                  m_lux_meas_ind_conf_pending = false
 //static ble_sensorsim_cfg_t                   m_LUX_sim_cfg;                    /**< Temperature simulator configuration. */
 //static ble_sensorsim_state_t                 m_LUX_sim_state;                  /**< Temperature simulator state. */
 static app_timer_id_t                         m_lux_timer_id;
-#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(4000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define lux_LEVEL_MEAS_INTERVAL               APP_TIMER_TICKS(10000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 static app_timer_id_t                         m_mem_write_id;
-#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(20000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
+#define MEM_WRITE_MEAS_INTERVAL               APP_TIMER_TICKS(22000, APP_TIMER_PRESCALER) /**< Lux level measurement interval (ticks). now set to every 2 sec ,modift later for 10 sec*/ 
 
 
 
@@ -303,6 +303,8 @@ static void lux_meas_timeout_handler(void * p_context)
 	  append_mem_buffer(&m_encoded_light_reading,write_to_mem_buffer,buffpointer);
 	  buffpointer+=7;
 	  if(buffpointer>40){buffpointer=0;}
+		uint32_t err_code = sd_app_evt_wait();
+	  APP_ERROR_CHECK(err_code);
 	}
 	  
 	//fetchMoreData = 1;
@@ -330,18 +332,25 @@ static void mem_write_timeout_handler(void * p_context)
 {
 	UNUSED_PARAMETER(p_context);
 	if (m_lux_meas_ind_conf_pending==false)
-	{
+	{ 
+	 print("Saving2mem\r\n");
 	 nrf_gpio_pin_clear(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also start mem write
 	 nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
 		uint32_t mem_pointer=eeprom_find_add_pointer();
+		print("eeeprom add %d \r\n",mem_pointer);
 	 uint8_t length = buffpointer;
+		
    i2c_eeprom_write(mem_pointer, write_to_mem_buffer,length);
+	
 	 mem_pointer+=length;
 	 buffpointer=0;
 	 eeprom_updateadd_pointer((uint32_t)mem_pointer);
+	
 	  mem_pointer =0;
 	 nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO); // turn on light blue led (B+G) to signal advertisement and also end mem write
 	 nrf_gpio_pin_set(CONNECTED_LED_PIN_NO);
+	 uint32_t err_code = sd_app_evt_wait();
+	 APP_ERROR_CHECK(err_code);
 		
 	}
 	 //eeprom_updateadd_pointer(mem_pointer);
@@ -397,7 +406,7 @@ static void Luxsync_ack_write_handler(ble_luxsync_t * p_luxsync, uint8_t ACK_dat
        
 		//case 4:
 			  //end of data stream;
-		case 7:
+		case 9:
 			//Erase memory
 		  upload_done(p_luxsync);
 			 break;
@@ -647,12 +656,13 @@ static void sec_params_init(void)
  */
 static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
 {
-    uint32_t err_code;
+    
 
     if(p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
     {
 			print("ERROR!");
-//        err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
+			
+//        uint32_t err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
 //        APP_ERROR_CHECK(err_code);
     }
 }
@@ -941,6 +951,7 @@ static void buttons_init(void)
 static void power_manage(void)
 {
     uint32_t err_code = sd_app_evt_wait();
+	  
     APP_ERROR_CHECK(err_code);
 }
 
@@ -1016,26 +1027,16 @@ int main(void)
 		//i2c_eeprom_read(addss,data_buff, 42);
 	  //read_by[1]=2;
 		
-				
+//Debug	
+/*
 #if 1		
 #define TX_PIN_NUMBER (2)
 #define RX_PIN_NUMBER	(3)
 
 	 simple_uart_config(0, TX_PIN_NUMBER,0, RX_PIN_NUMBER, 0);
 
-
-  //uart_start();
-	
-
-/*	while(true)
-  {
-		uint8_t cr = 'A';  
-		
-    simple_uart_put(cr);
-  }
-		*/
 #endif
-
+*/
 
 
 	

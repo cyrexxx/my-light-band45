@@ -13,6 +13,8 @@
 #include "nrf_delay.h"
 #include "cy_io.h"
 
+#include "defines.h"
+
 //Device address  
 #define MEM_BASE_ADD  0xA0            //!< 6 MSBs of the MAX 44009 I2C ADD
 
@@ -107,13 +109,14 @@ bool i2c_eeprom_write_buffer(uint8_t dev_id, uint16_t address, uint8_t* data, ui
   uint16_t end_byte   = address + length;
 
   uint16_t curr_page_start = (address / PAGE_SIZE) * PAGE_SIZE;
-  uint16_t next_page_start = curr_page_start + PAGE_SIZE;
-
+  uint32_t next_page_start = curr_page_start + PAGE_SIZE;
+  print("i2c %d %d %d %d \r\n",start_byte,end_byte,curr_page_start,next_page_start );
   bool success = true;
   while (end_byte > next_page_start && success) 
   {
     success = i2c_eeprom_write_page(dev_id, start_byte, &(data[start_byte - address]), next_page_start - start_byte);
-    curr_page_start = next_page_start;
+    print("i2c page overflow \r\n");
+		curr_page_start = next_page_start;
     next_page_start = curr_page_start + PAGE_SIZE;
     start_byte = curr_page_start;
   }
