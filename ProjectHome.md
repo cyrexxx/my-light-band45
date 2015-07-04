@@ -1,0 +1,1 @@
+Light band to measure lux levels
